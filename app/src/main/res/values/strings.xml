@@ -4,13 +4,16 @@
 
     <string name="this_month">THIS MONTH</string>
     <string name="last_month">LAST MONTH</string>
-    <string name="card_header_date_textview">The day in the month</string>
-    <string name="card_header_weekday_textview">The day of the week</string>
-    <string name="card_header_month_textview">The month</string>
-    <string name="card_header_year_textview">The year</string>
-    <string name="food_text_textview">The name of the food item eaten</string>
-    <string name="food_icon_imageview">The food category to which the item belongs</string>
-    <string name="food_time_textview">The time the item was consumed</string>
+    <string name="card_header_date_textview_contdesc">The day in the month</string>
+    <string name="card_header_weekday_textview_contdesc">The day of the week</string>
+    <string name="card_header_month_textview_contdesc">The month</string>
+    <string name="card_header_year_textview_contdesc">The year</string>
+    <string name="food_text_textview_contdesc">The name of the food item eaten</string>
+    <string name="food_icon_imageview_contdesc">The food category to which the item belongs</string>
+    <string name="food_time_textview_contdesc">The time the item was consumed</string>
     <string name="add_edit_input_header">Food</string>
     <string name="add_edit_input_hint">Enter food item name</string>
+    <string name="add_edit_ic_category_contdesc">Icon representing the food category to which this item belongs</string>
+    <string name="add_edit_ic_date_contdesc">Icon representing the date at which this item was consumed</string>
+    <string name="add_edit_ic_time_contdesc">Icon representing the time of the day at which this item was consumed</string>
 </resources>

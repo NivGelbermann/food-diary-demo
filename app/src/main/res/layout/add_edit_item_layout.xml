@@ -6,22 +6,28 @@
                                                  android:layout_height="match_parent"
                                                  android:orientation="vertical">
 
-    <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/linearLayoutCompat"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/add_edit_constraint_ayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/add_edit_toolbar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
             android:background="?attr/colorPrimary"
             android:elevation="@dimen/mcab_toolbar_elevation"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:contentInsetStart="@dimen/mcab_default_content_inset"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             tools:ignore="UnusedAttribute">
             <!--android:theme="?attr/actionBarTheme"-->
@@ -36,6 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginStart="5dp"
                     android:layout_marginTop="32dp"
                     android:text="@string/add_edit_input_header"/>
                 <!--TODO Stylize text-->
@@ -54,13 +61,25 @@
 
         <ViewStub
             android:id="@+id/add_edit_cab_stub"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"/>
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
             android:id="@+id/add_edit_ic_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:contentDescription="@string/add_edit_ic_category_contdesc"
+            app:layout_constraintDimensionRatio=""
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_toolbar"
             app:layout_dodgeInsetEdges="all"
             app:srcCompat="@drawable/ic_cake_grey_700_24dp"/>
 
@@ -68,6 +87,11 @@
             android:id="@+id/add_edit_ic_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="32dp"
+            android:contentDescription="@string/add_edit_ic_date_contdesc"
+            app:layout_constraintLeft_toLeftOf="@+id/add_edit_ic_category"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_ic_category"
             app:layout_dodgeInsetEdges="all"
             app:srcCompat="@drawable/ic_event_grey_700_24dp"/>
 
@@ -75,10 +99,36 @@
             android:id="@+id/add_edit_ic_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="32dp"
+            android:contentDescription="@string/add_edit_ic_time_contdesc"
+            app:layout_constraintLeft_toLeftOf="@+id/add_edit_ic_date"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_ic_date"
             app:layout_dodgeInsetEdges="all"
             app:srcCompat="@drawable/ic_access_time_grey_700_24dp"/>
 
-    </android.support.v7.widget.LinearLayoutCompat>
+        <TextView
+            android:id="@+id/add_edit_title_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="24dp"
+            android:text="TextView"
+            app:layout_constraintLeft_toRightOf="@+id/add_edit_ic_category"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_toolbar"/>
+
+        <TextView
+            android:id="@+id/add_edit_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            app:layout_constraintLeft_toLeftOf="@+id/add_edit_title_category"
+            app:layout_constraintTop_toBottomOf="@+id/add_edit_title_category"/>
+
+
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
