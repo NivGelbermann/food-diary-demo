@@ -11,4 +11,6 @@
     <string name="food_text_textview">The name of the food item eaten</string>
     <string name="food_icon_imageview">The food category to which the item belongs</string>
     <string name="food_time_textview">The time the item was consumed</string>
+    <string name="add_edit_input_header">Food</string>
+    <string name="add_edit_input_hint">Enter food item name</string>
 </resources>

@@ -6,29 +6,79 @@
                                                  android:layout_height="match_parent"
                                                  android:orientation="vertical">
 
-    <FrameLayout
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/add_edit_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
+            android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:elevation="@dimen/mcab_toolbar_elevation"
             android:minHeight="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:contentInsetStart="@dimen/mcab_default_content_inset"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            tools:ignore="UnusedAttribute"/>
-        <!--TODO app:contentInsertStart="@dimen/mcab_default_content_inset"-->
-        <!--android:theme="?attr/actionBarTheme"-->
+            tools:ignore="UnusedAttribute">
+            <!--android:theme="?attr/actionBarTheme"-->
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/add_edit_input_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="32dp"
+                    android:text="@string/add_edit_input_header"/>
+                <!--TODO Stylize text-->
+
+                <EditText
+                    android:id="@+id/add_edit_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="@string/add_edit_input_hint"/>
+
+            </android.support.v7.widget.LinearLayoutCompat>
+        </android.support.v7.widget.Toolbar>
 
         <ViewStub
             android:id="@+id/add_edit_cab_stub"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"/>
 
-    </FrameLayout>
+        <ImageView
+            android:id="@+id/add_edit_ic_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_dodgeInsetEdges="all"
+            app:srcCompat="@drawable/ic_cake_grey_700_24dp"/>
+
+        <ImageView
+            android:id="@+id/add_edit_ic_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_dodgeInsetEdges="all"
+            app:srcCompat="@drawable/ic_event_grey_700_24dp"/>
+
+        <ImageView
+            android:id="@+id/add_edit_ic_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_dodgeInsetEdges="all"
+            app:srcCompat="@drawable/ic_access_time_grey_700_24dp"/>
+
+    </android.support.v7.widget.LinearLayoutCompat>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -38,6 +88,8 @@
         app:layout_anchor="@id/add_edit_toolbar"
         app:layout_anchorGravity="bottom|right|end"
         app:srcCompat="@android:drawable/ic_menu_send"/>
+
+
     <!--android:layout_alignParentBottom="true"-->
     <!--android:layout_alignParentEnd="true"-->
     <!--android:layout_alignParentRight="true"-->
