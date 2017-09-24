@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nivgelbermann.fooddiarydemo.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/apl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentTop="true"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+        <!--<android.support.design.widget.TabLayout-->
+        <!--android:id="@+id/tabs"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/toolbar"-->
+        <!--android:background="?attr/colorPrimary"-->
+        <!--android:maxHeight="?attr/actionBarSize"-->
+        <!--android:minHeight="?attr/actionBarSize"-->
+        <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">-->
+        <!--</android.support.design.widget.TabLayout>-->
+
+        <com.nshmura.recyclertablayout.RecyclerTabLayout
+            android:id="@+id/recycler_tab_layout"
+            rtl_tabBackground="?attr/selectableItemBackground"
+            rtl_tabIndicatorColor="?attr/colorAccent"
+            rtl_tabIndicatorHeight="2dp"
+            rtl_tabMaxWidth="264dp"
+            rtl_tabMinWidth="72dp"
+            rtl_tabPadding="0dp"
+            rtl_tabPaddingBottom="20dp"
+            rtl_tabPaddingEnd="12dp"
+            rtl_tabPaddingStart="12dp"
+            rtl_tabPaddingTop="0dp"
+            rtl_tabSelectedTextColor="?android:textColorPrimary"
+            rtl_tabTextAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            >
+        </com.nshmura.recyclertablayout.RecyclerTabLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/apl"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp">
+    </android.support.v4.view.ViewPager>
+
+    <!--<include layout="@layout/content_main"/>-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_add_white_24dp"/>
+    <!-- TODO Put fab on the bottom left if app is RTL -->
+
+</RelativeLayout>

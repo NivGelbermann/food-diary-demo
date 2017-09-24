@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.nivgelbermann.fooddiarydemo.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <!--<android.support.design.widget.TabLayout-->
+        <!--android:id="@+id/tab_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="0dp"-->
+        <!--android:background="?attr/colorPrimary"-->
+        <!--android:minHeight="?attr/actionBarSize"-->
+        <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent">-->
+    <!--</android.support.design.widget.TabLayout>-->
+
+    <!--<android.support.v4.view.ViewPager-->
+        <!--android:id="@+id/pager"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_marginBottom="0dp"-->
+        <!--android:layout_marginLeft="0dp"-->
+        <!--android:layout_marginRight="0dp"-->
+        <!--android:layout_marginTop="0dp"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/tab_layout">-->
+    <!--</android.support.v4.view.ViewPager>-->
+
+    <!--<com.nshmura.recyclertablayout.RecyclerTabLayout-->
+    <!--android:id="@+id/recycler_tab_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="48dp"-->
+    <!--rtl_tabIndicatorColor="?attr/colorAccent"-->
+    <!--rtl_tabIndicatorHeight="2dp"-->
+    <!--rtl_tabBackground="?attr/selectableItemBackground"-->
+    <!--rtl_tabTextAppearance="@android:style/TextAppearance.Small"-->
+    <!--rtl_tabSelectedTextColor="?android:textColorPrimary"-->
+    <!--rtl_tabMinWidth="72dp"-->
+    <!--rtl_tabMaxWidth="264dp"-->
+    <!--rtl_tabPaddingStart="12dp"-->
+    <!--rtl_tabPaddingTop="0dp"-->
+    <!--rtl_tabPaddingEnd="12dp"-->
+    <!--rtl_tabPaddingBottom="0dp"-->
+    <!--rtl_tabPadding="0dp"/>-->
+
+</android.support.constraint.ConstraintLayout>

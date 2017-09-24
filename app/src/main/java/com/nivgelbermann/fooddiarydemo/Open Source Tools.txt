@@ -1,0 +1,11 @@
+nshmura's RecyclerTabLayout
+https://github.com/nshmura/RecyclerTabLayout/
+
+jakewharton's Butterknife
+jakewharton.github.io/butterknife/
+
+Tim Buchalka's code and course
+udemy.com/master-android-7-nougat-java-app-development-step-by-step/
+
+afollestad's material CAB
+https://github.com/afollestad/material-cab

@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">FoodDiaryDemo</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="this_month">THIS MONTH</string>
+    <string name="last_month">LAST MONTH</string>
+    <string name="card_header_date_textview">The day in the month</string>
+    <string name="card_header_weekday_textview">The day of the week</string>
+    <string name="card_header_month_textview">The month</string>
+    <string name="card_header_year_textview">The year</string>
+    <string name="food_text_textview">The name of the food item eaten</string>
+    <string name="food_icon_imageview">The food category to which the item belongs</string>
+    <string name="food_time_textview">The time the item was consumed</string>
+</resources>

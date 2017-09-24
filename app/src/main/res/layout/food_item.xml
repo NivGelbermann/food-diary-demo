@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:orientation="vertical"
+                                             android:paddingTop="8dp">
+
+    <ImageView
+        android:id="@+id/food_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:contentDescription="@string/food_icon_imageview"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_stars_grey_500_24dp"/>
+
+    <TextView
+        android:id="@+id/food_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:contentDescription="@string/food_text_textview"
+        app:layout_constraintBottom_toBottomOf="@+id/food_icon"
+        app:layout_constraintLeft_toRightOf="@+id/food_icon"
+        app:layout_constraintTop_toTopOf="@+id/food_icon"
+        tools:text="Double cheeseburger"/>
+
+    <TextView
+        android:id="@+id/food_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:contentDescription="@string/food_time_textview"
+        app:layout_constraintBaseline_toBaselineOf="@+id/food_text"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="16:20"/>
+</android.support.constraint.ConstraintLayout>
