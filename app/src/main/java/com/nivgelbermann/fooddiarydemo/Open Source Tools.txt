@@ -9,3 +9,9 @@ udemy.com/master-android-7-nougat-java-app-development-step-by-step/
 
 afollestad's material CAB
 https://github.com/afollestad/material-cab
+
+konifar's material icon generator
+https://github.com/konifar/android-material-design-icon-generator-plugin
+
+google's material icons
+https://material.io/icons/
