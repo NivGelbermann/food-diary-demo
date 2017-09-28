@@ -16,6 +16,10 @@
     <string name="add_edit_ic_contdesc">Icon representing the data this row displays; either Category, Date or Time</string>
     <string name="add_edit_header_textview_contdesc">Text representing the data this row displays; either Category, Date or Time</string>
     <string name="add_edit_content_textview_contdesc">The content this row displays; either Category, Date or Time</string>
+    <string name="add_edit_recyclerview_item_category">Category</string>
+    <string name="add_edit_recyclerview_item_date">Date</string>
+    <string name="add_edit_recyclerview_item_time">Time</string>
+    <string name="title_activity_add_edit">AddEditActivity</string>
     <!--<string name="add_edit_ic_category_contdesc">Icon representing the food category to which this item belongs</string>-->
     <!--<string name="add_edit_ic_date_contdesc">Icon representing the date at which this item was consumed</string>-->
     <!--<string name="add_edit_ic_time_contdesc">Icon representing the time of the day at which this item was consumed</string>-->

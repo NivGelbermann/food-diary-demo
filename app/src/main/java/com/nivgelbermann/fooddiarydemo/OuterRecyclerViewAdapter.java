@@ -56,7 +56,7 @@ class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAda
     @Override
     public CardDateViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: new view requested");
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_row_date, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_main_page_date, parent, false);
         return new CardDateViewHolder(view);
     }
 

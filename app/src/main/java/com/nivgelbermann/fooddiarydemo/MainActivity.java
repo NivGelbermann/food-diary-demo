@@ -1,10 +1,10 @@
 package com.nivgelbermann.fooddiarydemo;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -49,33 +49,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        String[] projection = {
-                FoodsContract.Columns._ID,
-                FoodsContract.Columns.FOOD_ITEM,
-                FoodsContract.Columns.HOUR,
-                FoodsContract.Columns.DAY,
-                FoodsContract.Columns.MONTH,
-                FoodsContract.Columns.YEAR};
-        ContentResolver contentResolver = getContentResolver();
-        Cursor cursor = contentResolver.query(FoodsContract.CONTENT_URI,
-                projection,
-                null,
-                null,
-                FoodsContract.Columns.YEAR + ", "
-                        + FoodsContract.Columns.MONTH + ", "
-                        + FoodsContract.Columns.DAY + ", "
-                        + FoodsContract.Columns.HOUR);
-        if (cursor != null) {
-            Log.d(TAG, "onCreate: number of rows: " + cursor.getCount());
-            Log.d(TAG, "onCreate: ====================");
-            while (cursor.moveToNext()) {
-                for (int i = 0; i < cursor.getColumnCount(); i++) {
-                    Log.d(TAG, "onCreate: " + cursor.getColumnName(i) + ": " + cursor.getString(i));
-                }
-                Log.d(TAG, "onCreate: ====================");
-            }
-            cursor.close();
-        }
+        utilLogDatabase();
 
         // Create a list to hold all page titles (MM/yyyy)
         List<String> tabTitles = new ArrayList<>();
@@ -104,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent addEditIntent = new Intent(getApplication(), AddEditActivity.class);
+                startActivity(addEditIntent);
             }
         });
     }
@@ -130,6 +104,41 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void utilLogDatabase()  {
+        Log.d(TAG, "utilLogDatabase: ====================");
+        Log.d(TAG, "utilLogDatabase:   LOGGING DATABASE");
+        Log.d(TAG, "utilLogDatabase: ====================");
+
+        String[] projection = {
+                FoodsContract.Columns._ID,
+                FoodsContract.Columns.FOOD_ITEM,
+                FoodsContract.Columns.CATEGORY_ID,
+                FoodsContract.Columns.HOUR,
+                FoodsContract.Columns.DAY,
+                FoodsContract.Columns.MONTH,
+                FoodsContract.Columns.YEAR};
+        ContentResolver contentResolver = getContentResolver();
+        Cursor cursor = contentResolver.query(FoodsContract.CONTENT_URI,
+                projection,
+                null,
+                null,
+                FoodsContract.Columns.YEAR + ", "
+                        + FoodsContract.Columns.MONTH + ", "
+                        + FoodsContract.Columns.DAY + ", "
+                        + FoodsContract.Columns.HOUR);
+        if (cursor != null) {
+            Log.d(TAG, "utilLogDatabase: number of rows: " + cursor.getCount());
+            Log.d(TAG, "utilLogDatabase: ====================");
+            while (cursor.moveToNext()) {
+                for (int i = 0; i < cursor.getColumnCount(); i++) {
+                    Log.d(TAG, "onCreate: " + cursor.getColumnName(i) + ": " + cursor.getString(i));
+                }
+                Log.d(TAG, "utilLogDatabase: ====================");
+            }
+            cursor.close();
+        }
     }
 
 }
