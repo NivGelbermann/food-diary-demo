@@ -26,7 +26,8 @@ import static com.nivgelbermann.fooddiarydemo.Constants.CURRENT_MONTH;
 import static com.nivgelbermann.fooddiarydemo.Constants.CURRENT_YEAR;
 import static com.nivgelbermann.fooddiarydemo.Constants.EPOCH;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity /*implements PageFragment.OnDateSelectedInterface*/ {
+//public class MainActivity extends AppCompatActivity implements InnerRecyclerViewAdapter.InnerRecyclerClickListener {
     private static final String TAG = "MainActivity";
 
     public static final int ADD_FOODITEM_DIALOG = 0;
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void utilLogDatabase()  {
+    private void utilLogDatabase() {
         Log.d(TAG, "utilLogDatabase: ====================");
         Log.d(TAG, "utilLogDatabase:   LOGGING DATABASE");
         Log.d(TAG, "utilLogDatabase: ====================");
@@ -141,4 +142,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+//    @Override
+//    public void onDateSelected(int position) {
+//        Toast.makeText(this, "Item clicked at position " + position, Toast.LENGTH_LONG);
+//    }
+
+
+//    @Override
+//    public void onInnerItemClick(View view) {
+//        Log.d(TAG, "onInnerItemClick: VALIDATION");
+//    }
 }
+
+// TODO Hide ActionBar, leave tabs visible (like in Tasks To Do app)

@@ -65,6 +65,7 @@ class AddEditRecyclerViewAdapter extends RecyclerView.Adapter<AddEditRecyclerVie
         
         switch (position) {
             case POS_CATEGORY:
+                // TODO Handle changing row icon to match category
                 holder.icon.setImageResource(R.drawable.ic_cake_grey_700_24dp);
                 holder.header.setText(R.string.add_edit_recyclerview_item_category);
                 holder.content.setText("FOOD"); // Temporary - until implementing categories

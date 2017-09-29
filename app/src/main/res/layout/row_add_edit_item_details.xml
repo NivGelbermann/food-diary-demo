@@ -49,5 +49,4 @@
         app:layout_constraintTop_toBottomOf="@+id/add_edit_row_header"
         tools:text="Content to be displayed according to food item"/>
 
-    <!--TODO With runtime available, play around with the margins and constraints to center textviews-->
 </android.support.constraint.ConstraintLayout>

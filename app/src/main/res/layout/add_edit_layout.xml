@@ -43,7 +43,6 @@
                     android:layout_marginTop="32dp"
                     android:text="@string/add_edit_input_header"
                     android:textStyle="bold"/>
-                <!--TODO Stylize text-->
 
                 <EditText
                     android:id="@+id/add_edit_input"
@@ -88,7 +87,6 @@
         <!--app:layout_dodgeInsetEdges="all"-->
         <!--app:srcCompat="@drawable/ic_cake_grey_700_24dp"/>-->
 
-        <!--TODO Find a better icon for category-->
 
         <!--<ImageView-->
         <!--android:id="@+id/add_edit_ic_date"-->

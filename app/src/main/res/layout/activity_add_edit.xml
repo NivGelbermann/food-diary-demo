@@ -21,7 +21,6 @@
             <!--app:popupTheme="@style/AppTheme.PopupOverlay"/>-->
 
     <!--</android.support.design.widget.AppBarLayout>-->
-    <!-- TODO If a back button does not exist in runtime, uncomment these lines and play around with the App Theme for all 3 add_edit files -->
 
     <include layout="@layout/content_add_edit"/>
 

@@ -10,7 +10,7 @@ import java.util.Calendar;
 
 public class Constants {
 
-    // TODO Decide on an Epoch
+    // TODO Make epoch be decided according to DB - the earliest row
     public static final int EPOCH = 2017;
     public static final int MONTHS_A_YEAR = 12;
     public static final int CURRENT_YEAR = Calendar.getInstance().get(Calendar.YEAR);
