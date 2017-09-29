@@ -30,11 +30,16 @@ public class AddEditActivityFragment extends Fragment {
         Log.d(TAG, "onCreateView: starts");
         View view = inflater.inflate(R.layout.fragment_add_edit, container, false);
 //        RecyclerView recyclerView = view.findViewById(R.id.add_edit_recyclerview);
+        // Initialize fixed-size RecyclerView for item's category, date, time, etc.
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new AddEditRecyclerViewAdapter(getContext(), null, false));
 
+        // Initialize ActionBar and Home button
 //        ((AddEditActivity) getActivity()).setSupportActionBar(toolbar);
+//        ((AddEditActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        ((AddEditActivity) getActivity()).getSupportActionBar().setSubtitle("Add item");
+//        ((AddEditActivity) getActivity()).getSupportActionBar().setElevation(0);
 
         Log.d(TAG, "onCreateView: ends");
         return view;
