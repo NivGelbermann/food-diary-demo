@@ -1,5 +1,6 @@
 package com.nivgelbermann.fooddiarydemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,8 +11,9 @@ import android.widget.Toast;
 public class AddEditActivity extends AppCompatActivity {
     private static final String TAG = "AddEditActivity";
 
-//    @BindView(R.id.add_edit_toolbar)
-//    Toolbar toolbar;
+    public static final String ADD_EDIT_FOOD_ITEM = "AddEditFoodItem";
+
+    private boolean mEditMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,14 +21,15 @@ public class AddEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit);
 
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        ButterKnife.bind(this);
-//        setSupportActionBar(toolbar);
+        // TODO Pass onto activity the tab (month) from which it was opened (to re-open on closing activity)
+        Intent intent = getIntent();
+        FoodItem foodItem = (FoodItem) intent.getSerializableExtra(ADD_EDIT_FOOD_ITEM);
+        if(foodItem != null) {
+            mEditMode = true;
+        }
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        // TODO Set text to "Create item"/"Edit item" according to whether activity was created with a POJO included in the bundle
-        // TODO Pass onto activity the tab (month) from which it was opened + FoodItem object if selected
-        getSupportActionBar().setTitle("Create Item:");
+        getSupportActionBar().setTitle((mEditMode) ? "Edit Item:" : "Create Item:");
         getSupportActionBar().setElevation(0);
     }
 

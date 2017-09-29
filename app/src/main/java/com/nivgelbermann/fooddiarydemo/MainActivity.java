@@ -26,14 +26,12 @@ import static com.nivgelbermann.fooddiarydemo.Constants.CURRENT_MONTH;
 import static com.nivgelbermann.fooddiarydemo.Constants.CURRENT_YEAR;
 import static com.nivgelbermann.fooddiarydemo.Constants.EPOCH;
 
-public class MainActivity extends AppCompatActivity /*implements PageFragment.OnDateSelectedInterface*/ {
-//public class MainActivity extends AppCompatActivity implements InnerRecyclerViewAdapter.InnerRecyclerClickListener {
+//public class MainActivity extends AppCompatActivity /*implements PageFragment.OnDateSelectedInterface*/ {
+public class MainActivity extends AppCompatActivity implements InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener {
     private static final String TAG = "MainActivity";
 
     public static final int ADD_FOODITEM_DIALOG = 0;
 
-    //    @BindView(R.id.tabs)
-//    TabLayout tabLayout;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.pager)
@@ -79,8 +77,7 @@ public class MainActivity extends AppCompatActivity /*implements PageFragment.On
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent addEditIntent = new Intent(getApplication(), AddEditActivity.class);
-                startActivity(addEditIntent);
+                utilStartAddEditActivity(null);
             }
         });
     }
@@ -107,6 +104,21 @@ public class MainActivity extends AppCompatActivity /*implements PageFragment.On
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onFoodItemClicked(FoodItem item) {
+        utilStartAddEditActivity(item);
+    }
+
+    @Override
+    public boolean onFoodItemLongClicked(FoodItem item) {
+        // Ignore long clicks, consume event by returning true
+        return true;
+    }
+
+    /**
+     * Temporary utility method for printing the entire contents
+     * of the DB to log, for my own comfort.
+     */
     private void utilLogDatabase() {
         Log.d(TAG, "utilLogDatabase: ====================");
         Log.d(TAG, "utilLogDatabase:   LOGGING DATABASE");
@@ -142,16 +154,19 @@ public class MainActivity extends AppCompatActivity /*implements PageFragment.On
         }
     }
 
-//    @Override
-//    public void onDateSelected(int position) {
-//        Toast.makeText(this, "Item clicked at position " + position, Toast.LENGTH_LONG);
-//    }
+    /**
+     * Utility method to start an AddEdit activity.
+     * @param item Pass item to edit it, otherwise pass null to create a new item
+     */
+    private void utilStartAddEditActivity(FoodItem item) {
+        Log.d(TAG, "utilStartAddEditActivity: called");
 
-
-//    @Override
-//    public void onInnerItemClick(View view) {
-//        Log.d(TAG, "onInnerItemClick: VALIDATION");
-//    }
+        Intent addEditIntent = new Intent(this, AddEditActivity.class);
+        if (item != null) {
+            addEditIntent.putExtra(AddEditActivity.ADD_EDIT_FOOD_ITEM, item);
+        }
+        startActivity(addEditIntent);
+    }
 }
 
 // TODO Hide ActionBar, leave tabs visible (like in Tasks To Do app)

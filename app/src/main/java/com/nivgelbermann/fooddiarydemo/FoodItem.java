@@ -14,30 +14,30 @@ public class FoodItem implements Serializable{
 
 //    private final long m_Id;
     private final String mName;
-    private final long mHour;
+    private final long mTime;
 //    private final int mDay;
 //    private final int mMonth;
 //    private final int mYear;
     private final int mCategory;
 
-//    public FoodItem(long id, String name, int hour, int day, int month, int year) {
-//    public FoodItem(long id, String name, long hour) {
-    public FoodItem(String name, long hour) {
+//    public FoodItem(long id, String name, int time, int day, int month, int year) {
+//    public FoodItem(long id, String name, long time) {
+    public FoodItem(String name, long time) {
 //        this.m_Id = id;
         mName = name;
-        mHour = hour;
+        mTime = time;
 //        mDay = day;
 //        mMonth = month;
 //        mYear = year;
         mCategory = 0;
     }
 
-//    public FoodItem(long m_Id, String name, int hour, int day, int month, int year, int category) {
-//    public FoodItem(long m_Id, String name, long hour, int category) {
-    public FoodItem(String name, long hour, int category) {
+//    public FoodItem(long m_Id, String name, int time, int day, int month, int year, int category) {
+//    public FoodItem(long m_Id, String name, long time, int category) {
+    public FoodItem(String name, long time, int category) {
 //        this.m_Id = m_Id;
         mName = name;
-        mHour = hour;
+        mTime = time;
 //        mDay = day;
 //        mMonth = month;
 //        mYear = year;
@@ -52,8 +52,8 @@ public class FoodItem implements Serializable{
         return mName;
     }
 
-    public long getHour() {
-        return mHour;
+    public long getTime() {
+        return mTime;
     }
 
 //    public int getDay() {
@@ -76,7 +76,7 @@ public class FoodItem implements Serializable{
     public String toString() {
         return "FoodItem{" +
                 "name='" + mName + '\'' +
-                ", hour=" + mHour +
+                ", hour=" + mTime +
                 ", category=" + mCategory +
                 '}';
     }

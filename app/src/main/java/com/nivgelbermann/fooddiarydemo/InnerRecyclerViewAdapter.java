@@ -25,10 +25,46 @@ class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAda
 
     private Context mContext;
     private Cursor mCursor;
+    private FoodItemViewHolder.FoodItemListener mFoodItemListener;
 
-    InnerRecyclerViewAdapter(Context context) {
+//    private final View.OnClickListener mListener = new View.OnClickListener() {
+//        @Override
+//        public void onClick(final View view) {
+//            Toast.makeText(mContext, "Click validation - view Id: " + view.getId(), Toast.LENGTH_SHORT).show();
+//            Log.d(TAG, "onClick: Click validation - view Id: " + view.getId());
+//        }
+//    };
+
+    //    InnerRecyclerViewAdapter(Context context) {
+    InnerRecyclerViewAdapter(Context context, FoodItemViewHolder.FoodItemListener listener) {
         mContext = context;
+        mFoodItemListener = listener;
     }
+
+//    //    static class FoodItemViewHolder extends RecyclerView.ViewHolder {
+//    static class FoodItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+//        @BindView(R.id.food_icon)
+//        ImageView icon;
+//        @BindView(R.id.food_text)
+//        TextView text;
+//        @BindView(R.id.food_time)
+//        TextView time;
+//
+//        FoodItemViewHolder(View view) {
+//            super(view);
+//            ButterKnife.bind(this, view);
+//            view.setOnClickListener(this);
+//        }
+//
+//        @Override
+//        public void onClick(View view) {
+////            Toast.makeText(view.getContext(), "Click validation - view position: " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+////            Log.d(TAG, "onClick: Click validation - view position: " + getAdapterPosition());
+//            Intent addEditIntent = new Intent(view.getContext(), AddEditActivity.class);
+////            addEditIntent.putExtra(FoodItem.class.getSimpleName(), foodItem);
+//            view.getContext().startActivity(addEditIntent);
+//        }
+//    }
 
     static class FoodItemViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.food_icon)
@@ -38,27 +74,62 @@ class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAda
         @BindView(R.id.food_time)
         TextView time;
 
-        FoodItemViewHolder(View view) {
+        FoodItemListener mListener;
+        FoodItem mFoodItem;
+
+        public interface FoodItemListener {
+            void onFoodItemClicked(FoodItem item);
+
+            // Should return true if the callback consumed the long click, false otherwise.
+            boolean onFoodItemLongClicked(FoodItem item);
+        }
+
+        FoodItemViewHolder(View view, final FoodItemListener listener) {
             super(view);
             ButterKnife.bind(this, view);
+            mListener = listener;
+            Log.d(TAG, "FoodItemViewHolder: listener: " + listener.getClass().getSimpleName());
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onFoodItemClicked(mFoodItem);
+                }
+            });
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    return mListener.onFoodItemLongClicked(mFoodItem);
+                }
+            });
+        }
+
+        void setFoodItem(FoodItem item) {
+            mFoodItem = item;
+            // TODO Handle changing row icon to match category
+            text.setText(mFoodItem.getName());
+            time.setText(utilFormatTime(mFoodItem.getTime(), "HH:mm"));
         }
     }
+
 
     @Override
     public FoodItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: new view requested");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_item, parent, false);
-        return new FoodItemViewHolder(view);
+//        view.setOnClickListener(mListener);
+//        return new FoodItemViewHolder(view);
+        return new FoodItemViewHolder(view, mFoodItemListener);
     }
 
     @Override
     public void onBindViewHolder(FoodItemViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: starts");
+        Log.d(TAG, "onBindViewHolder: starts with position " + position);
 
 //        holder.text.setText("item number #" + position);
 //        holder.time.setText("13:24");
 
-        if((mCursor == null) || (mCursor.getCount() == 0)) {
+        if ((mCursor == null) || (mCursor.getCount() == 0)) {
             Log.d(TAG, "onBindViewHolder: mCursor empty or null");
         } else {
             if (!mCursor.moveToPosition(position)) {
@@ -68,10 +139,11 @@ class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAda
             final FoodItem row = new FoodItem(mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns.FOOD_ITEM)),
                     mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.HOUR)),
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.CATEGORY_ID)));
+            holder.setFoodItem(row);
 
-            // TODO Handle changing row icon to match category
-            holder.text.setText(row.getName());
-            holder.time.setText(utilEpochToFormattedTime(row.getHour(), "HH:mm"));
+//            // TODO Handle changing row icon to match category
+//            holder.text.setText(row.getName());
+//            holder.time.setText(utilFormatTime(row.getTime(), "HH:mm"));
         }
 
         Log.d(TAG, "onBindViewHolder: ends");
@@ -122,8 +194,11 @@ class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAda
      * @param timeFormat String format for return value
      * @return String for time formatted
      */
-    private String utilEpochToFormattedTime(long time, String timeFormat) {
+    private static String utilFormatTime(long time, String timeFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(timeFormat);
         return dateFormat.format(new Date(time * Constants.MILLISECONDS));
     }
 }
+
+
+// General tip - if you ever need to find the current position, just call getAdapterPosition().

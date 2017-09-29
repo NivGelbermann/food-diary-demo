@@ -90,8 +90,10 @@ class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAda
             // Otherwise, do nothing, holder's RecyclerView will re-use its LinearLayoutManager.
             holder.innerRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         }
-        InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(mContext);
-        Log.d(TAG, "onBindViewHolder: adding adapter: " + mInnerAdapters.add(adapter));
+//        InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(mContext);
+        InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(mContext,
+                (InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener) mContext);
+//        Log.d(TAG, "onBindViewHolder: adding adapter: " + mInnerAdapters.add(adapter));
         holder.innerRecyclerView.setAdapter(adapter);
 
         // By default, the inner loader in PageFragment has finished loading
@@ -100,7 +102,7 @@ class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAda
         // That's why we need to force the InnerAdapter to swap cursor
         // (actually swapping with the same cursor it already has)
         // to make it refresh its rows.
-        adapter.swapCursor(mInnerCursor); // TODO Could probably be better implemented
+        adapter.swapCursor(mInnerCursor);
 
         Log.d(TAG, "onBindViewHolder: ends");
     }
