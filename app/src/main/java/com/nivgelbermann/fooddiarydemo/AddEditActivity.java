@@ -76,7 +76,7 @@ public class AddEditActivity extends AppCompatActivity {
 
             default:
 //                throw new InvalidParameterException(TAG + ".onOptionsItemSelected called with invalid MenuItem " + item.getTitle());
-                Toast.makeText(this, "An error has occurred, changes have not been saved", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.add_edit_home_button_error, Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);

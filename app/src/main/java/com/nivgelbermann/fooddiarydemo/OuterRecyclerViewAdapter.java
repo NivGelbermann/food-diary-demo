@@ -31,16 +31,11 @@ class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAda
     private ArrayList<InnerRecyclerViewAdapter> mInnerAdapters;
 
     static class CardDateViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.card_header_date)
-        TextView date;
-        @BindView(R.id.card_header_weekday)
-        TextView dayOfWeek;
-        @BindView(R.id.card_header_month)
-        TextView month;
-        @BindView(R.id.card_header_year)
-        TextView year;
-        @BindView(R.id.card_recyclerview)
-        RecyclerView innerRecyclerView;
+        @BindView(R.id.card_header_date) TextView date;
+        @BindView(R.id.card_header_weekday) TextView dayOfWeek;
+        @BindView(R.id.card_header_month) TextView month;
+        @BindView(R.id.card_header_year) TextView year;
+        @BindView(R.id.card_recyclerview) RecyclerView innerRecyclerView;
 
         CardDateViewHolder(View view) {
             super(view);

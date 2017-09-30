@@ -77,4 +77,5 @@ class RecyclerItemClickListener extends RecyclerView.SimpleOnItemTouchListener {
             return false;
         }
     }
+
 }

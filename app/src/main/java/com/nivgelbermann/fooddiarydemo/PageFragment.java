@@ -31,8 +31,7 @@ import butterknife.ButterKnife;
 public class PageFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "PageFragment";
 
-    @BindView(R.id.outerRecyclerView)
-    RecyclerView outerRecyclerView;
+    @BindView(R.id.outerRecyclerView) RecyclerView outerRecyclerView;
 
     public static final String ARG_PAGE_POS = "ARG_PAGE_POS";
     public static final int OUTER_LOADER_ID = 0;

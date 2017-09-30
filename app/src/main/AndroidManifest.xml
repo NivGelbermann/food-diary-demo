@@ -28,7 +28,8 @@
         <activity
             android:name=".AddEditActivity"
             android:label="@string/title_activity_add_edit"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nivgelbermann.fooddiarydemo.MainActivity"/>

@@ -64,12 +64,9 @@ class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAda
 //    }
 
     static class FoodItemViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.food_icon)
-        ImageView icon;
-        @BindView(R.id.food_text)
-        TextView text;
-        @BindView(R.id.food_time)
-        TextView time;
+        @BindView(R.id.food_icon) ImageView icon;
+        @BindView(R.id.food_text) TextView text;
+        @BindView(R.id.food_time) TextView time;
 
         FoodItemListener mListener;
         FoodItem mFoodItem;

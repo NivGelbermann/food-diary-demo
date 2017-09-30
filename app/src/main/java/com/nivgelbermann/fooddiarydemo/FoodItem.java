@@ -1,6 +1,8 @@
 package com.nivgelbermann.fooddiarydemo;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Niv on 14-Sep-17.
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * Represents a row in the Foods table in the database.
  */
 
-public class FoodItem implements Serializable{
+public class FoodItem implements Serializable {
     // 14-09-2017
     private static final long serialVersionUID = -931179032962101040L;
 
@@ -70,6 +72,19 @@ public class FoodItem implements Serializable{
 
     public int getCategory() {
         return mCategory;
+    }
+
+    /**
+     * Utility method for converting time in Epoch format to
+     * a formatted String.
+     *
+     * @param time       long, representing time as seconds since Epoch
+     * @param timeFormat String format for return value
+     * @return String for time formatted
+     */
+    public String getFormattedTime(long time, String timeFormat) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(timeFormat);
+        return dateFormat.format(new Date(time * Constants.MILLISECONDS));
     }
 
     @Override
