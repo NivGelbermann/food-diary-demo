@@ -19,23 +19,19 @@ import butterknife.ButterKnife;
  * Created by Niv on 25-Sep-17.
  */
 class AddEditRecyclerViewAdapter extends RecyclerView.Adapter<AddEditRecyclerViewAdapter.ItemContentViewHolder>
-                                 implements RecyclerItemClickListener.OnRecyclerClickListener{
+        implements RecyclerItemClickListener.OnRecyclerClickListener {
     private static final String TAG = "AddEditRecyclerViewAdap";
 
     private Context mContext;
 
-    private FoodItem mItem;
-    // True if AddEdit activity was opened by an item
-    // False if AddEdit activity was opened by FAB
-    private boolean mEditMode;
+    private FoodItem mFoodItem;
     private static final int POS_CATEGORY = 0;
     private static final int POS_DATE = 1;
     private static final int POS_TIME = 2;
 
-    AddEditRecyclerViewAdapter(Context context, FoodItem foodItem, boolean editMode) {
+    AddEditRecyclerViewAdapter(Context context, FoodItem foodItem) {
         mContext = context;
-        mItem = foodItem;
-        mEditMode = editMode;
+        mFoodItem = foodItem;
     }
 
     class ItemContentViewHolder extends RecyclerView.ViewHolder {
@@ -62,31 +58,41 @@ class AddEditRecyclerViewAdapter extends RecyclerView.Adapter<AddEditRecyclerVie
     @Override
     public void onBindViewHolder(ItemContentViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: starts");
-        
+
         switch (position) {
             case POS_CATEGORY:
                 // TODO Handle changing row icon to match category
                 holder.icon.setImageResource(R.drawable.ic_cake_grey_700_24dp);
                 holder.header.setText(R.string.add_edit_recyclerview_item_category);
-                holder.content.setText("FOOD"); // Temporary - until implementing categories
+                holder.content.setText("Select category"); // Temporary - until implementing categories
                 break;
-                
+
             case POS_DATE:
                 holder.icon.setImageResource(R.drawable.ic_event_grey_700_24dp);
                 holder.header.setText(R.string.add_edit_recyclerview_item_date);
-                holder.content.setText("11/11/2017"); // Temporary - until implementing dates in FoodItem
+                if (mFoodItem != null) {
+                    holder.content.setText(mFoodItem.getDay() + "/"
+                            + mFoodItem.getMonth() + "/"
+                            + mFoodItem.getYear());
+                } else {
+                    holder.content.setText("Select date");
+                }
                 break;
-                
+
             case POS_TIME:
                 holder.icon.setImageResource(R.drawable.ic_access_time_grey_700_24dp);
                 holder.header.setText(R.string.add_edit_recyclerview_item_time);
-                holder.content.setText("08:17"); // Temporary - until implementing time in FoodItem
+                if(mFoodItem!=null) {
+                    holder.content.setText(MainActivity.utilFormatTime(mFoodItem.getTime(), "HH:mm"));
+                } else {
+                    holder.content.setText("Select time");
+                }
                 break;
-                
+
             default:
                 throw new InvalidParameterException(TAG + ".onBindViewHolder called with invalid position: " + position);
         }
-        
+
         Log.d(TAG, "onBindViewHolder: ends");
     }
 
@@ -95,28 +101,28 @@ class AddEditRecyclerViewAdapter extends RecyclerView.Adapter<AddEditRecyclerVie
         // There are always 3 items: Category, Date, Hour
         return 3;
     }
-    
+
     @Override
     public void onItemClick(View view, int position) {
         Log.d(TAG, "onItemClick: called");
-        
+
         // Temporary click verification
         Toast.makeText(mContext, "Row " + position + " clicked", Toast.LENGTH_SHORT).show();
-        
+
         switch (position) {
             // TODO Handle each case 
             case POS_CATEGORY:
                 // select category
                 break;
-                
+
             case POS_DATE:
                 // display dialog for choosing date
                 break;
-                
+
             case POS_TIME:
                 // display dialog for choosing time
                 break;
-                
+
             default:
                 throw new InvalidParameterException(TAG + " onItemClick called with invalid position " + position);
         }

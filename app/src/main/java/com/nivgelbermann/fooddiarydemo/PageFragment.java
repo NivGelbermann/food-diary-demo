@@ -117,12 +117,23 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
                         sortOrder);
 
             case INNER_LOADER_ID:
-                projection = new String[]{FoodsContract.Columns.FOOD_ITEM,
+                projection = new String[]{FoodsContract.Columns._ID,
+                        FoodsContract.Columns.FOOD_ITEM,
+                        FoodsContract.Columns.DAY,
+                        FoodsContract.Columns.MONTH,
+                        FoodsContract.Columns.YEAR,
                         FoodsContract.Columns.HOUR,
                         FoodsContract.Columns.CATEGORY_ID};
+//                // Sort by Hour -> Name
+//                // 'ORDER BY Foods.Hour, Foods.FoodItem COLLATE NOCASE DESC'
+//                sortOrder = FoodsContract.Columns.HOUR + ","
+//                        + FoodsContract.Columns.FOOD_ITEM + " COLLATE NOCASE DESC";
                 // Sort by Year -> Month -> Day -> Hour -> Name
-                // 'ORDER BY Foods.Hour, Foods.FoodItem COLLATE NOCASE DESC'
-                sortOrder = FoodsContract.Columns.HOUR + ","
+                // 'ORDER BY Foods.Year, Foods.Month, Foods.Day, Foods.Hour, Foods.FoodItem COLLATE NOCASE DESC'
+                sortOrder = FoodsContract.Columns.YEAR + ","
+                        + FoodsContract.Columns.MONTH + ","
+                        + FoodsContract.Columns.DAY + ","
+                        + FoodsContract.Columns.HOUR + ","
                         + FoodsContract.Columns.FOOD_ITEM + " COLLATE NOCASE DESC";
                 return new CursorLoader(getActivity(),
                         FoodsContract.CONTENT_URI,

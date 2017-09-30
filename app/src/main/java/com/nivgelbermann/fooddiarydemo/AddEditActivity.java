@@ -2,6 +2,7 @@ package com.nivgelbermann.fooddiarydemo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -11,8 +12,6 @@ import android.widget.Toast;
 public class AddEditActivity extends AppCompatActivity {
     private static final String TAG = "AddEditActivity";
 
-    public static final String ADD_EDIT_FOOD_ITEM = "AddEditFoodItem";
-
     private boolean mEditMode = false;
 
     @Override
@@ -21,16 +20,29 @@ public class AddEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit);
 
-        // TODO Pass onto activity the tab (month) from which it was opened (to re-open on closing activity)
+        // TODO Pass onto activity the tab (month) from which it was opened (to re-open in MainActivity)
+
+        // Receive food item (if exists) from parent activity
         Intent intent = getIntent();
-        FoodItem foodItem = (FoodItem) intent.getSerializableExtra(ADD_EDIT_FOOD_ITEM);
-        if(foodItem != null) {
+        FoodItem foodItem = (FoodItem) intent.getSerializableExtra(FoodItem.class.getSimpleName());
+        if (foodItem != null) {
             mEditMode = true;
+
+            // Verify: the fragment that will receive the food item is capable of receiving data
+            Fragment fragment = getSupportFragmentManager().getFragments().get(0);
+            if (!(fragment instanceof PassActivityDataToFragment)) {
+                throw new ClassCastException(fragment.getClass().getSimpleName()
+                        + " must implement PassActivityDataToFragment interface");
+            } else {
+                PassActivityDataToFragment callback = (PassActivityDataToFragment) fragment;
+                callback.receiveData(foodItem);
+            }
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle((mEditMode) ? "Edit Item:" : "Create Item:");
         getSupportActionBar().setElevation(0);
+        Log.d(TAG, "onCreate: ends");
     }
 
     @Override

@@ -10,9 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -108,7 +105,7 @@ class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAda
             mFoodItem = item;
             // TODO Handle changing row icon to match category
             text.setText(mFoodItem.getName());
-            time.setText(utilFormatTime(mFoodItem.getTime(), "HH:mm"));
+            time.setText(MainActivity.utilFormatTime(mFoodItem.getTime(), "HH:mm"));
         }
     }
 
@@ -136,8 +133,12 @@ class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAda
                 throw new IllegalStateException("Couldn't move cursor to position " + position);
             }
 
-            final FoodItem row = new FoodItem(mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns.FOOD_ITEM)),
+            final FoodItem row = new FoodItem(mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns._ID)),
+                    mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns.FOOD_ITEM)),
                     mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.HOUR)),
+                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.DAY)),
+                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.MONTH)),
+                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)),
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.CATEGORY_ID)));
             holder.setFoodItem(row);
 
@@ -184,19 +185,6 @@ class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAda
         }
 
         return oldCursor;
-    }
-
-    /**
-     * Utility method for converting time in Epoch format to
-     * a formatted String.
-     *
-     * @param time       long, representing time as seconds since Epoch
-     * @param timeFormat String format for return value
-     * @return String for time formatted
-     */
-    private static String utilFormatTime(long time, String timeFormat) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(timeFormat);
-        return dateFormat.format(new Date(time * Constants.MILLISECONDS));
     }
 }
 

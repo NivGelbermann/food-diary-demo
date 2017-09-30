@@ -15,8 +15,10 @@ import android.view.View;
 
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
     Toolbar toolbar;
     @BindView(R.id.pager)
     ViewPager viewPager;
-    @BindView(R.id.fab)
+    @BindView(R.id.main_fab)
     FloatingActionButton fab;
     @BindView(R.id.recycler_tab_layout)
     RecyclerTabLayout recyclerTabLayout;
@@ -106,6 +108,17 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
 
     @Override
     public void onFoodItemClicked(FoodItem item) {
+//        AddEditActivityFragment fragment = new AddEditActivityFragment();
+//
+//        Bundle arguments = new Bundle();
+//        arguments.putSerializable(FoodItem.class.getSimpleName(), item);
+//        fragment.setArguments(arguments);
+//
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.add(R.id.add_edit_fragment, fragment);
+//        fragmentTransaction.commit();
+
         utilStartAddEditActivity(item);
     }
 
@@ -163,9 +176,22 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
 
         Intent addEditIntent = new Intent(this, AddEditActivity.class);
         if (item != null) {
-            addEditIntent.putExtra(AddEditActivity.ADD_EDIT_FOOD_ITEM, item);
+            addEditIntent.putExtra(FoodItem.class.getSimpleName(), item);
         }
         startActivity(addEditIntent);
+    }
+
+    /**
+     * Utility method for converting time in Epoch format to
+     * a formatted String.
+     *
+     * @param time       long, representing time as seconds since Epoch
+     * @param timeFormat String format for return value
+     * @return String for time formatted
+     */
+    public static String utilFormatTime(long time, String timeFormat) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(timeFormat);
+        return dateFormat.format(new Date(time * Constants.MILLISECONDS));
     }
 }
 

@@ -19,6 +19,9 @@
     <string name="add_edit_recyclerview_item_category">Category</string>
     <string name="add_edit_recyclerview_item_date">Date</string>
     <string name="add_edit_recyclerview_item_time">Time</string>
+    <string name="add_edit_item_category">Category</string>
+    <string name="add_edit_item_date">Date</string>
+    <string name="add_edit_item_time">Time</string>
     <string name="title_activity_add_edit">AddEditActivity</string>
     <!--<string name="add_edit_ic_category_contdesc">Icon representing the food category to which this item belongs</string>-->
     <!--<string name="add_edit_ic_date_contdesc">Icon representing the date at which this item was consumed</string>-->
