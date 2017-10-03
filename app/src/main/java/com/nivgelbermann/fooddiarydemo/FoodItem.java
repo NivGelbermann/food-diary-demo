@@ -2,7 +2,10 @@ package com.nivgelbermann.fooddiarydemo;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+
+import static com.nivgelbermann.fooddiarydemo.Constants.MILLISECONDS;
 
 /**
  * Created by Niv on 14-Sep-17.
@@ -14,13 +17,17 @@ public class FoodItem implements Serializable {
     // 14-09-2017
     private static final long serialVersionUID = -931179032962101040L;
 
-    private final String m_Id;
-    private final String mName;
-    private final long mTime;
-    private final int mDay;
-    private final int mMonth;
-    private final int mYear;
-    private final int mCategory;
+    private String m_Id;
+    private String mName;
+    private long mTime;
+    private int mDay;
+    private int mMonth;
+    private int mYear;
+    private int mCategory;
+
+    public FoodItem() {
+        // Initialize an empty FoodItem, to be manually filled in
+    }
 
     public FoodItem(String id, String name, long time, int day, int month, int year) {
 //    public FoodItem(long id, String name, long time) {
@@ -74,6 +81,36 @@ public class FoodItem implements Serializable {
         return mCategory;
     }
 
+    public Calendar getCalendarDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mYear, mMonth, mDay);
+        return calendar;
+    }
+
+    public Calendar getCalendarTime() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(mTime);
+        return calendar;
+    }
+
+    public void setId(String id) {
+        m_Id = id;
+    }
+
+    public void setName(String name) {
+        mName = name;
+    }
+
+    public void setDate(int year, int monthOfYear, int dayOfMonth) {
+        mYear = year;
+        mMonth = monthOfYear;
+        mDay = dayOfMonth;
+    }
+
+    public void setTime(long time) {
+        mTime = time;
+    }
+
     /**
      * Utility method for converting time in Epoch format to
      * a formatted String.
@@ -84,7 +121,7 @@ public class FoodItem implements Serializable {
      */
     public String getFormattedTime(long time, String timeFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(timeFormat);
-        return dateFormat.format(new Date(time * Constants.MILLISECONDS));
+        return dateFormat.format(new Date(time * MILLISECONDS));
     }
 
     @Override
@@ -98,5 +135,17 @@ public class FoodItem implements Serializable {
                 ", year=" + mYear +
                 ", category=" + mCategory +
                 '}';
+    }
+
+    /**
+     * Verify all of FoodItem object's parameters are set and valid.
+     * @return true if valid, otherwise false.
+     */
+    public boolean isValid() {
+        if (mName == null || mName.trim().isEmpty()
+                || mTime == 0L || mDay == 0 || mMonth == 0 || mYear == 0 || mCategory < 0) {
+            return false;
+        }
+        return true;
     }
 }

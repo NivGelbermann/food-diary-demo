@@ -44,7 +44,7 @@ public class FoodsContract {
     static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + CONTENT_AUTHORITY + "." + TABLE_NAME;
     static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + CONTENT_AUTHORITY + "." + TABLE_NAME;
 
-    static Uri buildTaskUri(long taskId) {
+    static Uri buildFoodItemUri(long taskId) {
         return ContentUris.withAppendedId(CONTENT_URI, taskId);
     }
 

@@ -15,3 +15,6 @@ https://github.com/konifar/android-material-design-icon-generator-plugin
 
 google's material icons
 https://material.io/icons/
+
+wdullaer's material date time picker
+https://github.com/wdullaer/MaterialDateTimePicker

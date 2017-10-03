@@ -30,9 +30,9 @@
     <string name="add_edit_home_button_error">An error has occurred, changes have not been saved</string>
     <string name="add_edit_name_input_error">No name was entered</string>
     <string name="title_activity_add_edit">AddEditActivity</string>
-    <string name="add_edit_category_header">CATEGORY</string>
-    <string name="add_edit_date_header">DATE</string>
-    <string name="add_edit_time_header">TIME</string>
+    <string name="add_edit_category_header">Category</string>
+    <string name="add_edit_date_header">Date</string>
+    <string name="add_edit_time_header">Time</string>
     <string name="add_edit_category_ic_contdesc">Icon representing the food category to which this item belongs</string>
     <string name="add_edit_category_header_contdesc">Icon representing the food category to which this item belongs</string>
     <string name="add_edit_category_content_contdesc">Icon representing the food category to which this item belongs</string>

@@ -123,7 +123,7 @@ public class AppProvider extends ContentProvider {
                 db = mOpenHelper.getWritableDatabase();
                 recordId = db.insert(FoodsContract.TABLE_NAME, null, values);
                 if (recordId >= 0) {
-                    returnUri = FoodsContract.buildTaskUri(recordId);
+                    returnUri = FoodsContract.buildFoodItemUri(recordId);
                 } else {
                     throw new android.database.SQLException("Failed to insert into " + uri.toString());
                 }
