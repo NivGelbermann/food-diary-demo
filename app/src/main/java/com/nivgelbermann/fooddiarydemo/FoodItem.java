@@ -89,7 +89,7 @@ public class FoodItem implements Serializable {
 
     public Calendar getCalendarTime() {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(mTime);
+        calendar.setTimeInMillis(mTime * MILLISECONDS);
         return calendar;
     }
 

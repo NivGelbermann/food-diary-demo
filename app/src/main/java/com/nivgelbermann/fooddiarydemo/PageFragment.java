@@ -65,9 +65,17 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         mMonth = pagePosition % Constants.MONTHS_A_YEAR;
     }
 
+//    @Override
+//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        getLoaderManager().initLoader(OUTER_LOADER_ID, null, this);
+//        getLoaderManager().initLoader(INNER_LOADER_ID, null, this);
+//    }
+
+
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onResume() {
+        super.onResume();
         getLoaderManager().initLoader(OUTER_LOADER_ID, null, this);
         getLoaderManager().initLoader(INNER_LOADER_ID, null, this);
     }

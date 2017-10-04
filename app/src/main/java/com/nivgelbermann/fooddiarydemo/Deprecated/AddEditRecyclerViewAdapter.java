@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo;
+package com.nivgelbermann.fooddiarydemo.Deprecated;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nivgelbermann.fooddiarydemo.FoodItem;
+import com.nivgelbermann.fooddiarydemo.MainActivity;
+import com.nivgelbermann.fooddiarydemo.R;
 
 import java.security.InvalidParameterException;
 

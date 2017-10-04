@@ -2,6 +2,7 @@ package com.nivgelbermann.fooddiarydemo;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -63,16 +64,6 @@ public class AddEditActivityFragment extends Fragment
             Calendar now = Calendar.getInstance();
             mFoodItem.setDate(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
             mFoodItem.setTime(now.getTimeInMillis() / Constants.MILLISECONDS);
-
-//            // Add mode - display instructions
-//            categoryContent.setText(getResources().getString(R.string.add_edit_recyclerview_item_category_message));
-//            dateContent.setText(getResources().getString(R.string.add_edit_recyclerview_item_date_message));
-//            timeContent.setText(getResources().getString(R.string.add_edit_recyclerview_item_time_message));
-//
-//        } else {
-//            // Edit mode - display item's details
-//            utilDisplayFoodItem();
-//        }
         }
         utilDisplayFoodItem();
 
@@ -103,17 +94,21 @@ public class AddEditActivityFragment extends Fragment
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         mFoodItem.setDate(year, monthOfYear, dayOfMonth);
+
+        dateContent.setText(mFoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
+        Log.d(TAG, "onCreateView: date: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
     }
 
     @Override
     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
         Calendar calendar = Calendar.getInstance();
-        if (mEditMode) {
-            calendar.set(mFoodItem.getYear(), mFoodItem.getMonth(), mFoodItem.getDay(), hourOfDay, minute, second);
-
-        }
+        calendar.set(mFoodItem.getYear(), mFoodItem.getMonth(), mFoodItem.getDay(), hourOfDay, minute, second);
         mFoodItem.setTime(calendar.getTimeInMillis() / Constants.MILLISECONDS);
+
         // Might cause errors when trying to set the time before/without setting the date
+
+        timeContent.setText(mFoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
+        Log.d(TAG, "onCreateView: time: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
     }
 
     /**
@@ -147,11 +142,16 @@ public class AddEditActivityFragment extends Fragment
         dateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar now = Calendar.getInstance();
+                Calendar calendar;
+                if(!mEditMode) {
+                    calendar = Calendar.getInstance();
+                } else {
+                    calendar = mFoodItem.getCalendarDate();
+                }
                 DatePickerDialog picker = DatePickerDialog.newInstance(AddEditActivityFragment.this,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH));
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH));
                 picker.show(getActivity().getFragmentManager(), DATE_PICKER_TAG);
             }
         });
@@ -159,11 +159,16 @@ public class AddEditActivityFragment extends Fragment
         timeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar now = Calendar.getInstance();
+                Calendar calendar;
+                if(!mEditMode) {
+                    calendar = Calendar.getInstance();
+                } else {
+                    calendar = mFoodItem.getCalendarTime();
+                }
                 TimePickerDialog picker = TimePickerDialog.newInstance(AddEditActivityFragment.this,
-                        now.get(Calendar.HOUR_OF_DAY),
-                        now.get(Calendar.MINUTE),
-                        now.get(Calendar.SECOND),
+                        calendar.get(Calendar.HOUR_OF_DAY),
+                        calendar.get(Calendar.MINUTE),
+                        0,
                         mMode24Hours);
                 picker.show(getActivity().getFragmentManager(), TIME_PICKER_TAG);
             }
@@ -172,8 +177,6 @@ public class AddEditActivityFragment extends Fragment
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "fab clicked", Toast.LENGTH_SHORT).show();
-
                 // If no name was entered, display error to user
                 // and consume click event
                 String name = input.getText().toString();
@@ -186,31 +189,41 @@ public class AddEditActivityFragment extends Fragment
                 mFoodItem.setName(name);
 
                 ContentResolver contentResolver = getContext().getContentResolver();
+                ContentValues values = new ContentValues();
+                values.put(FoodsContract.Columns.FOOD_ITEM, mFoodItem.getName());
+                values.put(FoodsContract.Columns.YEAR, mFoodItem.getYear());
+                values.put(FoodsContract.Columns.MONTH, mFoodItem.getMonth());
+                values.put(FoodsContract.Columns.DAY, mFoodItem.getDay());
+                values.put(FoodsContract.Columns.HOUR, mFoodItem.getTime());
+                values.put(FoodsContract.Columns.CATEGORY_ID, mFoodItem.getCategory());
 
                 if (mFoodItem.isValid()) {
                     if (mEditMode) {
-                        // If in edit mode - implement editing an item
-
                         // Item changes should have been made by user via pickers and dialogs.
-                        // Query the db to find if an item identical to mFoodItem exists
-                        // (meaning no changes have been made)
+                        // Query the DB to find the food item to be edited,
                         // and update DB accordingly.
+
+                        Cursor cursor = contentResolver.query(FoodsContract.CONTENT_URI,
+                                new String[]{FoodsContract.Columns._ID},
+                                "_id=?",
+                                new String[] {mFoodItem.getId()},
+                                null);
+
+                        if((cursor==null) || (!cursor.moveToFirst())) {
+                            // Cursor wasn't returned or matching item wasn't found
+                            Toast.makeText(getContext(),
+                                    getResources().getString(R.string.add_edit_home_button_error),
+                                    Toast.LENGTH_LONG).show();
+                            Log.d(TAG, "FAB.onClick: a match in the DB wasn't found for the food item loaded in edit mode. Exiting AddEditActivity.");
+                            getActivity().onBackPressed();
+                        } else {
+                            long itemId = cursor.getLong(cursor.getColumnIndex(FoodsContract.Columns._ID));
+                            cursor.close();
+                            contentResolver.update(FoodsContract.buildFoodItemUri(itemId), values, null, null);
+                        }
                     } else {
-                        // Verify mFoodItem has all its properties set
-                        // and insert into DB.
-
-                        ContentValues values = new ContentValues();
-                        values.put(FoodsContract.Columns.FOOD_ITEM, mFoodItem.getName());
-                        values.put(FoodsContract.Columns.YEAR, mFoodItem.getYear());
-                        values.put(FoodsContract.Columns.MONTH, mFoodItem.getMonth());
-                        values.put(FoodsContract.Columns.DAY, mFoodItem.getDay());
-                        values.put(FoodsContract.Columns.HOUR, mFoodItem.getTime());
-                        values.put(FoodsContract.Columns.CATEGORY_ID, mFoodItem.getCategory());
-
+                        // Insert new record into DB.
                         contentResolver.insert(FoodsContract.CONTENT_URI, values);
-
-                        // =======================================================================================================
-                        // Make sure MainActivity refreshes
                     }
                 }
 

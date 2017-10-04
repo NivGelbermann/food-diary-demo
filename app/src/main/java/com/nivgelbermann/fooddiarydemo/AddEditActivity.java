@@ -12,8 +12,6 @@ import android.widget.Toast;
 public class AddEditActivity extends AppCompatActivity {
     private static final String TAG = "AddEditActivity";
 
-    private boolean mEditMode = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate: starts");
@@ -22,11 +20,13 @@ public class AddEditActivity extends AppCompatActivity {
 
         // TODO Pass onto activity the tab (month) from which it was opened (to re-open in MainActivity)
 
+        boolean editMode = false;
+
         // Receive food item (if exists) from parent activity
         Intent intent = getIntent();
         FoodItem foodItem = (FoodItem) intent.getSerializableExtra(FoodItem.class.getSimpleName());
         if (foodItem != null) {
-            mEditMode = true;
+            editMode = true;
 
             // Verify: the fragment that will receive the food item is capable of receiving data
             Fragment fragment = getSupportFragmentManager().getFragments().get(0);
@@ -40,7 +40,7 @@ public class AddEditActivity extends AppCompatActivity {
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle((mEditMode) ? "Edit Item:" : "Create Item:");
+        getSupportActionBar().setTitle((editMode) ? "Edit Item:" : "Create Item:");
         getSupportActionBar().setElevation(0);
         Log.d(TAG, "onCreate: ends");
     }
