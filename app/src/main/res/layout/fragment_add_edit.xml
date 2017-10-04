@@ -24,7 +24,7 @@
         android:scrollbars="none">
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/add_edit_constraint_ayout"
+            android:id="@+id/add_edit_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"

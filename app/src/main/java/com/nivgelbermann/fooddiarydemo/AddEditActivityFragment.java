@@ -9,6 +9,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -69,8 +72,73 @@ public class AddEditActivityFragment extends Fragment
 
         utilSetOnClickListeners();
 
+        setHasOptionsMenu(true);
+
         Log.d(TAG, "onCreateView: ends");
         return view;
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_add_edit, menu);
+        if (!mEditMode) {
+            // TODO Hide delete button
+            menu.getItem(1).setVisible(false);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        switch (id) {
+            case R.id.menu_addedit_cancel:
+                getActivity().onBackPressed();
+                break;
+
+            case R.id.menu_addedit_delete:
+                // TODO Try to make a utility method for this and the fab OnClickListener
+
+                ContentResolver contentResolver = getContext().getContentResolver();
+                Cursor cursor = contentResolver.query(FoodsContract.CONTENT_URI,
+                        new String[]{FoodsContract.Columns._ID},
+                        "_id=?",
+                        new String[]{mFoodItem.getId()},
+                        null);
+                if ((cursor == null) || (!cursor.moveToFirst())) {
+                    // Cursor wasn't returned or matching item wasn't found
+                    Toast.makeText(getContext(),
+                            getResources().getString(R.string.add_edit_home_button_error),
+                            Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "Menu.Delete.onClick: a match in the DB wasn't found for the food item loaded in edit mode. Exiting AddEditActivity.");
+
+                } else {
+                    long itemId = cursor.getLong(cursor.getColumnIndex(FoodsContract.Columns._ID));
+                    cursor.close();
+                    contentResolver.delete(FoodsContract.buildFoodItemUri(itemId), null, null);
+
+                    // TODO Display confirmation dialog
+                }
+                getActivity().onBackPressed();
+                break;
+
+            // Handles home-button behaviour in pre-21sdk
+            case android.R.id.home:
+                getActivity().onBackPressed();
+                break;
+
+            default:
+//                throw new InvalidParameterException(TAG + ".onOptionsItemSelected called with invalid MenuItem " + item.getTitle());
+                Toast.makeText(getContext(), R.string.add_edit_home_button_error, Toast.LENGTH_LONG).show();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -143,7 +211,7 @@ public class AddEditActivityFragment extends Fragment
             @Override
             public void onClick(View view) {
                 Calendar calendar;
-                if(!mEditMode) {
+                if (!mEditMode) {
                     calendar = Calendar.getInstance();
                 } else {
                     calendar = mFoodItem.getCalendarDate();
@@ -160,7 +228,7 @@ public class AddEditActivityFragment extends Fragment
             @Override
             public void onClick(View view) {
                 Calendar calendar;
-                if(!mEditMode) {
+                if (!mEditMode) {
                     calendar = Calendar.getInstance();
                 } else {
                     calendar = mFoodItem.getCalendarTime();
@@ -206,10 +274,10 @@ public class AddEditActivityFragment extends Fragment
                         Cursor cursor = contentResolver.query(FoodsContract.CONTENT_URI,
                                 new String[]{FoodsContract.Columns._ID},
                                 "_id=?",
-                                new String[] {mFoodItem.getId()},
+                                new String[]{mFoodItem.getId()},
                                 null);
 
-                        if((cursor==null) || (!cursor.moveToFirst())) {
+                        if ((cursor == null) || (!cursor.moveToFirst())) {
                             // Cursor wasn't returned or matching item wasn't found
                             Toast.makeText(getContext(),
                                     getResources().getString(R.string.add_edit_home_button_error),
