@@ -2,6 +2,7 @@ package com.nivgelbermann.fooddiarydemo;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -33,7 +34,6 @@ public class AddEditActivityFragment extends Fragment
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener {
     private static final String TAG = "AddEditActivityFragment";
-
     private static final String DATE_PICKER_TAG = "DatePickerDialog";
     private static final String TIME_PICKER_TAG = "TimePickerDialog";
 
@@ -69,9 +69,7 @@ public class AddEditActivityFragment extends Fragment
             mFoodItem.setTime(now.getTimeInMillis() / Constants.MILLISECONDS);
         }
         utilDisplayFoodItem();
-
         utilSetOnClickListeners();
-
         setHasOptionsMenu(true);
 
         Log.d(TAG, "onCreateView: ends");
@@ -84,8 +82,8 @@ public class AddEditActivityFragment extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_add_edit, menu);
         if (!mEditMode) {
-            // TODO Hide delete button
             menu.getItem(1).setVisible(false);
+            menu.getItem(2).setVisible(false);
         }
     }
 
@@ -99,45 +97,39 @@ public class AddEditActivityFragment extends Fragment
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.menu_addedit_cancel:
-                getActivity().onBackPressed();
+                // Do nothing (activity's onBackPressed is called after switch statement)
+                break;
+
+            case R.id.menu_addedit_share:
+                // TODO Somehow deletes items!!!! Try sharing while watching logcat
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT,
+                        getResources().getString(R.string.add_edit_share_item_info,
+                                mFoodItem.getName(),
+                                String.valueOf(mFoodItem.getCategory()),
+                                FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"))); //TODO Make getFormattedTime static + revise all method calls
+                shareIntent.setType("text/plain");
+                startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.add_edit_share_chooser_header)));
                 break;
 
             case R.id.menu_addedit_delete:
-                // TODO Try to make a utility method for this and the fab OnClickListener
-
                 ContentResolver contentResolver = getContext().getContentResolver();
-                Cursor cursor = contentResolver.query(FoodsContract.CONTENT_URI,
-                        new String[]{FoodsContract.Columns._ID},
-                        "_id=?",
-                        new String[]{mFoodItem.getId()},
-                        null);
-                if ((cursor == null) || (!cursor.moveToFirst())) {
-                    // Cursor wasn't returned or matching item wasn't found
-                    Toast.makeText(getContext(),
-                            getResources().getString(R.string.add_edit_home_button_error),
-                            Toast.LENGTH_LONG).show();
-                    Log.d(TAG, "Menu.Delete.onClick: a match in the DB wasn't found for the food item loaded in edit mode. Exiting AddEditActivity.");
-
-                } else {
-                    long itemId = cursor.getLong(cursor.getColumnIndex(FoodsContract.Columns._ID));
-                    cursor.close();
-                    contentResolver.delete(FoodsContract.buildFoodItemUri(itemId), null, null);
-
-                    // TODO Display confirmation dialog
-                }
+                utilUpdateDeleteItem(contentResolver, null);
                 getActivity().onBackPressed();
                 break;
 
             // Handles home-button behaviour in pre-21sdk
             case android.R.id.home:
-                getActivity().onBackPressed();
+                // Do nothing (activity's onBackPressed is called after switch statement)
                 break;
 
             default:
 //                throw new InvalidParameterException(TAG + ".onOptionsItemSelected called with invalid MenuItem " + item.getTitle());
-                Toast.makeText(getContext(), R.string.add_edit_home_button_error, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.add_edit_general_error, Toast.LENGTH_LONG).show();
         }
 
+        getActivity().onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
@@ -161,22 +153,24 @@ public class AddEditActivityFragment extends Fragment
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        // Update mFoodItem
         mFoodItem.setDate(year, monthOfYear, dayOfMonth);
 
+        // Update display
         dateContent.setText(mFoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
-        Log.d(TAG, "onCreateView: date: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
+        Log.d(TAG, "onDateSet: date: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
     }
 
     @Override
     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+        // Update mFoodItem
         Calendar calendar = Calendar.getInstance();
         calendar.set(mFoodItem.getYear(), mFoodItem.getMonth(), mFoodItem.getDay(), hourOfDay, minute, second);
         mFoodItem.setTime(calendar.getTimeInMillis() / Constants.MILLISECONDS);
 
-        // Might cause errors when trying to set the time before/without setting the date
-
+        // Update display
         timeContent.setText(mFoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
-        Log.d(TAG, "onCreateView: time: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
+        Log.d(TAG, "onTimeSet: time: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
     }
 
     /**
@@ -185,12 +179,12 @@ public class AddEditActivityFragment extends Fragment
      */
     private void utilDisplayFoodItem() {
         categoryContent.setText(String.valueOf(mFoodItem.getCategory()));
-        Log.d(TAG, "onCreateView: category: " + mFoodItem.getCategory());
+        Log.d(TAG, "utilDisplayFoodItem: category: " + mFoodItem.getCategory());
         dateContent.setText(mFoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
-        Log.d(TAG, "onCreateView: date: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
+        Log.d(TAG, "utilDisplayFoodItem: date: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
 //        dateContent.setText(String.valueOf(mFoodItem.getDay()) + "/" + String.valueOf(mFoodItem.getMonth()+1) + "/" + String.valueOf(mFoodItem.getYear()));
         timeContent.setText(mFoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
-        Log.d(TAG, "onCreateView: time: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
+        Log.d(TAG, "utilDisplayFoodItem: time: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
     }
 
     /**
@@ -267,28 +261,7 @@ public class AddEditActivityFragment extends Fragment
 
                 if (mFoodItem.isValid()) {
                     if (mEditMode) {
-                        // Item changes should have been made by user via pickers and dialogs.
-                        // Query the DB to find the food item to be edited,
-                        // and update DB accordingly.
-
-                        Cursor cursor = contentResolver.query(FoodsContract.CONTENT_URI,
-                                new String[]{FoodsContract.Columns._ID},
-                                "_id=?",
-                                new String[]{mFoodItem.getId()},
-                                null);
-
-                        if ((cursor == null) || (!cursor.moveToFirst())) {
-                            // Cursor wasn't returned or matching item wasn't found
-                            Toast.makeText(getContext(),
-                                    getResources().getString(R.string.add_edit_home_button_error),
-                                    Toast.LENGTH_LONG).show();
-                            Log.d(TAG, "FAB.onClick: a match in the DB wasn't found for the food item loaded in edit mode. Exiting AddEditActivity.");
-                            getActivity().onBackPressed();
-                        } else {
-                            long itemId = cursor.getLong(cursor.getColumnIndex(FoodsContract.Columns._ID));
-                            cursor.close();
-                            contentResolver.update(FoodsContract.buildFoodItemUri(itemId), values, null, null);
-                        }
+                        utilUpdateDeleteItem(contentResolver, values);
                     } else {
                         // Insert new record into DB.
                         contentResolver.insert(FoodsContract.CONTENT_URI, values);
@@ -297,11 +270,37 @@ public class AddEditActivityFragment extends Fragment
 
                 getActivity().onBackPressed();
             }
-
-            // TODO If mFoodItem is unnecessary here, do the following:
-            // A) change it to an instance variable in receiveData()
-            // B) change utilDisplayFoodItem to receive a FoodItem object
-            // C) and delete the member variable mFoodItem
         });
+    }
+
+    /**
+     * Utility method for simplifying the edit and delete functionality code.
+     *
+     * @param resolver ContentResolver for this method to use.
+     * @param values ContentValues for to update if in edit mode. Otherwise pass Null (to delete).
+     */
+    private void utilUpdateDeleteItem(ContentResolver resolver, ContentValues values) {
+        Cursor cursor = resolver.query(FoodsContract.CONTENT_URI,
+                new String[]{FoodsContract.Columns._ID},
+                "_id=?",
+                new String[]{mFoodItem.getId()},
+                null);
+
+        if ((cursor == null) || (!cursor.moveToFirst())) {
+            // Cursor wasn't returned or matching item wasn't found
+            Toast.makeText(getContext(),
+                    getResources().getString(R.string.add_edit_general_error),
+                    Toast.LENGTH_LONG).show();
+            String errorSource = (values == null) ? "Menu.Delete" : "FAB";
+            Log.d(TAG, errorSource + ".onClick: a match in the DB wasn't found for the food item loaded in edit mode. Exiting AddEditActivity.");
+        } else {
+            long itemId = cursor.getLong(cursor.getColumnIndex(FoodsContract.Columns._ID));
+            cursor.close();
+            if (values != null) {
+                resolver.update(FoodsContract.buildFoodItemUri(itemId), values, null, null);
+            } else {
+                resolver.delete(FoodsContract.buildFoodItemUri(itemId), null, null);
+            }
+        }
     }
 }

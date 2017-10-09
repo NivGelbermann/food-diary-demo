@@ -158,15 +158,22 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.d(TAG, "onLoadFinished: starts");
+//        Log.d(TAG, "onLoadFinished: starts");
+//        Log.d(TAG, "onLoadFinished: " + mMonth + "/" + mYear + " finished with id: " + id);
+
+        if (data == null) {
+            throw new InvalidParameterException(TAG + ".onLoadFinished called with null cursor");
+        }
 
         switch (loader.getId()) {
             case OUTER_LOADER_ID:
+                Log.d(TAG, "onLoadFinished: " + mMonth + "/" + mYear + " starts with id OUTER_LOADER_ID");
                 mAdapter.swapCursor(data);
 //                int count = mAdapter.getItemCount();
                 break;
 
             case INNER_LOADER_ID:
+                Log.d(TAG, "onLoadFinished: " + mMonth + "/" + mYear + " starts with id INNER_LOADER_ID");
                 Log.d(TAG, "onLoadFinished: swapping inner cursors");
                 mAdapter.swapInnerCursors(data);
 //                int count = mAdapter.getInnerAdaptersCount();
@@ -177,7 +184,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         }
 
 //        Log.d(TAG, "onLoadFinished: ends with count: " + count);
-        Log.d(TAG, "onLoadFinished: ends");
+        Log.d(TAG, "onLoadFinished: ends with item count: " + mAdapter.getItemCount());
     }
 
     @Override

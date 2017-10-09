@@ -119,7 +119,7 @@ public class FoodItem implements Serializable {
      * @param timeFormat String format for return value
      * @return String for time formatted
      */
-    public String getFormattedTime(long time, String timeFormat) {
+    public static String getFormattedTime(long time, String timeFormat) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(timeFormat);
         return dateFormat.format(new Date(time * MILLISECONDS));
     }

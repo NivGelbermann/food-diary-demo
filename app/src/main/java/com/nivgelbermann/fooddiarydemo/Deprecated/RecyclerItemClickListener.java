@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo;
+package com.nivgelbermann.fooddiarydemo.Deprecated;
 
 import android.content.Context;
 import android.support.v4.view.GestureDetectorCompat;

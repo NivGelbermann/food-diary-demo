@@ -89,6 +89,7 @@ class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAda
         InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(mContext,
                 (InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener) mContext);
 //        Log.d(TAG, "onBindViewHolder: adding adapter: " + mInnerAdapters.add(adapter));
+        mInnerAdapters.add(adapter);
         holder.innerRecyclerView.setAdapter(adapter);
 
         // By default, the inner loader in PageFragment has finished loading
@@ -121,7 +122,9 @@ class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAda
      * Cursor, null is also returned.
      */
     Cursor swapCursor(Cursor newCursor) {
+        Log.d(TAG, "swapCursor: starts");
         if (newCursor == mCursor) {
+            Log.d(TAG, "swapCursor: ends, returning null because cursor hasn't changed");
             return null;
         }
 
@@ -134,6 +137,7 @@ class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAda
             // Notify the observers about the lack of a data set
             notifyItemRangeRemoved(0, getItemCount());
         }
+        Log.d(TAG, "swapCursor: ends, returning old cursor");
         return oldCursor;
     }
 
@@ -144,6 +148,7 @@ class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAda
             oldCursor = adapter.swapCursor(newCursor);
         }
         mInnerCursor = newCursor;
+        Log.d(TAG, "swapInnerCursors: ends");
         return oldCursor;
     }
 

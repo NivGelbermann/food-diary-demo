@@ -26,8 +26,8 @@
     <string name="add_edit_recyclerview_item_date_message">Tap to select date</string>
     <string name="add_edit_recyclerview_item_time">Time</string>
     <string name="add_edit_recyclerview_item_time_message">Tap to select time</string>
-
-    <string name="add_edit_home_button_error">An error has occurred, changes have not been saved</string>
+    <!-- <string name="add_edit_home_button_error">An error has occurred, changes have not been saved</string> -->
+    <string name="add_edit_general_error">An error has occurred, changes have not been saved</string>
     <string name="add_edit_name_input_error">No name was entered</string>
     <string name="title_activity_add_edit">AddEditActivity</string>
     <string name="add_edit_category_header">Category</string>
@@ -42,4 +42,7 @@
     <string name="add_edit_time_ic_contdesc">Icon representing the time of the day at which this item was consumed</string>
     <string name="add_edit_time_header_contdesc">Icon representing the time of the day at which this item was consumed</string>
     <string name="add_edit_time_content_contdesc">Icon representing the time of the day at which this item was consumed</string>
+    <string name="add_edit_share_chooser_header">Share via...</string>
+    <string name="add_edit_share_item_info">Name: %1$s\nCategory: %2$s\nDate and time: %3$s</string>
+
 </resources>

@@ -168,6 +168,7 @@ class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAda
     Cursor swapCursor(Cursor newCursor) {
         Log.d(TAG, "swapCursor: starts");
         if (newCursor == mCursor) {
+            Log.d(TAG, "swapCursor: ends, returning null because cursor hasn't changed");
             return null;
         }
 
@@ -181,6 +182,7 @@ class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAda
             notifyItemRangeRemoved(0, getItemCount());
         }
 
+        Log.d(TAG, "swapCursor: ends, returning old cursor");
         return oldCursor;
     }
 }

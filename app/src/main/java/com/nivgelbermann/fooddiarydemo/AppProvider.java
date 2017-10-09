@@ -83,9 +83,11 @@ public class AppProvider extends ContentProvider {
         }
 
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
-        return queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+        Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
+        // Set this cursor to listen for DB content changes
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
     }
-
 
 
     @Nullable
@@ -135,6 +137,15 @@ public class AppProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
 
+        db.close();
+        if (recordId >= 0) {
+            // If something was inserted, notify any listeners about changes
+            Log.d(TAG, "insert: settings notifyChanged with: " + uri);
+            getContext().getContentResolver().notifyChange(uri, null);
+        } else {
+            Log.d(TAG, "insert: nothing inserted");
+        }
+
         Log.d(TAG, "Exiting insert, returning " + returnUri);
         return returnUri;
     }
@@ -161,7 +172,7 @@ public class AppProvider extends ContentProvider {
                 long foodId = FoodsContract.getFoodId(uri);
                 selectionCriteria = FoodsContract.Columns._ID + " = " + foodId;
 
-                if(selection != null && selection.length()>0) {
+                if (selection != null && selection.length() > 0) {
                     selectionCriteria += " AND (" + selection + ")";
                 }
                 count = db.delete(FoodsContract.TABLE_NAME, selectionCriteria, selectionArgs);
@@ -170,6 +181,16 @@ public class AppProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
+
+        db.close();
+        if (count > 0) {
+            // If something was deleted, notify any listeners about changes
+            Log.d(TAG, "delete: setting notifyChange with: " + uri);
+            getContext().getContentResolver().notifyChange(uri, null);
+        } else {
+            Log.d(TAG, "delete: nothing deleted");
+        }
+
         Log.d(TAG, "Exiting delete, returning " + count);
         return count;
     }
@@ -196,7 +217,7 @@ public class AppProvider extends ContentProvider {
                 long foodId = FoodsContract.getFoodId(uri);
                 selectionCriteria = FoodsContract.Columns._ID + " = " + foodId;
 
-                if(selection != null && selection.length()>0) {
+                if (selection != null && selection.length() > 0) {
                     selectionCriteria += " AND (" + selection + ")";
                 }
                 count = db.update(FoodsContract.TABLE_NAME, values, selectionCriteria, selectionArgs);
@@ -205,6 +226,16 @@ public class AppProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
+
+        db.close();
+        if (count > 0) {
+            // If something was updated, notify any listeners about changes
+            Log.d(TAG, "update: setting notifyChange with: " + uri);
+            getContext().getContentResolver().notifyChange(uri, null);
+        } else {
+            Log.d(TAG, "update: nothing updated");
+        }
+
         Log.d(TAG, "Exiting update, returning " + count);
         return count;
     }
