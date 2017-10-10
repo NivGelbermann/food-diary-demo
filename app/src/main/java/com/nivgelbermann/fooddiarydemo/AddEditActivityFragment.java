@@ -80,10 +80,13 @@ public class AddEditActivityFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_add_edit, menu);
-        if (!mEditMode) {
-            menu.getItem(1).setVisible(false);
-            menu.getItem(2).setVisible(false);
+//        inflater.inflate(R.menu.menu_add_edit, menu);
+//        if (!mEditMode) {
+//            menu.getItem(1).setVisible(false);
+//            menu.getItem(2).setVisible(false);
+//        }
+        if(mEditMode) {
+            inflater.inflate(R.menu.menu_add_edit, menu);
         }
     }
 
@@ -96,9 +99,9 @@ public class AddEditActivityFragment extends Fragment
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.menu_addedit_cancel:
-                // Do nothing (activity's onBackPressed is called after switch statement)
-                break;
+//            case R.id.menu_addedit_cancel:
+//                // Do nothing (activity's finish method is called after switch statement)
+//                break;
 
             case R.id.menu_addedit_share:
                 // TODO Somehow deletes items!!!! Try sharing while watching logcat
@@ -116,20 +119,20 @@ public class AddEditActivityFragment extends Fragment
             case R.id.menu_addedit_delete:
                 ContentResolver contentResolver = getContext().getContentResolver();
                 utilUpdateDeleteItem(contentResolver, null);
-                getActivity().onBackPressed();
                 break;
 
             // Handles home-button behaviour in pre-21sdk
             case android.R.id.home:
-                // Do nothing (activity's onBackPressed is called after switch statement)
+//                NavUtils.navigateUpFromSameTask(getActivity());
+                // Do nothing (activity's finish method is called after switch statement)
                 break;
 
             default:
 //                throw new InvalidParameterException(TAG + ".onOptionsItemSelected called with invalid MenuItem " + item.getTitle());
                 Toast.makeText(getContext(), R.string.add_edit_general_error, Toast.LENGTH_LONG).show();
         }
+        getActivity().finish();
 
-        getActivity().onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
@@ -268,7 +271,7 @@ public class AddEditActivityFragment extends Fragment
                     }
                 }
 
-                getActivity().onBackPressed();
+                getActivity().finish();
             }
         });
     }

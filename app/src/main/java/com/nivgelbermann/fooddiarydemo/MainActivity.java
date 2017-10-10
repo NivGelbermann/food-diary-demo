@@ -34,14 +34,10 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
 
     public static final int ADD_FOODITEM_DIALOG = 0;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.pager)
-    ViewPager viewPager;
-    @BindView(R.id.main_fab)
-    FloatingActionButton fab;
-    @BindView(R.id.recycler_tab_layout)
-    RecyclerTabLayout recyclerTabLayout;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.pager) ViewPager viewPager;
+    @BindView(R.id.main_fab) FloatingActionButton fab;
+    @BindView(R.id.recycler_tab_layout) RecyclerTabLayout recyclerTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
                 new MonthsStatePagerAdapter(getSupportFragmentManager(), tabTitles);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(CURRENT_YEAR - startYear + Constants.MONTHS_A_YEAR * CURRENT_MONTH);
+//        viewPager.setCurrentItem(adapter.getCurrentPosition());
         recyclerTabLayout.setUpWithViewPager(viewPager);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
             }
         });
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -173,6 +172,8 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
      */
     private void utilStartAddEditActivity(FoodItem item) {
         Log.d(TAG, "utilStartAddEditActivity: called");
+
+        // TODO Try to start addedit by replacing the fragment instead of with intent
 
         Intent addEditIntent = new Intent(this, AddEditActivity.class);
         if (item != null) {

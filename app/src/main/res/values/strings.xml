@@ -44,5 +44,8 @@
     <string name="add_edit_time_content_contdesc">Icon representing the time of the day at which this item was consumed</string>
     <string name="add_edit_share_chooser_header">Share via...</string>
     <string name="add_edit_share_item_info">Name: %1$s\nCategory: %2$s\nDate and time: %3$s</string>
+    <string name="add_edit_menu_cancel">Cancel</string>
+    <string name="add_edit_menu_share">Share</string>
+    <string name="add_edit_menu_delete">Delete</string>
 
 </resources>

@@ -42,42 +42,4 @@ public class AddEditActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: ends");
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_add_edit, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // TODO Try to move the options menu inside the fragment
-//
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        switch (id) {
-//            case R.id.menu_addedit_cancel:
-//                onBackPressed();
-//                break;
-//
-//            case R.id.menu_addedit_delete:
-//                // TODO Handle item deletion after implementing opening activity by clicking an item
-//                break;
-//
-//            // Handles home-button behaviour in pre-21sdk
-//            case android.R.id.home:
-//                onBackPressed();
-//                break;
-//
-//            default:
-////                throw new InvalidParameterException(TAG + ".onOptionsItemSelected called with invalid MenuItem " + item.getTitle());
-//                Toast.makeText(this, R.string.add_edit_home_button_error, Toast.LENGTH_LONG).show();
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 }
