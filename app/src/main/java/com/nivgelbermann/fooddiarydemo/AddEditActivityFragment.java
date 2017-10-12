@@ -99,39 +99,36 @@ public class AddEditActivityFragment extends Fragment
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-//            case R.id.menu_addedit_cancel:
-//                // Do nothing (activity's finish method is called after switch statement)
-//                break;
 
             case R.id.menu_addedit_share:
-                // TODO Somehow deletes items!!!! Try sharing while watching logcat
                 Intent shareIntent = new Intent();
                 shareIntent.setAction(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_TEXT,
                         getResources().getString(R.string.add_edit_share_item_info,
                                 mFoodItem.getName(),
                                 String.valueOf(mFoodItem.getCategory()),
-                                FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"))); //TODO Make getFormattedTime static + revise all method calls
+                                FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy HH:mm")));
                 shareIntent.setType("text/plain");
                 startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.add_edit_share_chooser_header)));
-                break;
+                getActivity().finish();
+                return true;
 
             case R.id.menu_addedit_delete:
                 ContentResolver contentResolver = getContext().getContentResolver();
                 utilUpdateDeleteItem(contentResolver, null);
-                break;
+                getActivity().finish();
+                return true;
 
             // Handles home-button behaviour in pre-21sdk
             case android.R.id.home:
 //                NavUtils.navigateUpFromSameTask(getActivity());
-                // Do nothing (activity's finish method is called after switch statement)
-                break;
+                getActivity().finish();
+                return true;
 
             default:
-//                throw new InvalidParameterException(TAG + ".onOptionsItemSelected called with invalid MenuItem " + item.getTitle());
+                // throw new InvalidParameterException(TAG + ".onOptionsItemSelected called with invalid MenuItem " + item.getTitle());
                 Toast.makeText(getContext(), R.string.add_edit_general_error, Toast.LENGTH_LONG).show();
         }
-        getActivity().finish();
 
         return super.onOptionsItemSelected(item);
     }
@@ -160,8 +157,8 @@ public class AddEditActivityFragment extends Fragment
         mFoodItem.setDate(year, monthOfYear, dayOfMonth);
 
         // Update display
-        dateContent.setText(mFoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
-        Log.d(TAG, "onDateSet: date: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
+        dateContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
+        Log.d(TAG, "onDateSet: date: " + FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
     }
 
     @Override
@@ -172,8 +169,8 @@ public class AddEditActivityFragment extends Fragment
         mFoodItem.setTime(calendar.getTimeInMillis() / Constants.MILLISECONDS);
 
         // Update display
-        timeContent.setText(mFoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
-        Log.d(TAG, "onTimeSet: time: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
+        timeContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
+        Log.d(TAG, "onTimeSet: time: " + FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
     }
 
     /**
@@ -183,11 +180,11 @@ public class AddEditActivityFragment extends Fragment
     private void utilDisplayFoodItem() {
         categoryContent.setText(String.valueOf(mFoodItem.getCategory()));
         Log.d(TAG, "utilDisplayFoodItem: category: " + mFoodItem.getCategory());
-        dateContent.setText(mFoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
-        Log.d(TAG, "utilDisplayFoodItem: date: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
+        dateContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
+        Log.d(TAG, "utilDisplayFoodItem: date: " + FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
 //        dateContent.setText(String.valueOf(mFoodItem.getDay()) + "/" + String.valueOf(mFoodItem.getMonth()+1) + "/" + String.valueOf(mFoodItem.getYear()));
-        timeContent.setText(mFoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
-        Log.d(TAG, "utilDisplayFoodItem: time: " + mFoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
+        timeContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
+        Log.d(TAG, "utilDisplayFoodItem: time: " + FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
     }
 
     /**

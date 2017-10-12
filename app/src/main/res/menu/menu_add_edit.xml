@@ -2,12 +2,6 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.nivgelbermann.fooddiarydemo.AddEditActivity">
-    <!--<item-->
-        <!--android:id="@+id/menu_addedit_cancel"-->
-        <!--android:icon="@drawable/ic_cancel_white_24dp"-->
-        <!--android:orderInCategory="100"-->
-        <!--android:title="@string/add_edit_menu_cancel"-->
-        <!--app:showAsAction="ifRoom"/>-->
     <item
         android:id="@+id/menu_addedit_share"
         android:icon="@drawable/ic_share_white_24dp"

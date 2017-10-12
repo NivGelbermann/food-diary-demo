@@ -15,8 +15,6 @@ public class AddEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit);
 
-        // TODO Pass onto activity the tab (month) from which it was opened (to re-open in MainActivity)
-
         boolean editMode = false;
 
         // Receive food item (if exists) from parent activity
@@ -37,6 +35,7 @@ public class AddEditActivity extends AppCompatActivity {
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
         getSupportActionBar().setTitle((editMode) ? "Edit Item:" : "Create Item:");
         getSupportActionBar().setElevation(0);
         Log.d(TAG, "onCreate: ends");
