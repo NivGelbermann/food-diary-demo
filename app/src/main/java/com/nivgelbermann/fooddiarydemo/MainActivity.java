@@ -173,8 +173,6 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
     private void utilStartAddEditActivity(FoodItem item) {
         Log.d(TAG, "utilStartAddEditActivity: called");
 
-        // TODO Try to start addedit by replacing the fragment instead of with intent
-
         Intent addEditIntent = new Intent(this, AddEditActivity.class);
         if (item != null) {
             addEditIntent.putExtra(FoodItem.class.getSimpleName(), item);

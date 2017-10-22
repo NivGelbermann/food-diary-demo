@@ -1,7 +1,9 @@
 package com.nivgelbermann.fooddiarydemo;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -23,14 +25,14 @@ import android.widget.Toast;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
-import java.io.Serializable;
 import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AddEditActivityFragment extends Fragment
-        implements PassActivityDataToFragment,
+//        implements PassActivityDataToFragment,
+        implements
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener {
     private static final String TAG = "AddEditActivityFragment";
@@ -46,13 +48,36 @@ public class AddEditActivityFragment extends Fragment
     @BindView(R.id.add_edit_date_content) TextView dateContent;
     @BindView(R.id.add_edit_time_content) TextView timeContent;
 
-    private static FoodItem mFoodItem;
+    private FoodItem mFoodItem;
     private boolean mEditMode = false;
     private boolean mMode24Hours = true; // TODO Incorporate into app settings
+    private OnFinished mFinishedListener = null;
+
+    /**
+     * Interface for notifying the containing activity that
+     * the fragment has finished its task, and needs to be removed.
+     */
+    interface OnFinished {
+        void onAddEditFinished();
+    }
 
     public AddEditActivityFragment() {
         Log.d(TAG, "AddEditActivityFragment: constructor called");
         mFoodItem = new FoodItem();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        Log.d(TAG, "onAttach: called");
+        super.onAttach(context);
+
+        // Activities containing this fragment must implement its callbacks
+        Activity activity = getActivity();
+        if(!(activity instanceof OnFinished)) {
+            throw new ClassCastException(activity.getClass().getSimpleName()
+                    + "must implement AddEditActivityFragment.OnFinished interface");
+        }
+        mFinishedListener = (OnFinished) activity;
     }
 
     @Override
@@ -62,6 +87,15 @@ public class AddEditActivityFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_add_edit, container, false);
         ButterKnife.bind(this, view);
 
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mFoodItem = (FoodItem) arguments.getSerializable(FoodItem.class.getSimpleName());
+            if (mFoodItem != null) {
+                mEditMode = true;
+//                fab.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.ic_save_white_24dp));
+            }
+        }
+
         if (!mEditMode) {
             // If adding an item, initialize it for right now's date and time
             Calendar now = Calendar.getInstance();
@@ -70,22 +104,57 @@ public class AddEditActivityFragment extends Fragment
         }
         utilDisplayFoodItem();
         utilSetOnClickListeners();
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(mEditMode);
 
         Log.d(TAG, "onCreateView: ends");
         return view;
     }
 
+//    @Override
+//    public void onDestroyView() {
+//        Log.d(TAG, "onDestroyView: called");
+//        mFoodItem = null;
+//        fab.setVisibility(View.GONE);
+//        super.onDestroyView();
+//    }
+
+
+    @Override
+    public void onDetach() {
+        Log.d(TAG, "onDetach: called");
+        super.onDetach();
+        mFinishedListener = null;
+        fab = null;
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "onPause: called");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        Log.d(TAG, "onStop: called");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView: called");
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy: called");
+        super.onDestroy();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-//        inflater.inflate(R.menu.menu_add_edit, menu);
-//        if (!mEditMode) {
-//            menu.getItem(1).setVisible(false);
-//            menu.getItem(2).setVisible(false);
-//        }
-        if(mEditMode) {
+        if (mEditMode) {
             inflater.inflate(R.menu.menu_add_edit, menu);
         }
     }
@@ -110,46 +179,48 @@ public class AddEditActivityFragment extends Fragment
                                 FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy HH:mm")));
                 shareIntent.setType("text/plain");
                 startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.add_edit_share_chooser_header)));
-                getActivity().finish();
-                return true;
+                break;
 
             case R.id.menu_addedit_delete:
                 ContentResolver contentResolver = getContext().getContentResolver();
                 utilUpdateDeleteItem(contentResolver, null);
-                getActivity().finish();
-                return true;
+                break;
 
             // Handles home-button behaviour in pre-21sdk
             case android.R.id.home:
 //                NavUtils.navigateUpFromSameTask(getActivity());
-                getActivity().finish();
-                return true;
+                break;
 
             default:
                 // throw new InvalidParameterException(TAG + ".onOptionsItemSelected called with invalid MenuItem " + item.getTitle());
                 Toast.makeText(getContext(), R.string.add_edit_general_error, Toast.LENGTH_LONG).show();
         }
 
-        return super.onOptionsItemSelected(item);
+        if(mFinishedListener != null) {
+            mFinishedListener.onAddEditFinished();
+        }
+        return true;
     }
 
-    /**
-     * Callback method for receiving a Serializable (FoodItem) object from containing activity. <p>
-     * If data was received, fragment will edit it and update the DB.
-     * Otherwise, fragment will add new data to DB.
-     *
-     * @param data item to be edited, or null for adding new data.
-     */
-    @Override
-    public void receiveData(Serializable data) {
-        mFoodItem = (FoodItem) data;
-        if (mFoodItem != null) {
-            mEditMode = true;
-            input.setText(mFoodItem.getName());
-            fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_white_24dp));
-            utilDisplayFoodItem();
-        }
-    }
+//    /**
+//     * Callback method for receiving a Serializable (FoodItem) object from containing activity. <p>
+//     * If data was received, fragment will edit it and update the DB.
+//     * Otherwise, fragment will add new data to DB.
+//     *
+//     * @param data item to be edited, or null for adding new data.
+//     */
+//    @Override
+//    public void receiveData(Serializable data) {
+//        Log.d(TAG, "receiveData: called");
+//        mFoodItem = (FoodItem) data;
+//        if (mFoodItem != null) {
+//            mEditMode = true;
+////            input.setText(mFoodItem.getName());
+//            fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_white_24dp));
+//            Log.d(TAG, "receiveData: changed fab icon");
+//            utilDisplayFoodItem();
+//        }
+//    }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
@@ -178,13 +249,16 @@ public class AddEditActivityFragment extends Fragment
      * in the layout's rows: Category, Date, Time (and more to come).
      */
     private void utilDisplayFoodItem() {
+        input.setText(mFoodItem.getName());
         categoryContent.setText(String.valueOf(mFoodItem.getCategory()));
-        Log.d(TAG, "utilDisplayFoodItem: category: " + mFoodItem.getCategory());
         dateContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
-        Log.d(TAG, "utilDisplayFoodItem: date: " + FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
-//        dateContent.setText(String.valueOf(mFoodItem.getDay()) + "/" + String.valueOf(mFoodItem.getMonth()+1) + "/" + String.valueOf(mFoodItem.getYear()));
         timeContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
-        Log.d(TAG, "utilDisplayFoodItem: time: " + FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
+
+        if (mEditMode) {
+            fab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_save_white_24dp));
+        }
+
+        Log.d(TAG, "utilDisplayFoodItem: " + mFoodItem);
     }
 
     /**
@@ -268,7 +342,9 @@ public class AddEditActivityFragment extends Fragment
                     }
                 }
 
-                getActivity().finish();
+                if(mFinishedListener != null) {
+                    mFinishedListener.onAddEditFinished();
+                }
             }
         });
     }
@@ -277,7 +353,7 @@ public class AddEditActivityFragment extends Fragment
      * Utility method for simplifying the edit and delete functionality code.
      *
      * @param resolver ContentResolver for this method to use.
-     * @param values ContentValues for to update if in edit mode. Otherwise pass Null (to delete).
+     * @param values   ContentValues for to update if in edit mode. Otherwise pass Null (to delete).
      */
     private void utilUpdateDeleteItem(ContentResolver resolver, ContentValues values) {
         Cursor cursor = resolver.query(FoodsContract.CONTENT_URI,

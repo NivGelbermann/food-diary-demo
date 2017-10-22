@@ -15,6 +15,8 @@
     <string name="food_time_textview_contdesc">The time the item was consumed</string>
 
     <!-- ADD_EDIT_LAYOUT -->
+    <string name="add_edit_activity_header_add">Create Item:</string>
+    <string name="add_edit_activity_header_edit">Edit Item:</string>
     <string name="add_edit_input_header">Food</string>
     <string name="add_edit_input_hint">Enter food item name</string>
     <string name="add_edit_ic_contdesc">Icon representing the data this row displays; either Category, Date or Time</string>
