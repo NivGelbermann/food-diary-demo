@@ -8,20 +8,220 @@
     android:fitsSystemWindows="true"
     tools:context="com.nivgelbermann.fooddiarydemo.AddEditActivity">
 
-    <!--<android.support.design.widget.AppBarLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:theme="@style/AppTheme.AppBarOverlay">-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
-        <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/toolbar"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="?attr/actionBarSize"-->
-            <!--android:background="?attr/colorPrimary"-->
-            <!--app:popupTheme="@style/AppTheme.PopupOverlay"/>-->
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/add_edit_constraint_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scrollbars="none">
 
-    <!--</android.support.design.widget.AppBarLayout>-->
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/add_edit_toolbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:elevation="@dimen/mcab_toolbar_elevation"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:contentInsetStart="@dimen/mcab_default_content_inset"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:popupTheme="@style/ThemeOverlay.AppCompat"
+                tools:ignore="UnusedAttribute">
+                <!--android:theme="?attr/actionBarTheme"-->
 
-    <include layout="@layout/content_add_edit"/>
+                <android.support.v7.widget.LinearLayoutCompat
+                    android:id="@+id/add_edit_ll_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/add_edit_input_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="0dp"
+                        android:text="@string/add_edit_input_header"
+                        android:textStyle="bold"/>
+
+                    <EditText
+                        android:id="@+id/add_edit_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="32dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="8dp"
+                        android:hint="@string/add_edit_input_hint"
+                        android:inputType="textCapSentences|textShortMessage"/>
+
+                </android.support.v7.widget.LinearLayoutCompat>
+            </android.support.v7.widget.Toolbar>
+
+            <LinearLayout
+                android:id="@+id/add_edit_ll_category"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_edit_toolbar">
+
+                <ImageView
+                    android:id="@+id/add_edit_category_ic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/add_edit_category_ic_contdesc"
+                    app:srcCompat="@drawable/ic_cake_grey_700_24dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/add_edit_category_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
+                        android:contentDescription="@string/add_edit_category_ic_contdesc"
+                        android:text="@string/add_edit_category_header"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/add_edit_category_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/add_edit_category_content_contdesc"
+                        tools:text="Category to be displayed according to food item"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/add_edit_ll_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_edit_ll_category">
+
+                <ImageView
+                    android:id="@+id/add_edit_date_ic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/add_edit_date_ic_contdesc"
+                    app:srcCompat="@drawable/ic_event_grey_700_24dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/add_edit_date_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
+                        android:contentDescription="@string/add_edit_date_header_contdesc"
+                        android:text="@string/add_edit_date_header"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/add_edit_date_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/add_edit_date_content_contdesc"
+                        tools:text="Date to be displayed according to food item"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/add_edit_ll_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/add_edit_ll_date">
+
+                <ImageView
+                    android:id="@+id/add_edit_time_ic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/add_edit_time_ic_contdesc"
+                    app:srcCompat="@drawable/ic_access_time_grey_700_24dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/add_edit_time_header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"
+                        android:contentDescription="@string/add_edit_time_header_contdesc"
+                        android:text="@string/add_edit_time_header"
+                        android:textAppearance="@style/TextAppearance.AppCompat"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/add_edit_time_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/add_edit_time_content_contdesc"
+                        tools:text="Time to be displayed according to food item"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_edit_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@id/add_edit_toolbar"
+        app:layout_anchorGravity="bottom|right|end"
+        app:srcCompat="@drawable/ic_send_white_24dp"/>
 
 </android.support.design.widget.CoordinatorLayout>
+
+
+    <!-- TODO When scrolling down with keyboard displayed, FAB is partly covered by toolbar. Make it go on top of it, or stay below it. -->
+    <!-- This link could help: https://stackoverflow.com/questions/32551467/fab-doesnt-scroll-under-toolbar-when-anchored-to-a-textview-using-the-new-des -->
