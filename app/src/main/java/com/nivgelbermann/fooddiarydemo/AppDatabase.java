@@ -52,7 +52,12 @@ class AppDatabase extends SQLiteOpenHelper {
                 FoodsContract.Columns.YEAR + " INTEGER NOT NULL, " +
                 FoodsContract.Columns.HOUR + " INTEGER NOT NULL, " +
                 FoodsContract.Columns.FOOD_ITEM + " TEXT NOT NULL, " +
-                FoodsContract.Columns.CATEGORY_ID + " INTEGER NOT NULL)";
+                FoodsContract.Columns.CATEGORY_ID + " INTEGER NOT NULL);\n" +
+                "CREATE TABLE " + CategoriesContract.TABLE_NAME + " (" +
+                CategoriesContract.Columns._ID + " INTEGER PRIMARY KEY NOT NULL, " +
+                CategoriesContract.Columns.NAME + " TEXT NOT NULL, " +
+                CategoriesContract.Columns.COLOR + " INTEGER NOT NULL, " +
+                CategoriesContract.Columns.SORTORDER + " INTEGER NOT NULL);";
         Log.d(TAG, sSQL);
         db.execSQL(sSQL);
 

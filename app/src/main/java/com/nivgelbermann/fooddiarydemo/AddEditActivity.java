@@ -45,7 +45,7 @@ public class AddEditActivity extends AppCompatActivity
     @BindView(R.id.add_edit_time_content) TextView timeContent;
 
     private FoodItem mFoodItem;
-    private boolean mEditMode = false;
+    private boolean mEditMode;
     private boolean mMode24Hours = true; // TODO Incorporate into app settings
 
     @Override
@@ -55,7 +55,6 @@ public class AddEditActivity extends AppCompatActivity
         setContentView(R.layout.activity_add_edit);
         ButterKnife.bind(this);
 
-        mEditMode = false;
         mFoodItem = new FoodItem();
 
         Bundle arguments = getIntent().getExtras();
@@ -184,7 +183,9 @@ public class AddEditActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 // TODO Implement handling categories
-                Toast.makeText(AddEditActivity.this, "category clicked", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(AddEditActivity.this, "category clicked", Toast.LENGTH_SHORT).show();
+                Intent categoryIntent = new Intent(AddEditActivity.this, CategoryChooserActivity.class);
+                startActivity(categoryIntent);
             }
         });
 

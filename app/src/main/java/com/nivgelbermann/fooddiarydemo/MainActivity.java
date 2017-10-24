@@ -107,17 +107,6 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
 
     @Override
     public void onFoodItemClicked(FoodItem item) {
-//        AddEditActivityFragment fragment = new AddEditActivityFragment();
-//
-//        Bundle arguments = new Bundle();
-//        arguments.putSerializable(FoodItem.class.getSimpleName(), item);
-//        fragment.setArguments(arguments);
-//
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.add(R.id.add_edit_fragment, fragment);
-//        fragmentTransaction.commit();
-
         utilStartAddEditActivity(item);
     }
 

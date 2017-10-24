@@ -8,49 +8,42 @@ import static com.nivgelbermann.fooddiarydemo.AppProvider.CONTENT_AUTHORITY;
 import static com.nivgelbermann.fooddiarydemo.AppProvider.CONTENT_AUTHORITY_URI;
 
 /**
- * Created by Niv on 09-Sep-17.
+ * Created by Niv on 24-Oct-17.
  */
 
-public class FoodsContract {
+public class CategoriesContract {
 
-    static final String TABLE_NAME = "Foods";
+    static final String TABLE_NAME = "Categories";
 
-    // Foods table fields
+    // Categories table fields
     public static class Columns implements BaseColumns {
         // If you ever change the database schema,
         // you must increment the database version in AppDatabase.
-        public static final String DAY = "Day";             // INTEGER
-        public static final String MONTH = "Month";         // INTEGER where JAN=0, DEC=11
-        public static final String YEAR = "Year";           // INTEGER
-        public static final String HOUR = "Hour";           // INTEGER as Unix Time, the number of seconds since 1970-01-01 00:00:00 UTC.
-        public static final String FOOD_ITEM = "FoodItem";  // TEXT
-        public static final String CATEGORY_ID = "CategoryID";   // INTEGER
-        // TODO Add column for calories (in all files - loaders, etc...)
 
-        // Sort Order: Year -> Month -> Day -> Hour
-
+        // Default-created _id column represents category ID
+        // as used in Foods table
+        public static final String NAME = "Name";           // TEXT
+        public static final String COLOR = "Color";         // INTEGER - represents color resource id
+        public static final String SORTORDER = "SortOrder"; // INTEGER - TODO consider using this
 
         private Columns() {
             // Private constructor to prevent instantiation
         }
     }
 
-
     /**
-     * The Uri to access the Foods table in the DB
+     * The Uri to access the Categories table in the DB
      */
     public static final Uri CONTENT_URI = Uri.withAppendedPath(CONTENT_AUTHORITY_URI, TABLE_NAME);
 
     static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + CONTENT_AUTHORITY + "." + TABLE_NAME;
     static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + CONTENT_AUTHORITY + "." + TABLE_NAME;
 
-    static Uri buildFoodItemUri(long foodItemId) {
-        return ContentUris.withAppendedId(CONTENT_URI, foodItemId);
+    static Uri buildCategoryUri(long categoryId) {
+        return ContentUris.withAppendedId(CONTENT_URI, categoryId);
     }
 
-    static long getFoodId(Uri uri) {
+    static long getCategoryId(Uri uri) {
         return ContentUris.parseId(uri);
     }
-
-
 }

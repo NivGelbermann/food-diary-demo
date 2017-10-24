@@ -50,4 +50,10 @@
     <string name="add_edit_menu_share">Share</string>
     <string name="add_edit_menu_delete">Delete</string>
 
+    <!-- CATEGORY_CHOOSER_LAYOUT -->
+    <string name="title_activity_category_chooser">CategoryChooserActivity</string>
+    <string name="cc_row_category_ic_contdesc">Icon representing the category of this row</string>
+    <string name="cc_row_category_name_contdesc">This category\'s name</string>
+    <string name="cc_row_checked_ic_contdesc">If icon is visible, this category is the one selected</string>
+
 </resources>

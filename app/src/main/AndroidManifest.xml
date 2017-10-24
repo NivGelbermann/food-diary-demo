@@ -35,6 +35,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nivgelbermann.fooddiarydemo.MainActivity"/>
         </activity>
+        <activity
+            android:name=".CategoryChooserActivity"
+            android:label="@string/title_activity_category_chooser"
+            android:parentActivityName=".AddEditActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.nivgelbermann.fooddiarydemo.AddEditActivity"/>
+        </activity>
     </application>
 
 </manifest>
