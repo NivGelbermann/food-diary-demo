@@ -33,6 +33,8 @@ public class AppProvider extends ContentProvider {
 
     private static final int FOODS = 100;
     private static final int FOOD_ID = 101;
+    private static final int CATEGORIES = 200;
+    private static final int CATEGORY_ID = 201;
     // Add 2 similar constants for every future table
 
     // Can be replaced by a static initialization block
@@ -44,6 +46,8 @@ public class AppProvider extends ContentProvider {
         matcher.addURI(CONTENT_AUTHORITY, FoodsContract.TABLE_NAME, FOODS);
         //eg. content://com.nivgelbermann.fooddiarydemo.provider/Foods/8
         matcher.addURI(CONTENT_AUTHORITY, FoodsContract.TABLE_NAME + "/#", FOOD_ID);
+        matcher.addURI(CONTENT_AUTHORITY, CategoriesContract.TABLE_NAME, CATEGORIES);
+        matcher.addURI(CONTENT_AUTHORITY, CategoriesContract.TABLE_NAME + "/#", CATEGORY_ID);
 
         return matcher;
     }
@@ -76,6 +80,16 @@ public class AppProvider extends ContentProvider {
                 queryBuilder.appendWhere(FoodsContract.Columns._ID + " = " + foodId);
                 break;
 
+            case CATEGORIES:
+                queryBuilder.setTables(CategoriesContract.TABLE_NAME);
+                break;
+
+            case CATEGORY_ID:
+                queryBuilder.setTables(CategoriesContract.TABLE_NAME);
+                long categoryId = CategoriesContract.getCategoryId(uri);
+                queryBuilder.appendWhere(CategoriesContract.Columns._ID + " = " + categoryId);
+                break;
+
             // Add 2 cases for every table in DB
 
             default:
@@ -85,7 +99,13 @@ public class AppProvider extends ContentProvider {
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
         Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
         // Set this cursor to listen for DB content changes
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        try {
+            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        } catch (NullPointerException e) {
+            Log.d(TAG, "query: NullPointerException caught, couldn't get ContentResolver instance:");
+            e.printStackTrace();
+            return null;
+        }
         return cursor;
     }
 
@@ -100,6 +120,12 @@ public class AppProvider extends ContentProvider {
 
             case FOOD_ID:
                 return FoodsContract.CONTENT_ITEM_TYPE;
+
+            case CATEGORIES:
+                return CategoriesContract.CONTENT_TYPE;
+
+            case CATEGORY_ID:
+                return CategoriesContract.CONTENT_ITEM_TYPE;
 
             // Add 2 cases for every table in DB
 
@@ -131,6 +157,16 @@ public class AppProvider extends ContentProvider {
                 }
                 break;
 
+            case CATEGORIES:
+                db = mOpenHelper.getWritableDatabase();
+                recordId = db.insert(CategoriesContract.TABLE_NAME, null, values);
+                if (recordId >= 0) {
+                    returnUri = CategoriesContract.buildCategoryUri(recordId);
+                } else {
+                    throw new android.database.SQLException("Failed to insert into " + uri.toString());
+                }
+                break;
+
             // Add a case for every table in DB
 
             default:
@@ -141,7 +177,13 @@ public class AppProvider extends ContentProvider {
         if (recordId >= 0) {
             // If something was inserted, notify any listeners about changes
             Log.d(TAG, "insert: settings notifyChanged with: " + uri);
-            getContext().getContentResolver().notifyChange(uri, null);
+            try {
+                getContext().getContentResolver().notifyChange(uri, null);
+            } catch (NullPointerException e) {
+                Log.d(TAG, "query: NullPointerException caught, couldn't get ContentResolver instance:");
+                e.printStackTrace();
+                return null;
+            }
         } else {
             Log.d(TAG, "insert: nothing inserted");
         }
@@ -171,11 +213,25 @@ public class AppProvider extends ContentProvider {
                 db = mOpenHelper.getWritableDatabase();
                 long foodId = FoodsContract.getFoodId(uri);
                 selectionCriteria = FoodsContract.Columns._ID + " = " + foodId;
-
                 if (selection != null && selection.length() > 0) {
                     selectionCriteria += " AND (" + selection + ")";
                 }
                 count = db.delete(FoodsContract.TABLE_NAME, selectionCriteria, selectionArgs);
+                break;
+
+            case CATEGORIES:
+                db = mOpenHelper.getWritableDatabase();
+                count = db.delete(CategoriesContract.TABLE_NAME, selection, selectionArgs);
+                break;
+
+            case CATEGORY_ID:
+                db = mOpenHelper.getWritableDatabase();
+                long categoryId = CategoriesContract.getCategoryId(uri);
+                selectionCriteria = CategoriesContract.Columns._ID + " = " + categoryId;
+                if (selection!=null && selection.length()>0) {
+                    selectionCriteria += " AND (" + selection + ")";
+                }
+                count = db.delete(CategoriesContract.TABLE_NAME, selectionCriteria, selectionArgs);
                 break;
 
             default:
@@ -186,7 +242,13 @@ public class AppProvider extends ContentProvider {
         if (count > 0) {
             // If something was deleted, notify any listeners about changes
             Log.d(TAG, "delete: setting notifyChange with: " + uri);
-            getContext().getContentResolver().notifyChange(uri, null);
+            try {
+                getContext().getContentResolver().notifyChange(uri, null);
+            } catch (NullPointerException e) {
+                Log.d(TAG, "query: NullPointerException caught, couldn't get ContentResolver instance:");
+                e.printStackTrace();
+                return 0;
+            }
         } else {
             Log.d(TAG, "delete: nothing deleted");
         }
@@ -223,6 +285,21 @@ public class AppProvider extends ContentProvider {
                 count = db.update(FoodsContract.TABLE_NAME, values, selectionCriteria, selectionArgs);
                 break;
 
+            case CATEGORIES:
+                db = mOpenHelper.getWritableDatabase();
+                count = db.update(CategoriesContract.TABLE_NAME, values, selection, selectionArgs);
+                break;
+
+            case CATEGORY_ID:
+                db = mOpenHelper.getWritableDatabase();
+                long categoryId = CategoriesContract.getCategoryId(uri);
+                selectionCriteria = CategoriesContract.Columns._ID + " = " + categoryId;
+                if (selection!=null && selection.length()>0) {
+                    selectionCriteria += " AND (" + selection + ")";
+                }
+                count = db.update(CategoriesContract.TABLE_NAME, values, selectionCriteria, selectionArgs);
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
@@ -231,7 +308,13 @@ public class AppProvider extends ContentProvider {
         if (count > 0) {
             // If something was updated, notify any listeners about changes
             Log.d(TAG, "update: setting notifyChange with: " + uri);
-            getContext().getContentResolver().notifyChange(uri, null);
+            try {
+                getContext().getContentResolver().notifyChange(uri, null);
+            } catch (NullPointerException e) {
+                Log.d(TAG, "query: NullPointerException caught, couldn't get ContentResolver instance:");
+                e.printStackTrace();
+                return 0;
+            }
         } else {
             Log.d(TAG, "update: nothing updated");
         }
