@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        utilLogDatabase();
+//        utilLogDatabase();
 
         // Create a list to hold all page titles (MM/yyyy)
         List<String> tabTitles = new ArrayList<>();

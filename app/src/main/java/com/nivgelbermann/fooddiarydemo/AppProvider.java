@@ -25,7 +25,7 @@ import android.util.Log;
 public class AppProvider extends ContentProvider {
     private static final String TAG = "AppProvider";
 
-    private AppDatabase mOpenHelper;
+    private AppDatabase mAssetHelper;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
     static final String CONTENT_AUTHORITY = "com.nivgelbermann.fooddiarydemo.provider";
@@ -56,7 +56,7 @@ public class AppProvider extends ContentProvider {
     public boolean onCreate() {
         // Might have to change this method to perform on a separate thread
         // because creating a DB is performance-heavy and might cause the app to freeze
-        mOpenHelper = AppDatabase.getInstance(getContext());
+        mAssetHelper = AppDatabase.getInstance(getContext());
         return true;
     }
 
@@ -96,7 +96,7 @@ public class AppProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
 
-        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+        SQLiteDatabase db = mAssetHelper.getReadableDatabase();
         Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
         // Set this cursor to listen for DB content changes
         try {
@@ -148,7 +148,7 @@ public class AppProvider extends ContentProvider {
 
         switch (match) {
             case FOODS:
-                db = mOpenHelper.getWritableDatabase();
+                db = mAssetHelper.getWritableDatabase();
                 recordId = db.insert(FoodsContract.TABLE_NAME, null, values);
                 if (recordId >= 0) {
                     returnUri = FoodsContract.buildFoodItemUri(recordId);
@@ -158,7 +158,7 @@ public class AppProvider extends ContentProvider {
                 break;
 
             case CATEGORIES:
-                db = mOpenHelper.getWritableDatabase();
+                db = mAssetHelper.getWritableDatabase();
                 recordId = db.insert(CategoriesContract.TABLE_NAME, null, values);
                 if (recordId >= 0) {
                     returnUri = CategoriesContract.buildCategoryUri(recordId);
@@ -205,12 +205,12 @@ public class AppProvider extends ContentProvider {
 
         switch (match) {
             case FOODS:
-                db = mOpenHelper.getWritableDatabase();
+                db = mAssetHelper.getWritableDatabase();
                 count = db.delete(FoodsContract.TABLE_NAME, selection, selectionArgs);
                 break;
 
             case FOOD_ID:
-                db = mOpenHelper.getWritableDatabase();
+                db = mAssetHelper.getWritableDatabase();
                 long foodId = FoodsContract.getFoodId(uri);
                 selectionCriteria = FoodsContract.Columns._ID + " = " + foodId;
                 if (selection != null && selection.length() > 0) {
@@ -220,12 +220,12 @@ public class AppProvider extends ContentProvider {
                 break;
 
             case CATEGORIES:
-                db = mOpenHelper.getWritableDatabase();
+                db = mAssetHelper.getWritableDatabase();
                 count = db.delete(CategoriesContract.TABLE_NAME, selection, selectionArgs);
                 break;
 
             case CATEGORY_ID:
-                db = mOpenHelper.getWritableDatabase();
+                db = mAssetHelper.getWritableDatabase();
                 long categoryId = CategoriesContract.getCategoryId(uri);
                 selectionCriteria = CategoriesContract.Columns._ID + " = " + categoryId;
                 if (selection!=null && selection.length()>0) {
@@ -270,12 +270,12 @@ public class AppProvider extends ContentProvider {
 
         switch (match) {
             case FOODS:
-                db = mOpenHelper.getWritableDatabase();
+                db = mAssetHelper.getWritableDatabase();
                 count = db.update(FoodsContract.TABLE_NAME, values, selection, selectionArgs);
                 break;
 
             case FOOD_ID:
-                db = mOpenHelper.getWritableDatabase();
+                db = mAssetHelper.getWritableDatabase();
                 long foodId = FoodsContract.getFoodId(uri);
                 selectionCriteria = FoodsContract.Columns._ID + " = " + foodId;
 
@@ -286,12 +286,12 @@ public class AppProvider extends ContentProvider {
                 break;
 
             case CATEGORIES:
-                db = mOpenHelper.getWritableDatabase();
+                db = mAssetHelper.getWritableDatabase();
                 count = db.update(CategoriesContract.TABLE_NAME, values, selection, selectionArgs);
                 break;
 
             case CATEGORY_ID:
-                db = mOpenHelper.getWritableDatabase();
+                db = mAssetHelper.getWritableDatabase();
                 long categoryId = CategoriesContract.getCategoryId(uri);
                 selectionCriteria = CategoriesContract.Columns._ID + " = " + categoryId;
                 if (selection!=null && selection.length()>0) {

@@ -24,7 +24,6 @@ public class CategoriesContract {
         // as used in Foods table
         public static final String NAME = "Name";           // TEXT
         public static final String COLOR = "Color";         // INTEGER - represents color resource id
-        public static final String SORTORDER = "SortOrder"; // INTEGER - TODO consider using this
 
         private Columns() {
             // Private constructor to prevent instantiation
