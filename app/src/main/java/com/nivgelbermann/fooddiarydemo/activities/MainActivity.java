@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo;
+package com.nivgelbermann.fooddiarydemo.activities;
 
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -13,6 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.nivgelbermann.fooddiarydemo.utils.Constants;
+import com.nivgelbermann.fooddiarydemo.models.FoodItem;
+import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
+import com.nivgelbermann.fooddiarydemo.adapters.InnerRecyclerViewAdapter;
+import com.nivgelbermann.fooddiarydemo.adapters.MonthsStatePagerAdapter;
+import com.nivgelbermann.fooddiarydemo.R;
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
 import java.text.SimpleDateFormat;
@@ -24,9 +30,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.nivgelbermann.fooddiarydemo.Constants.CURRENT_MONTH;
-import static com.nivgelbermann.fooddiarydemo.Constants.CURRENT_YEAR;
-import static com.nivgelbermann.fooddiarydemo.Constants.EPOCH;
+import static com.nivgelbermann.fooddiarydemo.utils.Constants.CURRENT_MONTH;
+import static com.nivgelbermann.fooddiarydemo.utils.Constants.CURRENT_YEAR;
+import static com.nivgelbermann.fooddiarydemo.utils.Constants.EPOCH;
 
 //public class MainActivity extends AppCompatActivity /*implements PageFragment.OnDateSelectedInterface*/ {
 public class MainActivity extends AppCompatActivity implements InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener {

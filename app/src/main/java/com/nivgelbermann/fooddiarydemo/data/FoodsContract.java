@@ -1,11 +1,8 @@
-package com.nivgelbermann.fooddiarydemo;
+package com.nivgelbermann.fooddiarydemo.data;
 
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
-
-import static com.nivgelbermann.fooddiarydemo.AppProvider.CONTENT_AUTHORITY;
-import static com.nivgelbermann.fooddiarydemo.AppProvider.CONTENT_AUTHORITY_URI;
 
 /**
  * Created by Niv on 09-Sep-17.
@@ -39,16 +36,16 @@ public class FoodsContract {
     /**
      * The Uri to access the Foods table in the DB
      */
-    public static final Uri CONTENT_URI = Uri.withAppendedPath(CONTENT_AUTHORITY_URI, TABLE_NAME);
+    public static final Uri CONTENT_URI = Uri.withAppendedPath(AppProvider.CONTENT_AUTHORITY_URI, TABLE_NAME);
 
-    static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + CONTENT_AUTHORITY + "." + TABLE_NAME;
-    static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + CONTENT_AUTHORITY + "." + TABLE_NAME;
+    static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd." + AppProvider.CONTENT_AUTHORITY + "." + TABLE_NAME;
+    static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd." + AppProvider.CONTENT_AUTHORITY + "." + TABLE_NAME;
 
-    static Uri buildFoodItemUri(long foodItemId) {
+    public static Uri buildFoodItemUri(long foodItemId) {
         return ContentUris.withAppendedId(CONTENT_URI, foodItemId);
     }
 
-    static long getFoodId(Uri uri) {
+    public static long getFoodId(Uri uri) {
         return ContentUris.parseId(uri);
     }
 

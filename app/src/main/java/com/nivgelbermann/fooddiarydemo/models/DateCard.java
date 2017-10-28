@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo;
+package com.nivgelbermann.fooddiarydemo.models;
 
 import java.io.Serializable;
 

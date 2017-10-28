@@ -1,8 +1,10 @@
-package com.nivgelbermann.fooddiarydemo;
+package com.nivgelbermann.fooddiarydemo.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import com.nivgelbermann.fooddiarydemo.fragments.PageFragment;
 
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
  * Each tab's fragment is handled by {@link PageFragment}.
  */
 
-class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
+public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
     private static final String TAG = "MonthsStatePagerAdapter";
 
     // Contains the strings for each tab title

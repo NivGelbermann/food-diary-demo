@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.nivgelbermann.fooddiarydemo.AddEditActivity">
+    tools:context="com.nivgelbermann.fooddiarydemo.activities.AddEditActivity">
 
     <ScrollView
         android:layout_width="match_parent"

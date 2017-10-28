@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo;
+package com.nivgelbermann.fooddiarydemo.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,6 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
+import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.activities.MainActivity;
+import com.nivgelbermann.fooddiarydemo.models.FoodItem;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -17,53 +22,20 @@ import butterknife.ButterKnife;
  * Created by Niv on 06-Sep-17.
  */
 
-class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAdapter.FoodItemViewHolder> {
+public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAdapter.FoodItemViewHolder> {
     private static final String TAG = "InnerRecyclerViewAdapte";
 
     private Context mContext;
     private Cursor mCursor;
     private FoodItemViewHolder.FoodItemListener mFoodItemListener;
 
-//    private final View.OnClickListener mListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(final View view) {
-//            Toast.makeText(mContext, "Click validation - view Id: " + view.getId(), Toast.LENGTH_SHORT).show();
-//            Log.d(TAG, "onClick: Click validation - view Id: " + view.getId());
-//        }
-//    };
-
     //    InnerRecyclerViewAdapter(Context context) {
-    InnerRecyclerViewAdapter(Context context, FoodItemViewHolder.FoodItemListener listener) {
+    public InnerRecyclerViewAdapter(Context context, FoodItemViewHolder.FoodItemListener listener) {
         mContext = context;
         mFoodItemListener = listener;
     }
 
-//    //    static class FoodItemViewHolder extends RecyclerView.ViewHolder {
-//    static class FoodItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-//        @BindView(R.id.food_icon)
-//        ImageView icon;
-//        @BindView(R.id.food_text)
-//        TextView text;
-//        @BindView(R.id.food_time)
-//        TextView time;
-//
-//        FoodItemViewHolder(View view) {
-//            super(view);
-//            ButterKnife.bind(this, view);
-//            view.setOnClickListener(this);
-//        }
-//
-//        @Override
-//        public void onClick(View view) {
-////            Toast.makeText(view.getContext(), "Click validation - view position: " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
-////            Log.d(TAG, "onClick: Click validation - view position: " + getAdapterPosition());
-//            Intent addEditIntent = new Intent(view.getContext(), AddEditActivity.class);
-////            addEditIntent.putExtra(FoodItem.class.getSimpleName(), foodItem);
-//            view.getContext().startActivity(addEditIntent);
-//        }
-//    }
-
-    static class FoodItemViewHolder extends RecyclerView.ViewHolder {
+    public static class FoodItemViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.food_icon) ImageView icon;
         @BindView(R.id.food_text) TextView text;
         @BindView(R.id.food_time) TextView time;
@@ -165,7 +137,7 @@ class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAda
      * If the given new Cursor is the same instance as the previously set
      * Cursor, null is also returned.
      */
-    Cursor swapCursor(Cursor newCursor) {
+    public Cursor swapCursor(Cursor newCursor) {
         Log.d(TAG, "swapCursor: starts");
         if (newCursor == mCursor) {
             Log.d(TAG, "swapCursor: ends, returning null because cursor hasn't changed");

@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context="com.nivgelbermann.fooddiarydemo.AddEditActivity">
+      tools:context="com.nivgelbermann.fooddiarydemo.activities.AddEditActivity">
     <item
         android:id="@+id/menu_addedit_share"
         android:icon="@drawable/ic_share_white_24dp"

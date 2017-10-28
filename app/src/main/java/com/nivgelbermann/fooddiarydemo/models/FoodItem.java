@@ -1,11 +1,11 @@
-package com.nivgelbermann.fooddiarydemo;
+package com.nivgelbermann.fooddiarydemo.models;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.nivgelbermann.fooddiarydemo.Constants.MILLISECONDS;
+import static com.nivgelbermann.fooddiarydemo.utils.Constants.MILLISECONDS;
 
 /**
  * Created by Niv on 14-Sep-17.

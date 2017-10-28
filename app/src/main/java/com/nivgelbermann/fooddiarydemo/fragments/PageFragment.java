@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo;
+package com.nivgelbermann.fooddiarydemo.fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,6 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.nivgelbermann.fooddiarydemo.utils.Constants;
+import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.adapters.OuterRecyclerViewAdapter;
+import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 
 import java.security.InvalidParameterException;
 

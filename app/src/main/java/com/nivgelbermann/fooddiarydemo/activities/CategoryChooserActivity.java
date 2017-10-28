@@ -1,7 +1,9 @@
-package com.nivgelbermann.fooddiarydemo;
+package com.nivgelbermann.fooddiarydemo.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.nivgelbermann.fooddiarydemo.R;
 
 public class CategoryChooserActivity extends AppCompatActivity {
 

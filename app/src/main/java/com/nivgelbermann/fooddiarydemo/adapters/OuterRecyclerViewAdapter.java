@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo;
+package com.nivgelbermann.fooddiarydemo.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
+import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.models.DateCard;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -19,7 +23,7 @@ import butterknife.ButterKnife;
  * Created by Niv on 28-Aug-17.
  */
 
-class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAdapter.CardDateViewHolder> {
+public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAdapter.CardDateViewHolder> {
     private static final String TAG = "OuterRecyclerViewAdapte";
 
     private Context mContext;
@@ -43,7 +47,7 @@ class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAda
         }
     }
 
-    OuterRecyclerViewAdapter(Context context) {
+    public OuterRecyclerViewAdapter(Context context) {
         mContext = context;
         mInnerAdapters = new ArrayList<>();
     }
@@ -121,7 +125,7 @@ class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAda
      * If the given new Cursor is the same instance as the previously set
      * Cursor, null is also returned.
      */
-    Cursor swapCursor(Cursor newCursor) {
+    public Cursor swapCursor(Cursor newCursor) {
         Log.d(TAG, "swapCursor: starts");
         if (newCursor == mCursor) {
             Log.d(TAG, "swapCursor: ends, returning null because cursor hasn't changed");
@@ -141,7 +145,7 @@ class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAda
         return oldCursor;
     }
 
-    Cursor swapInnerCursors(Cursor newCursor) {
+    public Cursor swapInnerCursors(Cursor newCursor) {
         Log.d(TAG, "swapInnerCursors: starts");
         Cursor oldCursor = null;
         for (InnerRecyclerViewAdapter adapter : mInnerAdapters) {

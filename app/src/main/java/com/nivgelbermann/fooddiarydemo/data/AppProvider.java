@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo;
+package com.nivgelbermann.fooddiarydemo.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
