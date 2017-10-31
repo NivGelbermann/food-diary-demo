@@ -55,7 +55,7 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
     @Override
     public CardDateViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: new view requested");
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_main_page_date, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_outer_rv_card, parent, false);
         return new CardDateViewHolder(view);
     }
 
@@ -89,10 +89,8 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
             // Otherwise, do nothing, holder's RecyclerView will re-use its LinearLayoutManager.
             holder.innerRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         }
-//        InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(mContext);
-        InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(mContext,
+        InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(
                 (InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener) mContext);
-//        Log.d(TAG, "onBindViewHolder: adding adapter: " + mInnerAdapters.add(adapter));
         mInnerAdapters.add(adapter);
         holder.innerRecyclerView.setAdapter(adapter);
 
@@ -111,9 +109,8 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
     public int getItemCount() {
         if (mCursor == null || mCursor.getCount() == 0) {
             return 0;
-        } else {
-            return mCursor.getCount();
         }
+        return mCursor.getCount();
     }
 
     /**

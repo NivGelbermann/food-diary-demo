@@ -13,7 +13,7 @@ INSERT INTO Categories (
                            'Other'
                        ),
 					   (
-                           '#FFFFFF',
+                           '#CFD8DC',
                            'Dairy'
                        ),
                        (

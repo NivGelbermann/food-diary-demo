@@ -1,6 +1,5 @@
 package com.nivgelbermann.fooddiarydemo.adapters;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.activities.MainActivity;
+import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.models.FoodItem;
 
 import butterknife.BindView;
@@ -25,13 +24,14 @@ import butterknife.ButterKnife;
 public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAdapter.FoodItemViewHolder> {
     private static final String TAG = "InnerRecyclerViewAdapte";
 
-    private Context mContext;
+    //    private Context mContext;
     private Cursor mCursor;
     private FoodItemViewHolder.FoodItemListener mFoodItemListener;
 
     //    InnerRecyclerViewAdapter(Context context) {
-    public InnerRecyclerViewAdapter(Context context, FoodItemViewHolder.FoodItemListener listener) {
-        mContext = context;
+//    InnerRecyclerViewAdapter(Context context, FoodItemViewHolder.FoodItemListener listener) {
+    InnerRecyclerViewAdapter(FoodItemViewHolder.FoodItemListener listener) {
+//        mContext = context;
         mFoodItemListener = listener;
     }
 
@@ -43,10 +43,24 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
         FoodItemListener mListener;
         FoodItem mFoodItem;
 
+        /**
+         * Interface to be implemented by activities containing a RecyclerView
+         * with {@link InnerRecyclerViewAdapter}.
+         */
         public interface FoodItemListener {
+            /**
+             * Called when FoodItemViewHolder is clicked.
+             *
+             * @param item The FoodItem object contained in the clicked FoodItemViewHolder
+             */
             void onFoodItemClicked(FoodItem item);
 
-            // Should return true if the callback consumed the long click, false otherwise.
+            /**
+             * Called when FoodItemViewHolder is long-clicked.
+             *
+             * @param item The FoodItem object contained in the clicked FoodItemViewHolder
+             * @return Returns true if callback consumed the event, false otherwise.
+             */
             boolean onFoodItemLongClicked(FoodItem item);
         }
 
@@ -54,7 +68,6 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
             super(view);
             ButterKnife.bind(this, view);
             mListener = listener;
-            Log.d(TAG, "FoodItemViewHolder: listener: " + listener.getClass().getSimpleName());
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,7 +95,7 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
     @Override
     public FoodItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: new view requested");
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_inner_rv_food_item, parent, false);
 //        view.setOnClickListener(mListener);
 //        return new FoodItemViewHolder(view);
         return new FoodItemViewHolder(view, mFoodItemListener);
@@ -92,9 +105,6 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
     public void onBindViewHolder(FoodItemViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: starts with position " + position);
 
-//        holder.text.setText("item number #" + position);
-//        holder.time.setText("13:24");
-
         if ((mCursor == null) || (mCursor.getCount() == 0)) {
             Log.d(TAG, "onBindViewHolder: mCursor empty or null");
         } else {
@@ -102,7 +112,8 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
                 throw new IllegalStateException("Couldn't move cursor to position " + position);
             }
 
-            final FoodItem row = new FoodItem(mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns._ID)),
+            final FoodItem row = new FoodItem(
+                    mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns._ID)),
                     mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns.FOOD_ITEM)),
                     mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.HOUR)),
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.DAY)),
@@ -112,8 +123,6 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
             holder.setFoodItem(row);
 
 //            // TODO Handle changing row icon to match category
-//            holder.text.setText(row.getName());
-//            holder.time.setText(utilFormatTime(row.getTime(), "HH:mm"));
         }
 
         Log.d(TAG, "onBindViewHolder: ends");
@@ -123,9 +132,8 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
     public int getItemCount() {
         if (mCursor == null) {
             return 0;
-        } else {
-            return mCursor.getCount();
         }
+        return mCursor.getCount();
     }
 
     /**

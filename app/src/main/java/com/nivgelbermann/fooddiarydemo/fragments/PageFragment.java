@@ -39,8 +39,8 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     @BindView(R.id.outerRecyclerView) RecyclerView outerRecyclerView;
 
     public static final String ARG_PAGE_POS = "ARG_PAGE_POS";
-    public static final int OUTER_LOADER_ID = 0;
-    public static final int INNER_LOADER_ID = 1;
+    private static final int OUTER_LOADER_ID = 0;
+    private static final int INNER_LOADER_ID = 1;
 
     private OuterRecyclerViewAdapter mAdapter;
     //    // Represent the page number (tab identifier).
@@ -102,7 +102,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.d(TAG, "onCreateLoader: " + mMonth + "/" + mYear + " starts with id: " + id);
+        Log.d(TAG, "onCreateLoader: " + mMonth + "/" + mYear + " called with id: " + id);
         String[] projection;
         String sortOrder;
 
@@ -162,25 +162,25 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 //        Log.d(TAG, "onLoadFinished: starts");
 //        Log.d(TAG, "onLoadFinished: " + mMonth + "/" + mYear + " finished with id: " + id);
 
-        if (data == null) {
+        if (cursor == null) {
             throw new InvalidParameterException(TAG + ".onLoadFinished called with null cursor");
         }
 
         switch (loader.getId()) {
             case OUTER_LOADER_ID:
                 Log.d(TAG, "onLoadFinished: " + mMonth + "/" + mYear + " starts with id OUTER_LOADER_ID");
-                mAdapter.swapCursor(data);
+                mAdapter.swapCursor(cursor);
 //                int count = mAdapter.getItemCount();
                 break;
 
             case INNER_LOADER_ID:
                 Log.d(TAG, "onLoadFinished: " + mMonth + "/" + mYear + " starts with id INNER_LOADER_ID");
                 Log.d(TAG, "onLoadFinished: swapping inner cursors");
-                mAdapter.swapInnerCursors(data);
+                mAdapter.swapInnerCursors(cursor);
 //                int count = mAdapter.getInnerAdaptersCount();
                 break;
 

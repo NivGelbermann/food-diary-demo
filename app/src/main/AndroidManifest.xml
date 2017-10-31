@@ -17,7 +17,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <categoryId android:name="android.intent.categoryId.LAUNCHER"/>
             </intent-filter>
         </activity>
 
@@ -30,7 +30,8 @@
             android:name=".activities.AddEditActivity"
             android:label="@string/title_activity_add_edit"
             android:parentActivityName=".activities.MainActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.nivgelbermann.fooddiarydemo.activities.MainActivity"/>

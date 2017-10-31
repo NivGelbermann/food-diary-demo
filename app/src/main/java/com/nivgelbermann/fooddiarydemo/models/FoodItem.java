@@ -23,34 +23,31 @@ public class FoodItem implements Serializable {
     private int mDay;
     private int mMonth;
     private int mYear;
-    private int mCategory;
+    private int mCategoryId;
 
     public FoodItem() {
         // Initialize an empty FoodItem, to be manually filled in
+        mCategoryId = 0;
     }
 
     public FoodItem(String id, String name, long time, int day, int month, int year) {
-//    public FoodItem(long id, String name, long time) {
-//    public FoodItem(String name, long time) {
         this.m_Id = id;
         mName = name;
         mTime = time;
         mDay = day;
         mMonth = month;
         mYear = year;
-        mCategory = 0;
+        mCategoryId = 1;
     }
 
-    public FoodItem(String m_Id, String name, long time, int day, int month, int year, int category) {
-//    public FoodItem(long m_Id, String name, long time, int category) {
-//    public FoodItem(String name, long time, int category) {
+    public FoodItem(String m_Id, String name, long time, int day, int month, int year, int categoryId) {
         this.m_Id = m_Id;
         mName = name;
         mTime = time;
         mDay = day;
         mMonth = month;
         mYear = year;
-        mCategory = category;
+        mCategoryId = categoryId;
     }
 
     public String getId() {
@@ -77,8 +74,8 @@ public class FoodItem implements Serializable {
         return mYear;
     }
 
-    public int getCategory() {
-        return mCategory;
+    public int getCategoryId() {
+        return mCategoryId;
     }
 
     public Calendar getCalendarDate() {
@@ -133,17 +130,18 @@ public class FoodItem implements Serializable {
                 ", day=" + mDay +
                 ", month=" + mMonth +
                 ", year=" + mYear +
-                ", category=" + mCategory +
+                ", category=" + mCategoryId +
                 '}';
     }
 
     /**
      * Verify all of FoodItem object's parameters are set and valid.
+     *
      * @return true if valid, otherwise false.
      */
     public boolean isValid() {
         if (mName == null || mName.trim().isEmpty()
-                || mTime == 0L || mDay == 0 || mMonth == 0 || mYear == 0 || mCategory < 0) {
+                || mTime == 0L || mDay == 0 || mMonth == 0 || mYear == 0 || mCategoryId < 1) {
             return false;
         }
         return true;

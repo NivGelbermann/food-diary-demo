@@ -11,7 +11,7 @@
     <string name="card_header_year_textview_contdesc">The year</string>
 
     <string name="food_text_textview_contdesc">The name of the food item eaten</string>
-    <string name="food_icon_imageview_contdesc">The food category to which the item belongs</string>
+    <string name="food_icon_imageview_contdesc">The food categoryId to which the item belongs</string>
     <string name="food_time_textview_contdesc">The time the item was consumed</string>
 
     <!-- ADD_EDIT_LAYOUT -->
@@ -23,7 +23,7 @@
     <string name="add_edit_header_textview_contdesc">Text representing the data this row displays; either Category, Date or Time</string>
     <string name="add_edit_content_textview_contdesc">The content this row displays; either Category, Date or Time</string>
     <string name="add_edit_recyclerview_item_category">Category</string>
-    <string name="add_edit_recyclerview_item_category_message">Tap to select category</string>
+    <string name="add_edit_recyclerview_item_category_message">Tap to select categoryId</string>
     <string name="add_edit_recyclerview_item_date">Date</string>
     <string name="add_edit_recyclerview_item_date_message">Tap to select date</string>
     <string name="add_edit_recyclerview_item_time">Time</string>
@@ -35,9 +35,9 @@
     <string name="add_edit_category_header">Category</string>
     <string name="add_edit_date_header">Date</string>
     <string name="add_edit_time_header">Time</string>
-    <string name="add_edit_category_ic_contdesc">Icon representing the food category to which this item belongs</string>
-    <string name="add_edit_category_header_contdesc">Icon representing the food category to which this item belongs</string>
-    <string name="add_edit_category_content_contdesc">Icon representing the food category to which this item belongs</string>
+    <string name="add_edit_category_ic_contdesc">Icon representing the food categoryId to which this item belongs</string>
+    <string name="add_edit_category_header_contdesc">Icon representing the food categoryId to which this item belongs</string>
+    <string name="add_edit_category_content_contdesc">Icon representing the food categoryId to which this item belongs</string>
     <string name="add_edit_date_ic_contdesc">Icon representing the date at which this item was consumed</string>
     <string name="add_edit_date_header_contdesc">Icon representing the date at which this item was consumed</string>
     <string name="add_edit_date_content_contdesc">Icon representing the date at which this item was consumed</string>
@@ -52,8 +52,8 @@
 
     <!-- CATEGORY_CHOOSER_LAYOUT -->
     <string name="title_activity_category_chooser">CategoryChooserActivity</string>
-    <string name="cc_row_category_ic_contdesc">Icon representing the category of this row</string>
-    <string name="cc_row_category_name_contdesc">This category\'s name</string>
-    <string name="cc_row_checked_ic_contdesc">If icon is visible, this category is the one selected</string>
+    <string name="cc_row_category_ic_contdesc">Icon representing the categoryId of this row</string>
+    <string name="cc_row_category_name_contdesc">This categoryId\'s name</string>
+    <string name="cc_row_checked_ic_contdesc">If icon is visible, this categoryId is the one selected</string>
 
 </resources>

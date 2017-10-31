@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,10 +20,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nivgelbermann.fooddiarydemo.utils.Constants;
-import com.nivgelbermann.fooddiarydemo.models.FoodItem;
-import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.adapters.CategoryChooserRecyclerViewAdapter;
+import com.nivgelbermann.fooddiarydemo.data.Category;
+import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
+import com.nivgelbermann.fooddiarydemo.models.FoodItem;
+import com.nivgelbermann.fooddiarydemo.utils.Constants;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -33,12 +37,14 @@ import butterknife.ButterKnife;
 public class AddEditActivity extends AppCompatActivity
         implements
         DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener {
+        TimePickerDialog.OnTimeSetListener,
+        CategoryChooserRecyclerViewAdapter.CategoryViewHolder.CategoryListener {
     private static final String TAG = "AddEditActivity";
 
     private static final String DATE_PICKER_TAG = "DatePickerDialog";
     private static final String TIME_PICKER_TAG = "TimePickerDialog";
 
+    @BindView(R.id.add_edit_coordinator_layout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.add_edit_input) EditText input;
     @BindView(R.id.add_edit_fab) FloatingActionButton fab;
     @BindView(R.id.add_edit_ll_category) LinearLayout categoryLayout;
@@ -83,6 +89,7 @@ public class AddEditActivity extends AppCompatActivity
                 : resources.getString(R.string.add_edit_activity_header_add));
         getSupportActionBar().setElevation(0);
 //        setHasOptionsMenu(mEditMode);
+
         Log.d(TAG, "onCreate: ends");
     }
 
@@ -113,7 +120,7 @@ public class AddEditActivity extends AppCompatActivity
                 shareIntent.putExtra(Intent.EXTRA_TEXT,
                         getResources().getString(R.string.add_edit_share_item_info,
                                 mFoodItem.getName(),
-                                String.valueOf(mFoodItem.getCategory()),
+                                String.valueOf(mFoodItem.getCategoryId()),
                                 FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy HH:mm")));
                 shareIntent.setType("text/plain");
                 startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.add_edit_share_chooser_header)));
@@ -160,13 +167,24 @@ public class AddEditActivity extends AppCompatActivity
         Log.d(TAG, "onTimeSet: time: " + FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
     }
 
+    @Override
+    public void onCategoryClicked(Category category) {
+        Snackbar.make(coordinatorLayout, "Category " + category.getName() + " clicked", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onCategoryLongClicked(Category category) {
+        // Do nothing, consume event. Ignores long clicks
+        return true;
+    }
+
     /**
      * Utility method for displaying the item to be edited
      * in the layout's rows: Category, Date, Time (and more to come).
      */
     private void utilDisplayFoodItem() {
         input.setText(mFoodItem.getName());
-        categoryContent.setText(String.valueOf(mFoodItem.getCategory()));
+        categoryContent.setText(String.valueOf(mFoodItem.getCategoryId()));
         dateContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
         timeContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
 
@@ -187,7 +205,6 @@ public class AddEditActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 // TODO Implement handling categories
-//                Toast.makeText(AddEditActivity.this, "category clicked", Toast.LENGTH_SHORT).show();
                 Intent categoryIntent = new Intent(AddEditActivity.this, CategoryChooserActivity.class);
                 startActivity(categoryIntent);
             }
@@ -235,6 +252,7 @@ public class AddEditActivity extends AppCompatActivity
                 // and consume click event
                 String name = input.getText().toString();
                 if (name.trim().isEmpty()) {
+                    // TODO Replace all Toasts with Snackbars
                     Toast.makeText(AddEditActivity.this,
                             getResources().getString(R.string.add_edit_name_input_error),
                             Toast.LENGTH_SHORT).show();
@@ -249,7 +267,7 @@ public class AddEditActivity extends AppCompatActivity
                 values.put(FoodsContract.Columns.MONTH, mFoodItem.getMonth());
                 values.put(FoodsContract.Columns.DAY, mFoodItem.getDay());
                 values.put(FoodsContract.Columns.HOUR, mFoodItem.getTime());
-                values.put(FoodsContract.Columns.CATEGORY_ID, mFoodItem.getCategory());
+                values.put(FoodsContract.Columns.CATEGORY_ID, mFoodItem.getCategoryId());
 
                 if (mFoodItem.isValid()) {
                     if (mEditMode) {
