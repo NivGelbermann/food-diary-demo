@@ -27,7 +27,7 @@ public class FoodItem implements Serializable {
 
     public FoodItem() {
         // Initialize an empty FoodItem, to be manually filled in
-        mCategoryId = 0;
+        mCategoryId = 1;
     }
 
     public FoodItem(String id, String name, long time, int day, int month, int year) {
@@ -99,6 +99,17 @@ public class FoodItem implements Serializable {
     }
 
     public void setDate(int year, int monthOfYear, int dayOfMonth) {
+        // Calculate the time of the day
+        long hour = mTime;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mYear, mMonth, mDay);
+        hour = hour - (calendar.getTimeInMillis() / MILLISECONDS);
+
+        // Set item's time to: (new date) + (time of day)
+        calendar.set(year, monthOfYear, dayOfMonth);
+        mTime = calendar.getTimeInMillis() / MILLISECONDS + hour;
+
+        // Set item's date to new day
         mYear = year;
         mMonth = monthOfYear;
         mDay = dayOfMonth;
@@ -106,6 +117,10 @@ public class FoodItem implements Serializable {
 
     public void setTime(long time) {
         mTime = time;
+    }
+
+    public void setCategoryId(int categoryId) {
+        mCategoryId = categoryId;
     }
 
     /**
@@ -140,10 +155,7 @@ public class FoodItem implements Serializable {
      * @return true if valid, otherwise false.
      */
     public boolean isValid() {
-        if (mName == null || mName.trim().isEmpty()
-                || mTime == 0L || mDay == 0 || mMonth == 0 || mYear == 0 || mCategoryId < 1) {
-            return false;
-        }
-        return true;
+        return !(mName == null || mName.trim().isEmpty()
+                || mTime == 0L || mDay == 0 || mMonth == 0 || mYear == 0 || mCategoryId < 1);
     }
 }

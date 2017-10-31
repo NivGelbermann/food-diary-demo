@@ -1,6 +1,8 @@
 package com.nivgelbermann.fooddiarydemo.adapters;
 
+import android.content.ContentResolver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.activities.MainActivity;
+import com.nivgelbermann.fooddiarydemo.data.CategoriesContract;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.models.FoodItem;
 
@@ -24,7 +27,7 @@ import butterknife.ButterKnife;
 public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAdapter.FoodItemViewHolder> {
     private static final String TAG = "InnerRecyclerViewAdapte";
 
-    //    private Context mContext;
+//    private Context mContext;
     private Cursor mCursor;
     private FoodItemViewHolder.FoodItemListener mFoodItemListener;
 
@@ -83,11 +86,25 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
             });
         }
 
+//        void setFoodItem(FoodItem item, ContentResolver contentResolver) {
         void setFoodItem(FoodItem item) {
             mFoodItem = item;
             // TODO Handle changing row icon to match category
             text.setText(mFoodItem.getName());
             time.setText(MainActivity.utilFormatTime(mFoodItem.getTime(), "HH:mm"));
+
+            ContentResolver contentResolver = icon.getContext().getContentResolver();
+            Cursor cursor = contentResolver.query(
+                    CategoriesContract.buildCategoryUri(item.getCategoryId()),
+                    null,
+                    null,
+                    null,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                icon.setColorFilter(Color.parseColor(
+                        cursor.getString(cursor.getColumnIndex(CategoriesContract.Columns.COLOR))));
+                cursor.close();
+            }
         }
     }
 
@@ -96,8 +113,6 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
     public FoodItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: new view requested");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_inner_rv_food_item, parent, false);
-//        view.setOnClickListener(mListener);
-//        return new FoodItemViewHolder(view);
         return new FoodItemViewHolder(view, mFoodItemListener);
     }
 
@@ -120,9 +135,8 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.MONTH)),
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)),
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.CATEGORY_ID)));
+//            holder.setFoodItem(row, mContext.getContentResolver());
             holder.setFoodItem(row);
-
-//            // TODO Handle changing row icon to match category
         }
 
         Log.d(TAG, "onBindViewHolder: ends");

@@ -27,9 +27,12 @@ public class CategoryChooserRecyclerViewAdapter
 
     private Cursor mCursor;
     private CategoryViewHolder.CategoryListener mCategoryListener;
+    private int mSelectedCategory;
 
-    public CategoryChooserRecyclerViewAdapter(CategoryViewHolder.CategoryListener listener) {
+    public CategoryChooserRecyclerViewAdapter(CategoryViewHolder.CategoryListener listener, int selectedId) {
         mCategoryListener = listener;
+        Log.d(TAG, "CategoryChooserRecyclerViewAdapter: listener: " + listener);
+        mSelectedCategory = selectedId;
     }
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
@@ -49,11 +52,14 @@ public class CategoryChooserRecyclerViewAdapter
         public interface CategoryListener {
             /**
              * Called when CategoryViewHolder is clicked.
+             *
              * @param category The Category object contained in the clicked CategoryViewHolder
              */
             void onCategoryClicked(Category category);
+
             /**
              * Called when CategoryViewHolder is long-clicked.
+             *
              * @param category The Category object contained in the clicked CategoryViewHolder
              * @return Returns true if callback consumed the event, false otherwise.
              */
@@ -71,19 +77,17 @@ public class CategoryChooserRecyclerViewAdapter
                     mListener.onCategoryClicked(mCategory);
                 }
             });
-            view.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    return mListener.onCategoryLongClicked(mCategory);
-                }
-            });
         }
 
         void setCategory(Category category) {
             mCategory = category;
-            icon.setBackgroundColor(Color.parseColor(category.getColor())); // TODO Verify setBackgroundColor or setColorFilter
+            icon.setColorFilter(Color.parseColor(category.getColor()));
             name.setText(category.getName());
-            checked.setVisibility(View.GONE); // TODO Change to VISIBLE if category is current one
+            setSelected(false);
+        }
+
+        void setSelected(boolean selected) {
+            checked.setVisibility((selected ? View.VISIBLE : View.GONE));
         }
 
     }
@@ -99,10 +103,10 @@ public class CategoryChooserRecyclerViewAdapter
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
         Log.d(TAG, "onBindViewHolder: starts with position: " + position);
 
-        if((mCursor==null) || (mCursor.getCount() == 0)) {
+        if ((mCursor == null) || (mCursor.getCount() == 0)) {
             Log.d(TAG, "onBindViewHolder: mCursor empty or null");
         } else {
-            if(!mCursor.moveToPosition(position)) {
+            if (!mCursor.moveToPosition(position)) {
                 throw new IllegalStateException("Couldn't move cursor to position " + position);
             }
 
@@ -111,6 +115,9 @@ public class CategoryChooserRecyclerViewAdapter
                     mCursor.getString(mCursor.getColumnIndex(CategoriesContract.Columns.NAME)),
                     mCursor.getString(mCursor.getColumnIndex(CategoriesContract.Columns.COLOR)));
             holder.setCategory(row);
+            if (mSelectedCategory == Integer.parseInt(row.getId())) {
+                holder.setSelected(true);
+            }
         }
 
         Log.d(TAG, "onBindViewHolder: ends");
@@ -118,7 +125,7 @@ public class CategoryChooserRecyclerViewAdapter
 
     @Override
     public int getItemCount() {
-        if(mCursor == null) {
+        if (mCursor == null) {
             return 0;
         }
         return mCursor.getCount();
@@ -136,14 +143,14 @@ public class CategoryChooserRecyclerViewAdapter
     public Cursor swapCursor(Cursor newCursor) {
         Log.d(TAG, "swapCursor: starts");
 
-        if(newCursor == mCursor) {
+        if (newCursor == mCursor) {
             Log.d(TAG, "swapCursor: ends, returning null because cursor hasn't changed");
             return null;
         }
 
         final Cursor oldCursor = mCursor;
         mCursor = newCursor;
-        if(newCursor!=null) {
+        if (newCursor != null) {
             // Notify the observers about the new cursor
             notifyDataSetChanged();
         } else {

@@ -1,6 +1,5 @@
 package com.nivgelbermann.fooddiarydemo.adapters;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.models.DateCard;
 
 import java.util.ArrayList;
@@ -26,13 +25,14 @@ import butterknife.ButterKnife;
 public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAdapter.CardDateViewHolder> {
     private static final String TAG = "OuterRecyclerViewAdapte";
 
-    private Context mContext;
+//    private Context mContext;
     private Cursor mCursor;
     private Cursor mInnerCursor;
 
     // Variable to collect all the InnerRecyclerViewAdapters that have been
     // bound to a ViewHolder and displayed in OuterRecyclerView
     private ArrayList<InnerRecyclerViewAdapter> mInnerAdapters;
+    private InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener mInnerAdapterListener;
 
     static class CardDateViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.card_header_date) TextView date;
@@ -47,8 +47,10 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
         }
     }
 
-    public OuterRecyclerViewAdapter(Context context) {
-        mContext = context;
+//    public OuterRecyclerViewAdapter(Context context) {
+    public OuterRecyclerViewAdapter(InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener listener) {
+//        mContext = context;
+        mInnerAdapterListener = listener;
         mInnerAdapters = new ArrayList<>();
     }
 
@@ -87,10 +89,11 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
         if (isHolderNew) {
             // If holder is new, create a new LinearLayoutManager for the holder's RecyclerView.
             // Otherwise, do nothing, holder's RecyclerView will re-use its LinearLayoutManager.
-            holder.innerRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+//            holder.innerRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+            holder.innerRecyclerView.setLayoutManager(new LinearLayoutManager(holder.innerRecyclerView.getContext()));
         }
-        InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(
-                (InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener) mContext);
+        InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(mInnerAdapterListener);
+//                (InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener) mContext);
         mInnerAdapters.add(adapter);
         holder.innerRecyclerView.setAdapter(adapter);
 

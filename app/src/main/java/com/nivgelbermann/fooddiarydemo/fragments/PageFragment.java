@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nivgelbermann.fooddiarydemo.adapters.InnerRecyclerViewAdapter;
 import com.nivgelbermann.fooddiarydemo.utils.Constants;
 import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.adapters.OuterRecyclerViewAdapter;
@@ -91,7 +92,11 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         View view = inflater.inflate(R.layout.fragment_page, container, false);
 
         ButterKnife.bind(this, view);
-        mAdapter = new OuterRecyclerViewAdapter(getContext());
+        if (!(getContext() instanceof InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener)) {
+            throw new ClassCastException(getContext().getClass().getSimpleName()
+                    + " must implement FoodItemListener interface");
+        }
+        mAdapter = new OuterRecyclerViewAdapter((InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener) getContext());
 
         outerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         outerRecyclerView.setAdapter(mAdapter);
@@ -142,10 +147,10 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 //                        + FoodsContract.Columns.FOOD_ITEM + " COLLATE NOCASE DESC";
                 // Sort by Year -> Month -> Day -> Hour -> Name
                 // 'ORDER BY Foods.Year, Foods.Month, Foods.Day, Foods.Hour, Foods.FoodItem COLLATE NOCASE DESC'
-                sortOrder = FoodsContract.Columns.YEAR + ","
+                sortOrder = /*FoodsContract.Columns.YEAR + ","
                         + FoodsContract.Columns.MONTH + ","
                         + FoodsContract.Columns.DAY + ","
-                        + FoodsContract.Columns.HOUR + ","
+                        + */FoodsContract.Columns.HOUR + " DESC,"
                         + FoodsContract.Columns.FOOD_ITEM + " COLLATE NOCASE DESC";
                 return new CursorLoader(getActivity(),
                         FoodsContract.CONTENT_URI,

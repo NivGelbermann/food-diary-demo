@@ -5,10 +5,10 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,12 +16,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.adapters.CategoryChooserRecyclerViewAdapter;
+import com.nivgelbermann.fooddiarydemo.data.CategoriesContract;
 import com.nivgelbermann.fooddiarydemo.data.Category;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.models.FoodItem;
@@ -29,6 +30,7 @@ import com.nivgelbermann.fooddiarydemo.utils.Constants;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import java.security.InvalidParameterException;
 import java.util.Calendar;
 
 import butterknife.BindView;
@@ -37,12 +39,12 @@ import butterknife.ButterKnife;
 public class AddEditActivity extends AppCompatActivity
         implements
         DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener,
-        CategoryChooserRecyclerViewAdapter.CategoryViewHolder.CategoryListener {
+        TimePickerDialog.OnTimeSetListener {
     private static final String TAG = "AddEditActivity";
 
     private static final String DATE_PICKER_TAG = "DatePickerDialog";
     private static final String TIME_PICKER_TAG = "TimePickerDialog";
+    private static final int REQUEST_CODE_CHOOSE_CATEGORY = 1;
 
     @BindView(R.id.add_edit_coordinator_layout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.add_edit_input) EditText input;
@@ -50,6 +52,7 @@ public class AddEditActivity extends AppCompatActivity
     @BindView(R.id.add_edit_ll_category) LinearLayout categoryLayout;
     @BindView(R.id.add_edit_ll_date) LinearLayout dateLayout;
     @BindView(R.id.add_edit_ll_time) LinearLayout timeLayout;
+    @BindView(R.id.add_edit_category_ic) ImageView categoryIcon;
     @BindView(R.id.add_edit_category_content) TextView categoryContent;
     @BindView(R.id.add_edit_date_content) TextView dateContent;
     @BindView(R.id.add_edit_time_content) TextView timeContent;
@@ -96,7 +99,7 @@ public class AddEditActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // If in edit mode, inflate menu
-        if(mEditMode) {
+        if (mEditMode) {
             getMenuInflater().inflate(R.menu.menu_add_edit, menu);
             return true;
         }
@@ -151,8 +154,9 @@ public class AddEditActivity extends AppCompatActivity
         mFoodItem.setDate(year, monthOfYear, dayOfMonth);
 
         // Update display
-        dateContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
-        Log.d(TAG, "onDateSet: date: " + FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
+        String formattedTime = FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy");
+        dateContent.setText(formattedTime);
+        Log.d(TAG, "onDateSet: date: " + formattedTime);
     }
 
     @Override
@@ -168,14 +172,37 @@ public class AddEditActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCategoryClicked(Category category) {
-        Snackbar.make(coordinatorLayout, "Category " + category.getName() + " clicked", Snackbar.LENGTH_SHORT).show();
-    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult: called with result code: " + resultCode);
+        super.onActivityResult(requestCode, resultCode, data);
 
-    @Override
-    public boolean onCategoryLongClicked(Category category) {
-        // Do nothing, consume event. Ignores long clicks
-        return true;
+        if (requestCode != REQUEST_CODE_CHOOSE_CATEGORY) {
+            throw new InvalidParameterException(TAG + ".onActivityResult called with invalid request code: " + requestCode);
+        }
+        switch (resultCode) {
+            case RESULT_OK:
+                Log.d(TAG, "onActivityResult: result code OK");
+                if (data != null) {
+                    Category category = (Category) data.getSerializableExtra(Category.class.getSimpleName());
+                    if (category != null) {
+                        Log.d(TAG, "onActivityResult: displaying chosen category");
+                        categoryIcon.setColorFilter(Color.parseColor(category.getColor()));
+                        categoryContent.setText(category.getName());
+                        mFoodItem.setCategoryId(Integer.parseInt(category.getId()));
+                        Log.d(TAG, "onActivityResult: category #" + category.getId() + ": " + category.getName());
+                        Log.d(TAG, "onActivityResult: item category: " + mFoodItem.getCategoryId());
+                    }
+                }
+                break;
+
+            case RESULT_CANCELED:
+                Log.d(TAG, "onActivityResult: result code CANCELED");
+                // Do nothing
+                break;
+
+            default:
+                throw new InvalidParameterException(TAG + ".onActivityResult called with invalid result code: " + resultCode);
+        }
     }
 
     /**
@@ -184,12 +211,34 @@ public class AddEditActivity extends AppCompatActivity
      */
     private void utilDisplayFoodItem() {
         input.setText(mFoodItem.getName());
-        categoryContent.setText(String.valueOf(mFoodItem.getCategoryId()));
         dateContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
         timeContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
 
         if (mEditMode) {
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_save_white_24dp));
+
+            ContentResolver contentResolver = getContentResolver();
+            String[] projection = new String[]{CategoriesContract.Columns.NAME, CategoriesContract.Columns.COLOR};
+//            String selection = CategoriesContract.Columns._ID + " = ?";
+//            String[] selectionArgs = new String[]{String.valueOf(mFoodItem.getCategoryId())};
+            Cursor cursor = contentResolver.query(CategoriesContract.buildCategoryUri(mFoodItem.getCategoryId()),
+                    projection,
+//                    selection,
+//                    selectionArgs,
+                    null,
+                    null,
+                    null);
+            if (cursor == null || !cursor.moveToFirst()) {
+//                Log.d(TAG, "utilDisplayFoodItem: cursor: " + cursor);
+                throw new IllegalStateException("Couldn't move cursor to first");
+            }
+            categoryIcon.setColorFilter(Color.parseColor(
+                    cursor.getString(cursor.getColumnIndex(CategoriesContract.Columns.COLOR))));
+            categoryContent.setText(
+                    cursor.getString(cursor.getColumnIndex(CategoriesContract.Columns.NAME)));
+            cursor.close();
+        } else {
+            categoryContent.setText("Other"); // TODO Define default category
         }
 
         Log.d(TAG, "utilDisplayFoodItem: " + mFoodItem);
@@ -204,9 +253,9 @@ public class AddEditActivity extends AppCompatActivity
         categoryLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO Implement handling categories
                 Intent categoryIntent = new Intent(AddEditActivity.this, CategoryChooserActivity.class);
-                startActivity(categoryIntent);
+                categoryIntent.putExtra(CategoriesContract.Columns._ID, mFoodItem.getCategoryId());
+                startActivityForResult(categoryIntent, REQUEST_CODE_CHOOSE_CATEGORY);
             }
         });
 
@@ -274,10 +323,10 @@ public class AddEditActivity extends AppCompatActivity
                         utilUpdateDeleteItem(contentResolver, values);
                     } else {
                         // Insert new record into DB.
+                        Log.d(TAG, "fab.onClick: adding new item");
                         contentResolver.insert(FoodsContract.CONTENT_URI, values);
                     }
                 }
-
                 finish();
             }
         });
@@ -307,8 +356,10 @@ public class AddEditActivity extends AppCompatActivity
             long itemId = cursor.getLong(cursor.getColumnIndex(FoodsContract.Columns._ID));
             cursor.close();
             if (values != null) {
+                Log.d(TAG, "fab.onClick: updating item");
                 resolver.update(FoodsContract.buildFoodItemUri(itemId), values, null, null);
             } else {
+                Log.d(TAG, "fab.onClick: deleting item");
                 resolver.delete(FoodsContract.buildFoodItemUri(itemId), null, null);
             }
         }
