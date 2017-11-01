@@ -32,6 +32,7 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.security.InvalidParameterException;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -123,8 +124,8 @@ public class AddEditActivity extends AppCompatActivity
                 shareIntent.putExtra(Intent.EXTRA_TEXT,
                         getResources().getString(R.string.add_edit_share_item_info,
                                 mFoodItem.getName(),
-                                String.valueOf(mFoodItem.getCategoryId()),
-                                FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy HH:mm")));
+                                categoryContent.getText().toString(),
+                                FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy @ HH:mm")));
                 shareIntent.setType("text/plain");
                 startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.add_edit_share_chooser_header)));
                 break;
@@ -215,21 +216,18 @@ public class AddEditActivity extends AppCompatActivity
         timeContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
 
         if (mEditMode) {
+            // Set fab icon to "save"
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_save_white_24dp));
 
+            // Set category text and icon color according to food item's category
             ContentResolver contentResolver = getContentResolver();
             String[] projection = new String[]{CategoriesContract.Columns.NAME, CategoriesContract.Columns.COLOR};
-//            String selection = CategoriesContract.Columns._ID + " = ?";
-//            String[] selectionArgs = new String[]{String.valueOf(mFoodItem.getCategoryId())};
             Cursor cursor = contentResolver.query(CategoriesContract.buildCategoryUri(mFoodItem.getCategoryId()),
                     projection,
-//                    selection,
-//                    selectionArgs,
                     null,
                     null,
                     null);
             if (cursor == null || !cursor.moveToFirst()) {
-//                Log.d(TAG, "utilDisplayFoodItem: cursor: " + cursor);
                 throw new IllegalStateException("Couldn't move cursor to first");
             }
             categoryIcon.setColorFilter(Color.parseColor(
@@ -238,7 +236,7 @@ public class AddEditActivity extends AppCompatActivity
                     cursor.getString(cursor.getColumnIndex(CategoriesContract.Columns.NAME)));
             cursor.close();
         } else {
-            categoryContent.setText("Other"); // TODO Define default category
+            categoryContent.setText("Other"); // TODO After enabling user-defined categories, set this to load the default one
         }
 
         Log.d(TAG, "utilDisplayFoodItem: " + mFoodItem);

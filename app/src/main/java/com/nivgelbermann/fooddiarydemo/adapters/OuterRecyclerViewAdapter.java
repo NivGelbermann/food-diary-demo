@@ -14,6 +14,7 @@ import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.models.DateCard;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +26,6 @@ import butterknife.ButterKnife;
 public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecyclerViewAdapter.CardDateViewHolder> {
     private static final String TAG = "OuterRecyclerViewAdapte";
 
-//    private Context mContext;
     private Cursor mCursor;
     private Cursor mInnerCursor;
 
@@ -47,9 +47,7 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
         }
     }
 
-//    public OuterRecyclerViewAdapter(Context context) {
     public OuterRecyclerViewAdapter(InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener listener) {
-//        mContext = context;
         mInnerAdapterListener = listener;
         mInnerAdapters = new ArrayList<>();
     }
@@ -77,23 +75,22 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
             final DateCard date = new DateCard(
                     mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.DAY)),
                     "Tuesday",
-                    mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.MONTH)),
+                    (int) mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.MONTH)),
                     mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)));
 
-            holder.date.setText(String.valueOf(date.getDate()));
+//            holder.date.setText(String.valueOf(date.getDate()));
+            holder.date.setText(String.format(Locale.getDefault(),"%02d", date.getDate()));
             holder.dayOfWeek.setText(date.getDayOfWeek());
-            holder.month.setText(String.valueOf(date.getMonth() + 1));
+            holder.month.setText(date.getMonthName());
             holder.year.setText(String.valueOf(date.getYear()));
         }
 
         if (isHolderNew) {
             // If holder is new, create a new LinearLayoutManager for the holder's RecyclerView.
             // Otherwise, do nothing, holder's RecyclerView will re-use its LinearLayoutManager.
-//            holder.innerRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
             holder.innerRecyclerView.setLayoutManager(new LinearLayoutManager(holder.innerRecyclerView.getContext()));
         }
         InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(mInnerAdapterListener);
-//                (InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener) mContext);
         mInnerAdapters.add(adapter);
         holder.innerRecyclerView.setAdapter(adapter);
 

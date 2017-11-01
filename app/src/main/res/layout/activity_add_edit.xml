@@ -17,7 +17,7 @@
         <android.support.constraint.ConstraintLayout
             android:id="@+id/add_edit_constraint_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:scrollbars="none">
 
@@ -108,6 +108,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/add_edit_category_content_contdesc"
+                        android:textStyle="italic"
                         tools:text="Category to be displayed according to food item"/>
 
                 </LinearLayout>
@@ -156,6 +157,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/add_edit_date_content_contdesc"
+                        android:textStyle="italic"
                         tools:text="Date to be displayed according to food item"/>
 
                 </LinearLayout>
@@ -204,6 +206,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/add_edit_time_content_contdesc"
+                        android:textStyle="italic"
                         tools:text="Time to be displayed according to food item"/>
 
                 </LinearLayout>

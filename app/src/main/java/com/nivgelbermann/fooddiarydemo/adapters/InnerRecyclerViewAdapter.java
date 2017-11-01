@@ -27,14 +27,10 @@ import butterknife.ButterKnife;
 public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecyclerViewAdapter.FoodItemViewHolder> {
     private static final String TAG = "InnerRecyclerViewAdapte";
 
-//    private Context mContext;
     private Cursor mCursor;
     private FoodItemViewHolder.FoodItemListener mFoodItemListener;
 
-    //    InnerRecyclerViewAdapter(Context context) {
-//    InnerRecyclerViewAdapter(Context context, FoodItemViewHolder.FoodItemListener listener) {
     InnerRecyclerViewAdapter(FoodItemViewHolder.FoodItemListener listener) {
-//        mContext = context;
         mFoodItemListener = listener;
     }
 
@@ -135,7 +131,6 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.MONTH)),
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)),
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.CATEGORY_ID)));
-//            holder.setFoodItem(row, mContext.getContentResolver());
             holder.setFoodItem(row);
         }
 

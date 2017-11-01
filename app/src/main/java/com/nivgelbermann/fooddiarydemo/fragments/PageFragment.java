@@ -44,9 +44,6 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     private static final int INNER_LOADER_ID = 1;
 
     private OuterRecyclerViewAdapter mAdapter;
-    //    // Represent the page number (tab identifier).
-//    // Meaning, will always equal (tab position)
-//    private int mPagePosition;
     // Variables for querying the relevant mMonth from DB
     private int mMonth;
     private int mYear;
@@ -90,7 +87,6 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page, container, false);
-
         ButterKnife.bind(this, view);
         if (!(getContext() instanceof InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener)) {
             throw new ClassCastException(getContext().getClass().getSimpleName()
@@ -141,16 +137,9 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
                         FoodsContract.Columns.YEAR,
                         FoodsContract.Columns.HOUR,
                         FoodsContract.Columns.CATEGORY_ID};
-//                // Sort by Hour -> Name
-//                // 'ORDER BY Foods.Hour, Foods.FoodItem COLLATE NOCASE DESC'
-//                sortOrder = FoodsContract.Columns.HOUR + ","
-//                        + FoodsContract.Columns.FOOD_ITEM + " COLLATE NOCASE DESC";
                 // Sort by Year -> Month -> Day -> Hour -> Name
                 // 'ORDER BY Foods.Year, Foods.Month, Foods.Day, Foods.Hour, Foods.FoodItem COLLATE NOCASE DESC'
-                sortOrder = /*FoodsContract.Columns.YEAR + ","
-                        + FoodsContract.Columns.MONTH + ","
-                        + FoodsContract.Columns.DAY + ","
-                        + */FoodsContract.Columns.HOUR + " DESC,"
+                sortOrder = FoodsContract.Columns.HOUR + " DESC,"
                         + FoodsContract.Columns.FOOD_ITEM + " COLLATE NOCASE DESC";
                 return new CursorLoader(getActivity(),
                         FoodsContract.CONTENT_URI,
