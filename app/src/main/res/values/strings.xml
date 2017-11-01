@@ -4,11 +4,56 @@
 
     <string name="this_month">THIS MONTH</string>
     <string name="last_month">LAST MONTH</string>
-    <string name="card_header_date_textview">The day in the month</string>
-    <string name="card_header_weekday_textview">The day of the week</string>
-    <string name="card_header_month_textview">The month</string>
-    <string name="card_header_year_textview">The year</string>
-    <string name="food_text_textview">The name of the food item eaten</string>
-    <string name="food_icon_imageview">The food category to which the item belongs</string>
-    <string name="food_time_textview">The time the item was consumed</string>
+
+    <string name="card_header_date_textview_contdesc">The day in the month</string>
+    <string name="card_header_weekday_textview_contdesc">The day of the week</string>
+    <string name="card_header_month_textview_contdesc">The month</string>
+    <string name="card_header_year_textview_contdesc">The year</string>
+
+    <string name="food_text_textview_contdesc">The name of the food item eaten</string>
+    <string name="food_icon_imageview_contdesc">The food categoryId to which the item belongs</string>
+    <string name="food_time_textview_contdesc">The time the item was consumed</string>
+
+    <!-- ADD_EDIT_LAYOUT -->
+    <string name="add_edit_activity_header_add">Create Item:</string>
+    <string name="add_edit_activity_header_edit">Edit Item:</string>
+    <string name="add_edit_input_header">Food</string>
+    <string name="add_edit_input_hint">Enter food item name</string>
+    <string name="add_edit_ic_contdesc">Icon representing the data this row displays; either Category, Date or Time</string>
+    <string name="add_edit_header_textview_contdesc">Text representing the data this row displays; either Category, Date or Time</string>
+    <string name="add_edit_content_textview_contdesc">The content this row displays; either Category, Date or Time</string>
+    <string name="add_edit_recyclerview_item_category">Category</string>
+    <string name="add_edit_recyclerview_item_category_message">Tap to select categoryId</string>
+    <string name="add_edit_recyclerview_item_date">Date</string>
+    <string name="add_edit_recyclerview_item_date_message">Tap to select date</string>
+    <string name="add_edit_recyclerview_item_time">Time</string>
+    <string name="add_edit_recyclerview_item_time_message">Tap to select time</string>
+    <!-- <string name="add_edit_home_button_error">An error has occurred, changes have not been saved</string> -->
+    <string name="add_edit_general_error">An error has occurred, changes have not been saved</string>
+    <string name="add_edit_name_input_error">No name was entered</string>
+    <string name="title_activity_add_edit">AddEditActivity</string>
+    <string name="add_edit_category_header">Category</string>
+    <string name="add_edit_date_header">Date</string>
+    <string name="add_edit_time_header">Time</string>
+    <string name="add_edit_category_ic_contdesc">Icon representing the food categoryId to which this item belongs</string>
+    <string name="add_edit_category_header_contdesc">Icon representing the food categoryId to which this item belongs</string>
+    <string name="add_edit_category_content_contdesc">Icon representing the food categoryId to which this item belongs</string>
+    <string name="add_edit_date_ic_contdesc">Icon representing the date at which this item was consumed</string>
+    <string name="add_edit_date_header_contdesc">Icon representing the date at which this item was consumed</string>
+    <string name="add_edit_date_content_contdesc">Icon representing the date at which this item was consumed</string>
+    <string name="add_edit_time_ic_contdesc">Icon representing the time of the day at which this item was consumed</string>
+    <string name="add_edit_time_header_contdesc">Icon representing the time of the day at which this item was consumed</string>
+    <string name="add_edit_time_content_contdesc">Icon representing the time of the day at which this item was consumed</string>
+    <string name="add_edit_share_chooser_header">Share via...</string>
+    <string name="add_edit_share_item_info">Name: %1$s\nCategory: %2$s\nDate and time: %3$s</string>
+    <string name="add_edit_menu_cancel">Cancel</string>
+    <string name="add_edit_menu_share">Share</string>
+    <string name="add_edit_menu_delete">Delete</string>
+
+    <!-- CATEGORY_CHOOSER_LAYOUT -->
+    <string name="title_activity_category_chooser">CategoryChooserActivity</string>
+    <string name="cc_row_category_ic_contdesc">Icon representing the categoryId of this row</string>
+    <string name="cc_row_category_name_contdesc">This categoryId\'s name</string>
+    <string name="cc_row_checked_ic_contdesc">If icon is visible, this categoryId is the one selected</string>
+
 </resources>

@@ -9,6 +9,11 @@
         <!--   darker variant for the status bar and contextual app bars -->
         <item name="colorAccent">@color/colorAccent</item>
         <!--   theme UI controls like checkboxes and text fields -->
+        <item name="android:windowContentOverlay">@null</item>
+        <!--   makes the shadow beneath the action bar disappear (for pre-sdk21)-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+
     </style>
 
     <style name="AppTheme.NoActionBar">
