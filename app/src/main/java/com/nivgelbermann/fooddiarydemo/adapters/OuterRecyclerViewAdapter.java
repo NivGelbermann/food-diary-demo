@@ -64,6 +64,7 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
         Log.d(TAG, "onBindViewHolder: starts with position " + position);
 
         boolean isHolderNew = (holder.date.getText().toString().trim().isEmpty());
+        DateCard date = new DateCard(0,"",0,0);
 
         if ((mCursor == null) || (mCursor.getCount() == 0)) {
             // Do nothing for now
@@ -72,7 +73,8 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
                 throw new IllegalStateException("Couldn't move cursor to position " + position);
             }
 
-            final DateCard date = new DateCard(
+//            final DateCard date = new DateCard(
+            date = new DateCard(
                     mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.DAY)),
                     "Tuesday",
                     (int) mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.MONTH)),
@@ -90,7 +92,7 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
             // Otherwise, do nothing, holder's RecyclerView will re-use its LinearLayoutManager.
             holder.innerRecyclerView.setLayoutManager(new LinearLayoutManager(holder.innerRecyclerView.getContext()));
         }
-        InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(mInnerAdapterListener);
+        InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(mInnerAdapterListener, (int) date.getDate());
         mInnerAdapters.add(adapter);
         holder.innerRecyclerView.setAdapter(adapter);
 
@@ -152,5 +154,4 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
         Log.d(TAG, "swapInnerCursors: ends");
         return oldCursor;
     }
-
 }

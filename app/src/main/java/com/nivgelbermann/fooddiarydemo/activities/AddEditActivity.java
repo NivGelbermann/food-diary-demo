@@ -32,7 +32,6 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import java.security.InvalidParameterException;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -363,3 +362,5 @@ public class AddEditActivity extends AppCompatActivity
         }
     }
 }
+
+// TODO Add to app settings: allow users to choose whether item time is selected in hour format, or {morning, noon, evening...} format

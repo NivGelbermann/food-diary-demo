@@ -149,6 +149,19 @@ public class FoodItem implements Serializable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        FoodItem item = (FoodItem) obj;
+        return (m_Id.equals(item.getId())
+                && mName.equals(item.getName())
+                && mTime == item.getTime()
+                && mDay == item.getDay()
+                && mMonth == item.getMonth()
+                && mYear == item.getYear()
+                && mCategoryId == item.getCategoryId());
+    }
+
+
     /**
      * Verify all of FoodItem object's parameters are set and valid.
      *

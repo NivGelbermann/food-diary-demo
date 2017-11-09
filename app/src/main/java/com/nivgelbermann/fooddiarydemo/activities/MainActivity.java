@@ -190,3 +190,4 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
 }
 
 // TODO Hide ActionBar, leave tabs visible (like in Tasks To Do app)
+// TODO Add gap between bottom card and bottom of display, like in Money app, to prevent FAB covering items

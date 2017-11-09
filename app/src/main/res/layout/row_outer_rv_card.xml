@@ -9,7 +9,8 @@
     android:layout_marginLeft="@dimen/card_margin_horizontal"
     android:layout_marginRight="@dimen/card_margin_horizontal"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="0dp">
+    app:cardCornerRadius="0dp"
+    app:cardUseCompatPadding="true">
     <!--app:cardUseCompatPadding="true"-->
     <!--android:clickable="true"-->
 
@@ -38,7 +39,6 @@
             android:id="@+id/card_header_weekday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
             android:contentDescription="@string/card_header_weekday_textview_contdesc"
@@ -50,7 +50,7 @@
             android:id="@+id/card_header_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
             android:contentDescription="@string/card_header_month_textview_contdesc"
             app:layout_constraintLeft_toRightOf="@+id/card_header_date"
@@ -79,7 +79,7 @@
             app:layout_constraintTop_toBottomOf="@id/card_header_date"
             />
 
-        <!-- TODO Make this divider visible -->
+        <!-- TODO Make this divider smaller -->
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/card_recyclerview"

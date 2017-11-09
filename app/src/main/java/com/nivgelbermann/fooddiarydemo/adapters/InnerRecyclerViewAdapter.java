@@ -29,9 +29,11 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
 
     private Cursor mCursor;
     private FoodItemViewHolder.FoodItemListener mFoodItemListener;
+    private int mRepresentedDayOfMonth;
 
-    InnerRecyclerViewAdapter(FoodItemViewHolder.FoodItemListener listener) {
+    InnerRecyclerViewAdapter(FoodItemViewHolder.FoodItemListener listener, int dayOfMonth) {
         mFoodItemListener = listener;
+        mRepresentedDayOfMonth = dayOfMonth;
     }
 
     public static class FoodItemViewHolder extends RecyclerView.ViewHolder {
@@ -82,10 +84,8 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
             });
         }
 
-//        void setFoodItem(FoodItem item, ContentResolver contentResolver) {
         void setFoodItem(FoodItem item) {
             mFoodItem = item;
-            // TODO Handle changing row icon to match category
             text.setText(mFoodItem.getName());
             time.setText(MainActivity.utilFormatTime(mFoodItem.getTime(), "HH:mm"));
 
@@ -101,6 +101,22 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
                         cursor.getString(cursor.getColumnIndex(CategoriesContract.Columns.COLOR))));
                 cursor.close();
             }
+        }
+
+        void hide() {
+            icon.setVisibility(View.GONE);
+            text.setVisibility(View.GONE);
+            time.setVisibility(View.GONE);
+        }
+
+        void destroy() {
+//            ((ViewGroup) icon.getParent()).removeAllViews();
+            ((ViewGroup) icon.getParent()).removeView(icon);
+            ((ViewGroup) text.getParent()).removeView(text);
+            ((ViewGroup) time.getParent()).removeView(time);
+            icon = null;
+            text = null;
+            time = null;
         }
     }
 
@@ -121,6 +137,13 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
         } else {
             if (!mCursor.moveToPosition(position)) {
                 throw new IllegalStateException("Couldn't move cursor to position " + position);
+            }
+
+            int currentDay = mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.DAY));
+            if (currentDay != mRepresentedDayOfMonth) {
+                holder.destroy();
+                holder = null;
+                return;
             }
 
             final FoodItem row = new FoodItem(
@@ -174,6 +197,7 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
         Log.d(TAG, "swapCursor: ends, returning old cursor");
         return oldCursor;
     }
+
 }
 
 
