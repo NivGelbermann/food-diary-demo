@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -19,7 +20,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.data.CategoriesContract;
@@ -141,7 +141,7 @@ public class AddEditActivity extends AppCompatActivity
 
             default:
                 // throw new InvalidParameterException(TAG + ".onOptionsItemSelected called with invalid MenuItem " + item.getTitle());
-                Toast.makeText(this, R.string.add_edit_general_error, Toast.LENGTH_LONG).show();
+                Snackbar.make(getWindow().getDecorView().getRootView(), R.string.add_edit_general_error, Snackbar.LENGTH_LONG).show();
         }
 
         finish();
@@ -298,10 +298,7 @@ public class AddEditActivity extends AppCompatActivity
                 // and consume click event
                 String name = input.getText().toString();
                 if (name.trim().isEmpty()) {
-                    // TODO Replace all Toasts with Snackbars
-                    Toast.makeText(AddEditActivity.this,
-                            getResources().getString(R.string.add_edit_name_input_error),
-                            Toast.LENGTH_SHORT).show();
+                    Snackbar.make(view, R.string.add_edit_name_input_error, Snackbar.LENGTH_LONG).show();
                     return;
                 }
                 mFoodItem.setName(name);
@@ -344,9 +341,8 @@ public class AddEditActivity extends AppCompatActivity
 
         if ((cursor == null) || (!cursor.moveToFirst())) {
             // Cursor wasn't returned or matching item wasn't found
-            Toast.makeText(this,
-                    getResources().getString(R.string.add_edit_general_error),
-                    Toast.LENGTH_LONG).show();
+            Snackbar.make(getWindow().getDecorView().getRootView(),
+                    R.string.add_edit_general_error, Snackbar.LENGTH_LONG).show();
             String errorSource = (values == null) ? "Menu.Delete" : "FAB";
             Log.d(TAG, errorSource + ".onClick: a match in the DB wasn't found for the food item loaded in edit mode. Exiting AddEditActivity.");
         } else {
@@ -364,3 +360,4 @@ public class AddEditActivity extends AppCompatActivity
 }
 
 // TODO Add to app settings: allow users to choose whether item time is selected in hour format, or {morning, noon, evening...} format
+// TODO Add prevention of adding future items

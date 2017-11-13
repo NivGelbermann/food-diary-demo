@@ -49,7 +49,4 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
         }
         return mTabTitles.get(position);
     }
-
-    // TODO Implement only loading a page when it's tab is selected
-    // Meaning not loading ALL pages when app starts
 }

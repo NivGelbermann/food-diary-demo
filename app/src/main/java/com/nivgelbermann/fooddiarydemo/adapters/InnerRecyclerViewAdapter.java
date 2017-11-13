@@ -104,19 +104,27 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
         }
 
         void hide() {
-            icon.setVisibility(View.GONE);
-            text.setVisibility(View.GONE);
-            time.setVisibility(View.GONE);
+            if (icon != null) {
+                icon.setVisibility(View.GONE);
+            }
+            if (text != null) {
+                text.setVisibility(View.GONE);
+            }
+            if (time != null) {
+                time.setVisibility(View.GONE);
+            }
         }
 
         void destroy() {
-//            ((ViewGroup) icon.getParent()).removeAllViews();
-            ((ViewGroup) icon.getParent()).removeView(icon);
-            ((ViewGroup) text.getParent()).removeView(text);
-            ((ViewGroup) time.getParent()).removeView(time);
-            icon = null;
-            text = null;
-            time = null;
+            if (icon != null) {
+                ((ViewGroup) icon.getParent()).removeAllViews();
+//            ((ViewGroup) icon.getParent()).removeView(icon);
+//            ((ViewGroup) text.getParent()).removeView(text);
+//            ((ViewGroup) time.getParent()).removeView(time);
+                icon = null;
+                text = null;
+                time = null;
+            }
         }
     }
 
@@ -141,6 +149,9 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
 
             int currentDay = mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.DAY));
             if (currentDay != mRepresentedDayOfMonth) {
+                // Commented out logging for testing
+                // Log.d(TAG, "onBindViewHolder: DB item at position " + position + " is not from represented day: " + mRepresentedDayOfMonth);
+                // Log.d(TAG, "onBindViewHolder: item's current day: " + currentDay);
                 holder.destroy();
                 holder = null;
                 return;
@@ -199,6 +210,3 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
     }
 
 }
-
-
-// General tip - if you ever need to find the current position, just call getAdapterPosition().

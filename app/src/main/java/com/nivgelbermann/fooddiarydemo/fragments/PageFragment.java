@@ -47,6 +47,9 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     // Variables for querying the relevant mMonth from DB
     private int mMonth;
     private int mYear;
+//    private boolean mFragmentLoaded = false;
+    private boolean mIsStarted;
+    private boolean mIsVisible;
 
     /**
      * @param page Page number to create.
@@ -66,9 +69,10 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         int pagePosition = getArguments().getInt(ARG_PAGE_POS);
         mYear = Constants.EPOCH + pagePosition / Constants.MONTHS_A_YEAR;
         mMonth = pagePosition % Constants.MONTHS_A_YEAR;
+//        mFragmentLoaded = false;
     }
 
-//    @Override
+    //    @Override
 //    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 //        super.onActivityCreated(savedInstanceState);
 //        getLoaderManager().initLoader(OUTER_LOADER_ID, null, this);
@@ -76,16 +80,17 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 //    }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getLoaderManager().initLoader(OUTER_LOADER_ID, null, this);
-        getLoaderManager().initLoader(INNER_LOADER_ID, null, this);
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        getLoaderManager().initLoader(OUTER_LOADER_ID, null, this);
+//        getLoaderManager().initLoader(INNER_LOADER_ID, null, this);
+//    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView: PageFragment created for MM/yy: " + mMonth + "/" + mYear);
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         ButterKnife.bind(this, view);
         if (!(getContext() instanceof InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener)) {
@@ -97,9 +102,51 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         outerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         outerRecyclerView.setAdapter(mAdapter);
 
+//        if (!mFragmentLoaded) {
+//            utilInitLoaders();
+//             // TODO This line is the problem. It initializes the data without any delay, but doing so initializes ALL tabs on app start-up.
+//        }
+
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mIsStarted = true;
+        if(mIsVisible) {
+            utilInitLoaders();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mIsStarted = false;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+//        if (isVisibleToUser && !mFragmentLoaded) {
+//            utilInitLoaders();
+//            mFragmentLoaded = true;
+//        }
+
+//        if (getView() != null) {
+//            mFragmentLoaded = true;
+//            utilInitLoaders();
+//        } else {
+//            mFragmentLoaded = false;
+//        }
+
+        mIsVisible = isVisibleToUser;
+        if(mIsVisible && mIsStarted) {
+            utilInitLoaders();
+        } else {
+            mIsStarted = false;
+        }
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -202,5 +249,11 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
             default:
                 throw new InvalidParameterException(TAG + ".onLoadFinished called with invalid loader");
         }
+    }
+
+    private void utilInitLoaders() {
+        Log.d(TAG, "utilInitLoaders: called, initiating loaders");
+        getLoaderManager().initLoader(OUTER_LOADER_ID, null, this);
+        getLoaderManager().initLoader(INNER_LOADER_ID, null, this);
     }
 }
