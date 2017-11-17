@@ -14,9 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.nivgelbermann.fooddiarydemo.adapters.InnerRecyclerViewAdapter;
-import com.nivgelbermann.fooddiarydemo.utils.Constants;
 import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.adapters.InnerRecyclerViewAdapter;
 import com.nivgelbermann.fooddiarydemo.adapters.OuterRecyclerViewAdapter;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 
@@ -39,7 +38,9 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @BindView(R.id.outerRecyclerView) RecyclerView outerRecyclerView;
 
-    public static final String ARG_PAGE_POS = "ARG_PAGE_POS";
+    //    public static final String ARG_PAGE_POS = "ARG_PAGE_POS";
+    public static final String PAGE_MONTH = "PageMonth";
+    public static final String PAGE_YEAR = "PageYear";
     private static final int OUTER_LOADER_ID = 0;
     private static final int INNER_LOADER_ID = 1;
 
@@ -47,17 +48,34 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     // Variables for querying the relevant mMonth from DB
     private int mMonth;
     private int mYear;
-//    private boolean mFragmentLoaded = false;
+    //    private boolean mFragmentLoaded = false;
     private boolean mIsStarted;
     private boolean mIsVisible;
 
+//    /**
+//     * @param page Page number to create.
+//     * @return {@link PageFragment} object that contains given page number.
+//     */
+//    public static PageFragment newInstance(int page) {
+//        Bundle args = new Bundle();
+//        args.putInt(ARG_PAGE_POS, page);
+//        PageFragment fragment = new PageFragment();
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
+
     /**
-     * @param page Page number to create.
+     * @param monthAndYear String in format of "month/year"
      * @return {@link PageFragment} object that contains given page number.
      */
-    public static PageFragment newInstance(int page) {
+    public static PageFragment newInstance(String monthAndYear) {
+        if (!monthAndYear.contains("/")) {
+            throw new InvalidParameterException(TAG + ".newInstance received invalid monthAndYear string parameter, which does not contain \"/\" divider");
+        }
+        String[] segments = monthAndYear.split("/");
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE_POS, page);
+        args.putInt(PAGE_MONTH, Integer.valueOf(segments[0]));
+        args.putInt(PAGE_YEAR, Integer.valueOf(segments[1]));
         PageFragment fragment = new PageFragment();
         fragment.setArguments(args);
         return fragment;
@@ -66,9 +84,15 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int pagePosition = getArguments().getInt(ARG_PAGE_POS);
-        mYear = Constants.EPOCH + pagePosition / Constants.MONTHS_A_YEAR;
-        mMonth = pagePosition % Constants.MONTHS_A_YEAR;
+//        int pagePosition = getArguments().getInt(ARG_PAGE_POS);
+//        mYear = Constants.EPOCH + pagePosition / Constants.MONTHS_A_YEAR;
+//        mMonth = pagePosition % Constants.MONTHS_A_YEAR;
+        Bundle args = getArguments();
+        if (args == null) {
+            throw new IllegalStateException(TAG + ".onCreate called without arguments, cannot load required data");
+        }
+        mMonth = args.getInt(PAGE_MONTH);
+        mYear = args.getInt(PAGE_YEAR);
 //        mFragmentLoaded = false;
     }
 
@@ -102,11 +126,6 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         outerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         outerRecyclerView.setAdapter(mAdapter);
 
-//        if (!mFragmentLoaded) {
-//            utilInitLoaders();
-//             // TODO This line is the problem. It initializes the data without any delay, but doing so initializes ALL tabs on app start-up.
-//        }
-
         return view;
     }
 
@@ -114,7 +133,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onStart() {
         super.onStart();
         mIsStarted = true;
-        if(mIsVisible) {
+        if (mIsVisible) {
             utilInitLoaders();
         }
     }
@@ -141,7 +160,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 //        }
 
         mIsVisible = isVisibleToUser;
-        if(mIsVisible && mIsStarted) {
+        if (mIsVisible && mIsStarted) {
             utilInitLoaders();
         } else {
             mIsStarted = false;
