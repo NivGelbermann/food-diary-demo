@@ -1,7 +1,9 @@
 package com.nivgelbermann.fooddiarydemo.activities;
 
-import android.content.ContentResolver;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +23,7 @@ import com.nivgelbermann.fooddiarydemo.models.FoodItem;
 import com.nivgelbermann.fooddiarydemo.utils.Constants;
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
+import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,15 +33,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 //public class MainActivity extends AppCompatActivity /*implements PageFragment.OnDateSelectedInterface*/ {
-public class MainActivity extends AppCompatActivity implements InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener {
+public class MainActivity
+        extends AppCompatActivity
+        implements InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "MainActivity";
 
-    public static final int ADD_FOODITEM_DIALOG = 0;
+    //    public static final int ADD_FOODITEM_DIALOG = 0;
+    private static final int MONTHS_PAGER_LOADER_ID = 0;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.pager) ViewPager viewPager;
     @BindView(R.id.main_fab) FloatingActionButton fab;
     @BindView(R.id.recycler_tab_layout) RecyclerTabLayout recyclerTabLayout;
+
+    private MonthsStatePagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-
+        utilInitLoaders();
 //        utilLogDatabase();
 
         // Create a list to hold all page titles (MM/yyyy)
@@ -66,38 +75,43 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
 //                tabTitles.add(month.toString() + "/" + String.valueOf(i));
 //            }
 //        }
-        ContentResolver contentResolver = getContentResolver();
-        if (contentResolver != null) {
-            String[] projection = new String[]{"DISTINCT " + FoodsContract.Columns.MONTH,
-                    FoodsContract.Columns.YEAR};
-            String sortOrder = FoodsContract.Columns.YEAR + ","
-                    + FoodsContract.Columns.MONTH + " ASC";
-            Cursor cursor = contentResolver.query(
-                    FoodsContract.CONTENT_URI,
-                    projection,
-                    null,
-                    null,
-                    sortOrder);
-            if (cursor == null || cursor.getCount() == 0) {
-                Log.d(TAG, "onCreate: cursor null or empty");
-            } else {
-                // TODO This method generates tabs only for months that exist in the DB. Make it generate a tab for every month since the FIRST IN THE DB to the CURRENT DATE
-                // Right now, if the DB contains items in June and August but no items in July, a tab for July would not be created
-                // TODO Add empty database scenario
-                while (cursor.moveToNext()) {
-                    tabTitles.add(cursor.getString(
-                            cursor.getColumnIndex(FoodsContract.Columns.MONTH)) + "/"
-                            + cursor.getString(cursor.getColumnIndex(FoodsContract.Columns.YEAR)));
-                }
-            }
-        }
 
-        MonthsStatePagerAdapter adapter =
-                new MonthsStatePagerAdapter(getSupportFragmentManager(), tabTitles);
-        viewPager.setAdapter(adapter);
+
+//        ContentResolver contentResolver = getContentResolver();
+//        if (contentResolver != null) {
+//            String[] projection = new String[]{"DISTINCT " + FoodsContract.Columns.MONTH,
+//                    FoodsContract.Columns.YEAR};
+//            String sortOrder = FoodsContract.Columns.YEAR + ","
+//                    + FoodsContract.Columns.MONTH + " ASC";
+//            Cursor cursor = contentResolver.query(
+//                    FoodsContract.CONTENT_URI,
+//                    projection,
+//                    null,
+//                    null,
+//                    sortOrder);
+//            if (cursor == null || cursor.getCount() == 0) {
+//                Log.d(TAG, "onCreate: cursor null or empty");
+//            } else {
+//                // TODO This method generates tabs only for months that exist in the DB. Make it generate a tab for every month since the FIRST IN THE DB to the CURRENT DATE
+//                // Right now, if the DB contains items in June and August but no items in July, a tab for July would not be created
+//                // TODO Add empty database scenario
+//                while (cursor.moveToNext()) {
+//                    tabTitles.add(cursor.getString(
+//                            cursor.getColumnIndex(FoodsContract.Columns.MONTH)) + "/"
+//                            + cursor.getString(cursor.getColumnIndex(FoodsContract.Columns.YEAR)));
+//                }
+//            }
+//        }
+
+//        MonthsStatePagerAdapter adapter =
+//                new MonthsStatePagerAdapter(getSupportFragmentManager(), tabTitles);
+        mPagerAdapter =
+                new MonthsStatePagerAdapter(getSupportFragmentManager());
+//        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(mPagerAdapter);
 //        viewPager.setCurrentItem(CURRENT_YEAR - startYear + Constants.MONTHS_A_YEAR * CURRENT_MONTH);
-        viewPager.setCurrentItem(tabTitles.size() - 1);
-//        viewPager.setCurrentItem(adapter.getCurrentPosition());
+//        viewPager.setCurrentItem(tabTitles.size() - 1);
+//        viewPager.setCurrentItem(mPagerAdapter.getCount() - 1);
         recyclerTabLayout.setUpWithViewPager(viewPager);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +121,6 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -127,8 +140,64 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+        Log.d(TAG, "onCreateLoader: called with id: " + id);
+        String[] projection;
+        String sortOrder;
+
+        switch (id) {
+            case MONTHS_PAGER_LOADER_ID:
+                projection = new String[]{
+                        "DISTINCT " + FoodsContract.Columns.MONTH,
+                        FoodsContract.Columns.YEAR};
+                sortOrder = FoodsContract.Columns.MONTH + ", "
+                        + FoodsContract.Columns.YEAR + " ASC";
+                return new CursorLoader(this,
+                        FoodsContract.CONTENT_URI,
+                        projection,
+                        null,
+                        null,
+                        sortOrder);
+
+            default:
+                throw new InvalidParameterException(TAG + ".onCreateLoader called with invalid loader id: " + id);
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (cursor == null) {
+            throw new InvalidParameterException(TAG + ".onLoadFinished called with null cursor");
+        }
+
+        switch (loader.getId()) {
+            case MONTHS_PAGER_LOADER_ID:
+                Log.d(TAG, "onLoadFinished: starts with MONTHS_PAGER_LOADER_ID");
+                mPagerAdapter.swapCursor(cursor);
+                break;
+
+            default:
+                throw new InvalidParameterException(TAG + ".onLoadFinished called with invalid loader");
+        }
+        viewPager.setCurrentItem(mPagerAdapter.getCount() - 1);
+        Log.d(TAG, "onLoadFinished: ends with item count: " + mPagerAdapter.getCount());
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        Log.d(TAG, "onLoaderReset: called");
+        switch (loader.getId()) {
+            case MONTHS_PAGER_LOADER_ID:
+                mPagerAdapter.swapCursor(null);
+                break;
+
+            default:
+                throw new InvalidParameterException(TAG + ".onLoaderReset called with invalid loader");
+        }
     }
 
     @Override
@@ -140,45 +209,6 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
     public boolean onFoodItemLongClicked(FoodItem item) {
         // Ignore long clicks, consume event by returning true
         return true;
-    }
-
-    /**
-     * Temporary utility method for printing the entire contents
-     * of the DB to log, for my own comfort.
-     */
-    private void utilLogDatabase() {
-        Log.d(TAG, "utilLogDatabase: ====================");
-        Log.d(TAG, "utilLogDatabase:   LOGGING DATABASE");
-        Log.d(TAG, "utilLogDatabase: ====================");
-
-        String[] projection = {
-                FoodsContract.Columns._ID,
-                FoodsContract.Columns.FOOD_ITEM,
-                FoodsContract.Columns.CATEGORY_ID,
-                FoodsContract.Columns.HOUR,
-                FoodsContract.Columns.DAY,
-                FoodsContract.Columns.MONTH,
-                FoodsContract.Columns.YEAR};
-        ContentResolver contentResolver = getContentResolver();
-        Cursor cursor = contentResolver.query(FoodsContract.CONTENT_URI,
-                projection,
-                null,
-                null,
-                FoodsContract.Columns.YEAR + ", "
-                        + FoodsContract.Columns.MONTH + ", "
-                        + FoodsContract.Columns.DAY + ", "
-                        + FoodsContract.Columns.HOUR);
-        if (cursor != null) {
-            Log.d(TAG, "utilLogDatabase: number of rows: " + cursor.getCount());
-            Log.d(TAG, "utilLogDatabase: ====================");
-            while (cursor.moveToNext()) {
-                for (int i = 0; i < cursor.getColumnCount(); i++) {
-                    Log.d(TAG, "onCreate: " + cursor.getColumnName(i) + ": " + cursor.getString(i));
-                }
-                Log.d(TAG, "utilLogDatabase: ====================");
-            }
-            cursor.close();
-        }
     }
 
     /**
@@ -205,10 +235,15 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
      * @return String for time formatted
      */
     public static String utilFormatTime(long time, String timeFormat) {
+        // TODO Merge this utility method with the one in FoodItem.java, and move into a util class?
         SimpleDateFormat dateFormat = new SimpleDateFormat(timeFormat);
         return dateFormat.format(new Date(time * Constants.MILLISECONDS));
     }
-    // TODO Merge this utility method with the one in FoodItem.java, and move into a util class?
+
+    private void utilInitLoaders() {
+        Log.d(TAG, "utilInitLoaders: called, initiating loaders");
+        getLoaderManager().initLoader(MONTHS_PAGER_LOADER_ID, null, this);
+    }
 }
 
 // TODO Hide ActionBar, leave tabs visible (like in Tasks To Do app)

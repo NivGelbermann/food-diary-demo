@@ -48,7 +48,6 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     // Variables for querying the relevant mMonth from DB
     private int mMonth;
     private int mYear;
-    //    private boolean mFragmentLoaded = false;
     private boolean mIsStarted;
     private boolean mIsVisible;
 
@@ -96,21 +95,6 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 //        mFragmentLoaded = false;
     }
 
-    //    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        getLoaderManager().initLoader(OUTER_LOADER_ID, null, this);
-//        getLoaderManager().initLoader(INNER_LOADER_ID, null, this);
-//    }
-
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        getLoaderManager().initLoader(OUTER_LOADER_ID, null, this);
-//        getLoaderManager().initLoader(INNER_LOADER_ID, null, this);
-//    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -147,18 +131,6 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser && !mFragmentLoaded) {
-//            utilInitLoaders();
-//            mFragmentLoaded = true;
-//        }
-
-//        if (getView() != null) {
-//            mFragmentLoaded = true;
-//            utilInitLoaders();
-//        } else {
-//            mFragmentLoaded = false;
-//        }
-
         mIsVisible = isVisibleToUser;
         if (mIsVisible && mIsStarted) {
             utilInitLoaders();
@@ -254,7 +226,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        Log.d(TAG, "onLoaderReset: starts");
+        Log.d(TAG, "onLoaderReset: called");
 
         switch (loader.getId()) {
             case OUTER_LOADER_ID:
@@ -266,7 +238,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
                 break;
 
             default:
-                throw new InvalidParameterException(TAG + ".onLoadFinished called with invalid loader");
+                throw new InvalidParameterException(TAG + ".onLoaderReset called with invalid loader");
         }
     }
 
