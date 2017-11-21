@@ -131,14 +131,14 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
 
     @Override
     public FoodItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder: new view requested");
+        // Log.d(TAG, "onCreateViewHolder: new view requested");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_inner_rv_food_item, parent, false);
         return new FoodItemViewHolder(view, mFoodItemListener);
     }
 
     @Override
     public void onBindViewHolder(FoodItemViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: starts with position " + position);
+        // Log.d(TAG, "onBindViewHolder: starts with position " + position);
 
         if ((mCursor == null) || (mCursor.getCount() == 0)) {
             Log.d(TAG, "onBindViewHolder: mCursor empty or null");
@@ -168,7 +168,7 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
             holder.setFoodItem(row);
         }
 
-        Log.d(TAG, "onBindViewHolder: ends");
+        // Log.d(TAG, "onBindViewHolder: ends");
     }
 
     @Override

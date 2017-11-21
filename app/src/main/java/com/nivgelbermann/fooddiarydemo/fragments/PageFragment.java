@@ -38,7 +38,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @BindView(R.id.outerRecyclerView) RecyclerView outerRecyclerView;
 
-    //    public static final String ARG_PAGE_POS = "ARG_PAGE_POS";
+//    public static final String PAGE_POSITION = "PAGE_POSITION";
     public static final String PAGE_MONTH = "PageMonth";
     public static final String PAGE_YEAR = "PageYear";
     private static final int OUTER_LOADER_ID = 0;
@@ -57,7 +57,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 //     */
 //    public static PageFragment newInstance(int page) {
 //        Bundle args = new Bundle();
-//        args.putInt(ARG_PAGE_POS, page);
+//        args.putInt(PAGE_POSITION, page);
 //        PageFragment fragment = new PageFragment();
 //        fragment.setArguments(args);
 //        return fragment;
@@ -75,6 +75,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         Bundle args = new Bundle();
         args.putInt(PAGE_MONTH, Integer.valueOf(segments[0]));
         args.putInt(PAGE_YEAR, Integer.valueOf(segments[1]));
+//        args.putInt(PAGE_POSITION, position);
         PageFragment fragment = new PageFragment();
         fragment.setArguments(args);
         return fragment;
@@ -83,16 +84,13 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        int pagePosition = getArguments().getInt(ARG_PAGE_POS);
-//        mYear = Constants.EPOCH + pagePosition / Constants.MONTHS_A_YEAR;
-//        mMonth = pagePosition % Constants.MONTHS_A_YEAR;
+//        int pagePosition = getArguments().getInt(PAGE_POSITION);
         Bundle args = getArguments();
         if (args == null) {
             throw new IllegalStateException(TAG + ".onCreate called without arguments, cannot load required data");
         }
         mMonth = args.getInt(PAGE_MONTH);
         mYear = args.getInt(PAGE_YEAR);
-//        mFragmentLoaded = false;
     }
 
     @Nullable
@@ -241,6 +239,10 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
                 throw new InvalidParameterException(TAG + ".onLoaderReset called with invalid loader");
         }
     }
+
+//    public int getIdentifier() {
+//        return getArguments().getInt(PAGE_POSITION);
+//    }
 
     private void utilInitLoaders() {
         Log.d(TAG, "utilInitLoaders: called, initiating loaders");

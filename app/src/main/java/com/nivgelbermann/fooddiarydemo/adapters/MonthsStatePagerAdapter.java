@@ -1,6 +1,7 @@
 package com.nivgelbermann.fooddiarydemo.adapters;
 
 import android.database.Cursor;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,27 +29,8 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
     private List<String> mTabTitles;
     private Cursor mCursor;
 
-    public interface MonthsLoadingListener {
-        public void onMonthsLoadFinished();
-    }
-
-    //    public MonthsStatePagerAdapter(FragmentManager fm, List<String> tabTitles) {
     public MonthsStatePagerAdapter(FragmentManager fm) {
         super(fm);
-//        mTabTitles = tabTitles;
-        mTabTitles = new ArrayList<>();
-        // TODO Make this class database-aware      https://medium.com/inloop/adventures-with-fragmentstatepageradapter-4f56a643f8e0
-        if (mCursor == null || mCursor.getCount() == 0) {
-            Log.d(TAG, "MonthsStatePagerAdapter: mCursor null or empty");
-        } else {
-            while (mCursor.moveToNext()) {
-                // TODO This method generates tabs only for months that exist in the DB. Make it generate a tab for every month since the FIRST IN THE DB to the CURRENT DATE
-                // TODO Add empty database scenario
-                mTabTitles.add(mCursor.getString(
-                        mCursor.getColumnIndex(FoodsContract.Columns.MONTH)) + "/"
-                        + mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)));
-            }
-        }
     }
 
     @Override
@@ -57,13 +39,15 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
         // create separate class+layout files for each required fragment.
         // Then, in here, use a switch(position) to determine
         // which layout is to be used for each tab position.
-//        return PageFragment.newInstance(position);
         return PageFragment.newInstance(mTabTitles.get(position));
     }
 
     @Override
     public int getCount() {
 //        return mTabTitles.size();
+        if (mCursor == null) {
+            return 0;
+        }
         return mCursor.getCount();
     }
 
@@ -75,17 +59,29 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
             return "LAST MONTH";
         }
         // Build and format tab title: MM/yy
-        String[] segments = mTabTitles.get(position).split("/");
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MONTH, Integer.valueOf(segments[0]));
-        calendar.set(Calendar.YEAR, Integer.valueOf(segments[1]));
-        return String.format("%tm/%ty", calendar, calendar); // Cheat sheet: https://dzone.com/articles/java-string-format-examples
+        if (mTabTitles == null || mTabTitles.size() == 0) {
+            // The next line sometimes throws a runtime exception. For example: "java.lang.IndexOutOfBoundsException: Index: 0, Size: 0"
+            String[] segments = mTabTitles.get(position).split("/");
+            return utilFormatPageTitle(Integer.valueOf(segments[0]), Integer.valueOf(segments[1]));
+        } else {
+            return "HOYL DANG";
+        }
     }
 
     @Override
     public int getItemPosition(@NonNull Object object) {
-        return super.getItemPosition(object);
-        // TODO Implement
+        PageFragment fragment = (PageFragment) object;
+        Bundle args = fragment.getArguments();
+        if (args != null) {
+            String title = utilFormatPageTitle(args.getInt(PageFragment.PAGE_MONTH),
+                    args.getInt(PageFragment.PAGE_YEAR));
+            for (int i = 0; i < mTabTitles.size(); i++) {
+                if (mTabTitles.get(i).equals(title)) {
+                    return i;
+                }
+            }
+        }
+        return POSITION_NONE;
     }
 
     public Cursor swapCursor(Cursor newCursor) {
@@ -96,8 +92,37 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
         }
 
         final Cursor oldCursor = mCursor;
+        mCursor = newCursor;
+
+        mTabTitles = new ArrayList<>();
+        if (mCursor == null || mCursor.getCount() == 0) {
+            Log.d(TAG, "MonthsStatePagerAdapter: mCursor null or empty");
+        } else {
+            while (mCursor.moveToNext()) {
+                // TODO This method generates tabs only for months that exist in the DB. Make it generate a tab for every month since the FIRST IN THE DB to the CURRENT DATE
+                // TODO Add empty database scenario
+                mTabTitles.add(mCursor.getString(
+                        mCursor.getColumnIndex(FoodsContract.Columns.MONTH)) + "/"
+                        + mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)));
+            }
+        }
+
         notifyDataSetChanged();
         Log.d(TAG, "swapCursor: ends, returning old cursor");
         return oldCursor;
+    }
+
+    /**
+     * Formats given integer values to "MM/yy"
+     *
+     * @param month Integer value of month
+     * @param year  Integer value of year
+     * @return formatted String
+     */
+    private String utilFormatPageTitle(int month, int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        return String.format("%tm/%ty", calendar, calendar); // Cheat sheet: https://dzone.com/articles/java-string-format-examples
     }
 }

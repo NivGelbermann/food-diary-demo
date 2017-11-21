@@ -25,21 +25,17 @@ import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
 import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-//public class MainActivity extends AppCompatActivity /*implements PageFragment.OnDateSelectedInterface*/ {
 public class MainActivity
         extends AppCompatActivity
         implements InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener,
         LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "MainActivity";
 
-    //    public static final int ADD_FOODITEM_DIALOG = 0;
     private static final int MONTHS_PAGER_LOADER_ID = 0;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -51,68 +47,18 @@ public class MainActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: starts");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        utilInitLoaders();
-//        utilLogDatabase();
 
-        // Create a list to hold all page titles (MM/yyyy)
-        List<String> tabTitles = new ArrayList<>();
-//        int startYear = EPOCH;
-//
-//        for (int i = startYear; i <= CURRENT_YEAR; i++) {
-//            for (int j = Calendar.JANUARY; j <= Calendar.DECEMBER; j++) {
-//                // If loop has passed current month and year, stop adding tab titles
-//                if (i == CURRENT_YEAR && j > CURRENT_MONTH) {
-//                    break;
-//                }
-//                StringBuilder month = new StringBuilder(String.valueOf(j + 1));
-//                if (j < 9) {
-//                    month.insert(0, 0);
-//                }
-//                tabTitles.add(month.toString() + "/" + String.valueOf(i));
-//            }
-//        }
-
-
-//        ContentResolver contentResolver = getContentResolver();
-//        if (contentResolver != null) {
-//            String[] projection = new String[]{"DISTINCT " + FoodsContract.Columns.MONTH,
-//                    FoodsContract.Columns.YEAR};
-//            String sortOrder = FoodsContract.Columns.YEAR + ","
-//                    + FoodsContract.Columns.MONTH + " ASC";
-//            Cursor cursor = contentResolver.query(
-//                    FoodsContract.CONTENT_URI,
-//                    projection,
-//                    null,
-//                    null,
-//                    sortOrder);
-//            if (cursor == null || cursor.getCount() == 0) {
-//                Log.d(TAG, "onCreate: cursor null or empty");
-//            } else {
-//                // TODO This method generates tabs only for months that exist in the DB. Make it generate a tab for every month since the FIRST IN THE DB to the CURRENT DATE
-//                // Right now, if the DB contains items in June and August but no items in July, a tab for July would not be created
-//                // TODO Add empty database scenario
-//                while (cursor.moveToNext()) {
-//                    tabTitles.add(cursor.getString(
-//                            cursor.getColumnIndex(FoodsContract.Columns.MONTH)) + "/"
-//                            + cursor.getString(cursor.getColumnIndex(FoodsContract.Columns.YEAR)));
-//                }
-//            }
-//        }
-
-//        MonthsStatePagerAdapter adapter =
-//                new MonthsStatePagerAdapter(getSupportFragmentManager(), tabTitles);
         mPagerAdapter =
                 new MonthsStatePagerAdapter(getSupportFragmentManager());
-//        viewPager.setAdapter(adapter);
         viewPager.setAdapter(mPagerAdapter);
-//        viewPager.setCurrentItem(CURRENT_YEAR - startYear + Constants.MONTHS_A_YEAR * CURRENT_MONTH);
-//        viewPager.setCurrentItem(tabTitles.size() - 1);
-//        viewPager.setCurrentItem(mPagerAdapter.getCount() - 1);
         recyclerTabLayout.setUpWithViewPager(viewPager);
+
+        utilInitLoaders();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +66,7 @@ public class MainActivity
                 utilStartAddEditActivity(null);
             }
         });
+        Log.d(TAG, "onCreate: ends");
     }
 
     @Override
@@ -178,6 +125,9 @@ public class MainActivity
             case MONTHS_PAGER_LOADER_ID:
                 Log.d(TAG, "onLoadFinished: starts with MONTHS_PAGER_LOADER_ID");
                 mPagerAdapter.swapCursor(cursor);
+                if (cursor.getCount() == 0) {
+                    viewPager.setVisibility(View.INVISIBLE);
+                }
                 break;
 
             default:

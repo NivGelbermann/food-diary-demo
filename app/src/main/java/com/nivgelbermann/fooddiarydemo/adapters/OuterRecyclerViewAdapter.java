@@ -54,14 +54,14 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
 
     @Override
     public CardDateViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder: new view requested");
+        // Log.d(TAG, "onCreateViewHolder: new view requested");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_outer_rv_card, parent, false);
         return new CardDateViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(CardDateViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: starts with position " + position);
+        // Log.d(TAG, "onBindViewHolder: starts with position " + position);
 
         boolean isHolderNew = (holder.date.getText().toString().trim().isEmpty());
         DateCard date = new DateCard(0,"",0,0);
@@ -104,7 +104,7 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
         // to make it refresh its rows.
         adapter.swapCursor(mInnerCursor);
 
-        Log.d(TAG, "onBindViewHolder: ends");
+        // Log.d(TAG, "onBindViewHolder: ends");
     }
 
     @Override
