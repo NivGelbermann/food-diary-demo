@@ -1,14 +1,9 @@
 package com.nivgelbermann.fooddiarydemo.adapters;
 
-import android.database.Cursor;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
-import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.fragments.PageFragment;
 
 import java.util.ArrayList;
@@ -27,10 +22,10 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
 
     // Contains the strings for each tab title in format: month/year
     private List<String> mTabTitles;
-    private Cursor mCursor;
 
-    public MonthsStatePagerAdapter(FragmentManager fm) {
+    public MonthsStatePagerAdapter(FragmentManager fm, ArrayList<String> tabTitles) {
         super(fm);
+        mTabTitles = tabTitles;
     }
 
     @Override
@@ -44,11 +39,7 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-//        return mTabTitles.size();
-        if (mCursor == null) {
-            return 0;
-        }
-        return mCursor.getCount();
+        return mTabTitles.size();
     }
 
     @Override
@@ -59,57 +50,8 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
             return "LAST MONTH";
         }
         // Build and format tab title: MM/yy
-        if (mTabTitles == null || mTabTitles.size() == 0) {
-            // The next line sometimes throws a runtime exception. For example: "java.lang.IndexOutOfBoundsException: Index: 0, Size: 0"
-            String[] segments = mTabTitles.get(position).split("/");
-            return utilFormatPageTitle(Integer.valueOf(segments[0]), Integer.valueOf(segments[1]));
-        } else {
-            return "HOYL DANG";
-        }
-    }
-
-    @Override
-    public int getItemPosition(@NonNull Object object) {
-        PageFragment fragment = (PageFragment) object;
-        Bundle args = fragment.getArguments();
-        if (args != null) {
-            String title = utilFormatPageTitle(args.getInt(PageFragment.PAGE_MONTH),
-                    args.getInt(PageFragment.PAGE_YEAR));
-            for (int i = 0; i < mTabTitles.size(); i++) {
-                if (mTabTitles.get(i).equals(title)) {
-                    return i;
-                }
-            }
-        }
-        return POSITION_NONE;
-    }
-
-    public Cursor swapCursor(Cursor newCursor) {
-        Log.d(TAG, "swapCursor: starts");
-        if (newCursor == mCursor) {
-            Log.d(TAG, "swapCursor: ends, returning null because cursor hasn't changed");
-            return null;
-        }
-
-        final Cursor oldCursor = mCursor;
-        mCursor = newCursor;
-
-        mTabTitles = new ArrayList<>();
-        if (mCursor == null || mCursor.getCount() == 0) {
-            Log.d(TAG, "MonthsStatePagerAdapter: mCursor null or empty");
-        } else {
-            while (mCursor.moveToNext()) {
-                // TODO This method generates tabs only for months that exist in the DB. Make it generate a tab for every month since the FIRST IN THE DB to the CURRENT DATE
-                // TODO Add empty database scenario
-                mTabTitles.add(mCursor.getString(
-                        mCursor.getColumnIndex(FoodsContract.Columns.MONTH)) + "/"
-                        + mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)));
-            }
-        }
-
-        notifyDataSetChanged();
-        Log.d(TAG, "swapCursor: ends, returning old cursor");
-        return oldCursor;
+        String[] segments = mTabTitles.get(position).split("/");
+        return utilFormatPageTitle(Integer.valueOf(segments[0]), Integer.valueOf(segments[1]));
     }
 
     /**

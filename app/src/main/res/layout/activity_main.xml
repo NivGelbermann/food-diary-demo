@@ -49,8 +49,7 @@
             rtl_tabSelectedTextColor="?android:textColorPrimary"
             rtl_tabTextAppearance="@android:style/TextAppearance.DeviceDefault.Small"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            >
+            android:layout_height="48dp">
         </com.nshmura.recyclertablayout.RecyclerTabLayout>
 
     </android.support.design.widget.AppBarLayout>

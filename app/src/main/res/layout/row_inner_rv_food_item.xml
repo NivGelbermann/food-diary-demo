@@ -25,6 +25,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="0dp"
         android:contentDescription="@string/food_text_textview_contdesc"
+        android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="@+id/food_icon"
         app:layout_constraintLeft_toRightOf="@+id/food_icon"
         app:layout_constraintTop_toTopOf="@+id/food_icon"

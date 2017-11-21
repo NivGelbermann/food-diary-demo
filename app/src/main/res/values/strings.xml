@@ -2,19 +2,22 @@
     <string name="app_name">FoodDiaryDemo</string>
     <string name="action_settings">Settings</string>
 
+    <!-- MonthsStatePagerAdapter -->
     <string name="this_month">THIS MONTH</string>
     <string name="last_month">LAST MONTH</string>
 
+    <!-- row_outer_rv_card -->
     <string name="card_header_date_textview_contdesc">The day in the month</string>
     <string name="card_header_weekday_textview_contdesc">The day of the week</string>
     <string name="card_header_month_textview_contdesc">The month</string>
     <string name="card_header_year_textview_contdesc">The year</string>
 
+    <!-- row_inner_rv_food_item -->
     <string name="food_text_textview_contdesc">The name of the food item eaten</string>
     <string name="food_icon_imageview_contdesc">The food categoryId to which the item belongs</string>
     <string name="food_time_textview_contdesc">The time the item was consumed</string>
 
-    <!-- ADD_EDIT_LAYOUT -->
+    <!-- activity_add_edit -->
     <string name="add_edit_activity_header_add">Create Item:</string>
     <string name="add_edit_activity_header_edit">Edit Item:</string>
     <string name="add_edit_input_header">Food</string>
@@ -28,7 +31,6 @@
     <string name="add_edit_recyclerview_item_date_message">Tap to select date</string>
     <string name="add_edit_recyclerview_item_time">Time</string>
     <string name="add_edit_recyclerview_item_time_message">Tap to select time</string>
-    <!-- <string name="add_edit_home_button_error">An error has occurred, changes have not been saved</string> -->
     <string name="add_edit_general_error">An error has occurred, changes have not been saved</string>
     <string name="add_edit_name_input_error">No name was entered</string>
     <string name="title_activity_add_edit">AddEditActivity</string>
@@ -50,7 +52,7 @@
     <string name="add_edit_menu_share">Share</string>
     <string name="add_edit_menu_delete">Delete</string>
 
-    <!-- CATEGORY_CHOOSER_LAYOUT -->
+    <!-- activity_category_chooser -->
     <string name="title_activity_category_chooser">CategoryChooserActivity</string>
     <string name="cc_row_category_ic_contdesc">Icon representing the categoryId of this row</string>
     <string name="cc_row_category_name_contdesc">This categoryId\'s name</string>
