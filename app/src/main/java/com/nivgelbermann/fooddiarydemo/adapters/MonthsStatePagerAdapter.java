@@ -44,14 +44,37 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if (position == getCount() - 1) {
-            return "THIS MONTH";
-        } else if (position == getCount() - 2) {
-            return "LAST MONTH";
-        }
         // Build and format tab title: MM/yy
         String[] segments = mTabTitles.get(position).split("/");
+        int month = Integer.valueOf(segments[0]);
+        int year = Integer.valueOf(segments[1]);
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH);
+
+        if (month == currentMonth && year == currentYear) {
+            return "THIS MONTH"; // TODO Convert to use string resource
+        } else if ((month == currentMonth - 1 && year == currentYear)
+                || (month == 11 && year == currentYear - 1)) {
+            return "LAST MONTH"; // TODO Convert to use string resource
+        }
         return utilFormatPageTitle(Integer.valueOf(segments[0]), Integer.valueOf(segments[1]));
+    }
+
+    public int getCurrentMonthPosition() {
+        Calendar calendar = Calendar.getInstance();
+        int currentMonth = calendar.get(Calendar.MONTH);
+        int currentYear = calendar.get(Calendar.YEAR);
+
+        for (int i = 0; i < getCount(); i++) {
+            String[] segments = mTabTitles.get(i).split("/");
+            int month = Integer.valueOf(segments[0]);
+            int year = Integer.valueOf(segments[1]);
+            if (month == currentMonth && year == currentYear) {
+                return i;
+            }
+        }
+        return getCount()-1;
     }
 
     /**

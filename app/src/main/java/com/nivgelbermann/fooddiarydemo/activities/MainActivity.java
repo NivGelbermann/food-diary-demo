@@ -78,7 +78,7 @@ public class MainActivity
         mPagerAdapter =
                 new MonthsStatePagerAdapter(getSupportFragmentManager(), tabTitles);
         viewPager.setAdapter(mPagerAdapter);
-        viewPager.setCurrentItem(tabTitles.size() - 1);
+        viewPager.setCurrentItem(mPagerAdapter.getCurrentMonthPosition());
         recyclerTabLayout.setUpWithViewPager(viewPager);
 
         fab.setOnClickListener(new View.OnClickListener() {
