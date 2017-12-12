@@ -61,7 +61,7 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
 
     @Override
     public void onBindViewHolder(CardDateViewHolder holder, int position) {
-        // Log.d(TAG, "onBindViewHolder: starts with position " + position);
+        Log.d(TAG, "onBindViewHolder: starts with position " + position);
 
         boolean isHolderNew = (holder.date.getText().toString().trim().isEmpty());
         DateCard date = new DateCard(0,"",0,0);
@@ -75,16 +75,18 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
 
 //            final DateCard date = new DateCard(
             date = new DateCard(
-                    mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.DAY)),
-                    "Tuesday",
-                    (int) mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.MONTH)),
-                    mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)));
+                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.DAY)),
+                    "Tuesday", // TODO Change to get actual day of week, OR update DateCard to figure that out on its own
+                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.MONTH)),
+                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)));
+            Log.d(TAG, "onBindViewHolder: date: " + date);
 
 //            holder.date.setText(String.valueOf(date.getDate()));
             holder.date.setText(String.format(Locale.getDefault(),"%02d", date.getDate()));
             holder.dayOfWeek.setText(date.getDayOfWeek());
             holder.month.setText(date.getMonthName());
             holder.year.setText(String.valueOf(date.getYear()));
+            Log.d(TAG, "onBindViewHolder: date has been set to views");
         }
 
         if (isHolderNew) {
@@ -92,7 +94,8 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
             // Otherwise, do nothing, holder's RecyclerView will re-use its LinearLayoutManager.
             holder.innerRecyclerView.setLayoutManager(new LinearLayoutManager(holder.innerRecyclerView.getContext()));
         }
-        InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(mInnerAdapterListener, (int) date.getDate());
+        InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(
+                mInnerAdapterListener, date.getDate());
         mInnerAdapters.add(adapter);
         holder.innerRecyclerView.setAdapter(adapter);
 

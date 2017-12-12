@@ -12,10 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.activities.MainActivity;
 import com.nivgelbermann.fooddiarydemo.data.CategoriesContract;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.models.FoodItem;
+import com.nivgelbermann.fooddiarydemo.utils.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -87,7 +87,7 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
         void setFoodItem(FoodItem item) {
             mFoodItem = item;
             text.setText(mFoodItem.getName());
-            time.setText(MainActivity.utilFormatTime(mFoodItem.getTime(), "HH:mm"));
+            time.setText(Util.formatTime(mFoodItem.getTime(), "HH:mm"));
 
             ContentResolver contentResolver = icon.getContext().getContentResolver();
             Cursor cursor = contentResolver.query(

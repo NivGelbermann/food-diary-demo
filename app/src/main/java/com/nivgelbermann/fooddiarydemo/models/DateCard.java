@@ -10,19 +10,19 @@ import java.util.Calendar;
 public class DateCard implements Serializable {
     private static final long serialVersionUID = -2385710830075534562L;
 
-    private long mDate;
+    private int mDate;
     private String mDayOfWeek;
     private int mMonth;
-    private long mYear;
+    private int mYear;
 
-    public DateCard(long date, String dayOfWeek, int month, long year) {
+    public DateCard(int date, String dayOfWeek, int month, int year) {
         mDate = date;
         mDayOfWeek = dayOfWeek;
         mMonth = month;
         mYear = year;
     }
 
-    public long getDate() {
+    public int getDate() {
         return mDate;
     }
 
@@ -30,11 +30,11 @@ public class DateCard implements Serializable {
         return mDayOfWeek;
     }
 
-    public long getMonth() {
+    public int getMonth() {
         return mMonth;
     }
 
-    public long getYear() {
+    public int getYear() {
         return mYear;
     }
 
@@ -47,7 +47,7 @@ public class DateCard implements Serializable {
     @Override
     public String toString() {
         return "DateCard{" +
-                ", date=" + mDate +
+                "date=" + mDate +
                 ", dayOfWeek='" + mDayOfWeek + '\'' +
                 ", month=" + mMonth +
                 ", year=" + mYear +

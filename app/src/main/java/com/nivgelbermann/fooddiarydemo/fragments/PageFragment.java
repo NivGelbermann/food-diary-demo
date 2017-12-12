@@ -36,9 +36,8 @@ import butterknife.ButterKnife;
 public class PageFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "PageFragment";
 
-    @BindView(R.id.outerRecyclerView) RecyclerView outerRecyclerView;
+    @BindView(R.id.page_outer_recyclerView) RecyclerView outerRecyclerView;
 
-//    public static final String PAGE_POSITION = "PAGE_POSITION";
     public static final String PAGE_MONTH = "PageMonth";
     public static final String PAGE_YEAR = "PageYear";
     private static final int OUTER_LOADER_ID = 0;
@@ -51,31 +50,14 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     private boolean mIsStarted;
     private boolean mIsVisible;
 
-//    /**
-//     * @param page Page number to create.
-//     * @return {@link PageFragment} object that contains given page number.
-//     */
-//    public static PageFragment newInstance(int page) {
-//        Bundle args = new Bundle();
-//        args.putInt(PAGE_POSITION, page);
-//        PageFragment fragment = new PageFragment();
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
     /**
-     * @param monthAndYear String in format of "month/year"
+//     * @param monthAndYear String in format of "month/year"
      * @return {@link PageFragment} object that contains given page number.
      */
-    public static PageFragment newInstance(String monthAndYear) {
-        if (!monthAndYear.contains("/")) {
-            throw new InvalidParameterException(TAG + ".newInstance received invalid monthAndYear string parameter, which does not contain \"/\" divider");
-        }
-        String[] segments = monthAndYear.split("/");
+    public static PageFragment newInstance(int month, int year) {
         Bundle args = new Bundle();
-        args.putInt(PAGE_MONTH, Integer.valueOf(segments[0]));
-        args.putInt(PAGE_YEAR, Integer.valueOf(segments[1]));
-//        args.putInt(PAGE_POSITION, position);
+        args.putInt(PAGE_MONTH, month);
+        args.putInt(PAGE_YEAR, year);
         PageFragment fragment = new PageFragment();
         fragment.setArguments(args);
         return fragment;
@@ -83,8 +65,8 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate: called");
         super.onCreate(savedInstanceState);
-//        int pagePosition = getArguments().getInt(PAGE_POSITION);
         Bundle args = getArguments();
         if (args == null) {
             throw new IllegalStateException(TAG + ".onCreate called without arguments, cannot load required data");
@@ -113,11 +95,14 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onStart() {
+        Log.d(TAG, "onStart: starts");
         super.onStart();
         mIsStarted = true;
         if (mIsVisible) {
+            Log.d(TAG, "onStart: page is visible, initiating loaders");
             utilInitLoaders();
         }
+        Log.d(TAG, "onStart: ends");
     }
 
     @Override
@@ -128,18 +113,21 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+        Log.d(TAG, "setUserVisibleHint: starts");
         super.setUserVisibleHint(isVisibleToUser);
         mIsVisible = isVisibleToUser;
         if (mIsVisible && mIsStarted) {
+            Log.d(TAG, "setUserVisibleHint: page is visible and is started, initiating loaders");
             utilInitLoaders();
         } else {
+            Log.d(TAG, "setUserVisibleHint: page isn't started");
             mIsStarted = false;
         }
+        Log.d(TAG, "setUserVisibleHint: ends");
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Log.d(TAG, "onCreateLoader: " + mMonth + "/" + mYear + " called with id: " + id);
         String[] projection;
         String sortOrder;
 
@@ -149,6 +137,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
         switch (id) {
             case OUTER_LOADER_ID:
+                Log.d(TAG, "onCreateLoader: " + mMonth + "/" + mYear + " called with id OUTER_LOADER ID");
                 // SOME UGLY SHIT SQL injection - alternative solution: https://stackoverflow.com/questions/24877815/distinct-query-for-cursorloader
                 projection = new String[]{"DISTINCT " + FoodsContract.Columns.DAY,
                         FoodsContract.Columns.MONTH,
@@ -166,6 +155,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
                         sortOrder);
 
             case INNER_LOADER_ID:
+                Log.d(TAG, "onCreateLoader: " + mMonth + "/" + mYear + " called with id INNER_LOADER_ID");
                 projection = new String[]{FoodsContract.Columns._ID,
                         FoodsContract.Columns.FOOD_ITEM,
                         FoodsContract.Columns.DAY,
@@ -193,9 +183,6 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-//        Log.d(TAG, "onLoadFinished: starts");
-//        Log.d(TAG, "onLoadFinished: " + mMonth + "/" + mYear + " finished with id: " + id);
-
         if (cursor == null) {
             throw new InvalidParameterException(TAG + ".onLoadFinished called with null cursor");
         }

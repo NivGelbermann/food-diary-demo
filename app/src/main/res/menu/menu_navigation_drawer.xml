@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_navdrawer_this_month"
+            android:icon="@drawable/ic_event_grey_700_24dp"
+            android:title="@string/navdrawer_item_this_month"
+            android:checked="true"/>
+        <item
+            android:id="@+id/menu_navdrawer_history"
+            android:icon="@drawable/ic_history_grey_700_24dp"
+            android:title="@string/navdrawer_item_history"/>
+        <item
+            android:id="@+id/menu_navdrawer_categories"
+            android:icon="@drawable/ic_stars_grey_500_24dp"
+            android:title="@string/navdrawer_item_categories"/>
+
+        <item android:title="menu_navdrawer_non_content_items">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/menu_navdrawer_settings"
+                        android:icon="@drawable/ic_settings_grey_700_24dp"
+                        android:title="@string/navdrawer_item_settings"/>
+                    <item
+                        android:id="@+id/menu_navdrawer_feedback"
+                        android:icon="@drawable/ic_feedback_grey_700_24dp"
+                        android:title="@string/navdrawer_item_feedback"/>
+                </group>
+            </menu>
+        </item>
+
+    </group>
+</menu>

@@ -26,7 +26,7 @@ import com.nivgelbermann.fooddiarydemo.data.CategoriesContract;
 import com.nivgelbermann.fooddiarydemo.data.Category;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.models.FoodItem;
-import com.nivgelbermann.fooddiarydemo.utils.Constants;
+import com.nivgelbermann.fooddiarydemo.utils.Util;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -78,7 +78,7 @@ public class AddEditActivity extends AppCompatActivity
             // If adding an item, initialize it for right now's date and time
             Calendar now = Calendar.getInstance();
             mFoodItem.setDate(now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
-            mFoodItem.setTime(now.getTimeInMillis() / Constants.MILLISECONDS);
+            mFoodItem.setTime(now.getTimeInMillis() / Util.MILLISECONDS);
         }
 
         utilDisplayFoodItem();
@@ -91,7 +91,6 @@ public class AddEditActivity extends AppCompatActivity
                 ? resources.getString(R.string.add_edit_activity_header_edit)
                 : resources.getString(R.string.add_edit_activity_header_add));
         getSupportActionBar().setElevation(0);
-//        setHasOptionsMenu(mEditMode);
 
         Log.d(TAG, "onCreate: ends");
     }
@@ -164,7 +163,7 @@ public class AddEditActivity extends AppCompatActivity
         // Update mFoodItem
         Calendar calendar = Calendar.getInstance();
         calendar.set(mFoodItem.getYear(), mFoodItem.getMonth(), mFoodItem.getDay(), hourOfDay, minute, second);
-        mFoodItem.setTime(calendar.getTimeInMillis() / Constants.MILLISECONDS);
+        mFoodItem.setTime(calendar.getTimeInMillis() / Util.MILLISECONDS);
 
         // Update display
         timeContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));

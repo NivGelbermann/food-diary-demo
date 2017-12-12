@@ -34,7 +34,10 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
         // create separate class+layout files for each required fragment.
         // Then, in here, use a switch(position) to determine
         // which layout is to be used for each tab position.
-        return PageFragment.newInstance(mTabTitles.get(position));
+        String[] segments = mTabTitles.get(position).split("/");
+        int month = Integer.valueOf(segments[0]);
+        int year = Integer.valueOf(segments[1]);
+        return PageFragment.newInstance(month, year);
     }
 
     @Override
@@ -58,7 +61,7 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
                 || (month == 11 && year == currentYear - 1)) {
             return "LAST MONTH"; // TODO Convert to use string resource
         }
-        return utilFormatPageTitle(Integer.valueOf(segments[0]), Integer.valueOf(segments[1]));
+        return utilFormatPageTitle(Integer.valueOf(segments[0]), Integer.valueOf(segments[1])); // TODO Change to local variables month & year
     }
 
     public int getCurrentMonthPosition() {
