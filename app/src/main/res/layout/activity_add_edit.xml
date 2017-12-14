@@ -35,7 +35,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:popupTheme="@style/ThemeOverlay.AppCompat"
                 tools:ignore="UnusedAttribute">
-                <!--android:theme="?attr/actionBarTheme"-->
 
                 <android.support.v7.widget.LinearLayoutCompat
                     android:id="@+id/add_edit_ll_header"

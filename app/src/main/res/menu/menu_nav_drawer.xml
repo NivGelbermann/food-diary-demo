@@ -3,19 +3,21 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_navdrawer_this_month"
+            android:checked="true"
             android:icon="@drawable/ic_event_grey_700_24dp"
-            android:title="@string/navdrawer_item_this_month"
-            android:checked="true"/>
+            android:title="@string/navdrawer_item_this_month"/>
         <item
             android:id="@+id/menu_navdrawer_history"
             android:icon="@drawable/ic_history_grey_700_24dp"
             android:title="@string/navdrawer_item_history"/>
+
         <item
             android:id="@+id/menu_navdrawer_categories"
             android:icon="@drawable/ic_stars_grey_500_24dp"
             android:title="@string/navdrawer_item_categories"/>
 
-        <item android:title="menu_navdrawer_non_content_items">
+        <!-- TODO Get rid of this header-->
+        <item android:title="non-content items:">
             <menu>
                 <group android:checkableBehavior="single">
                     <item

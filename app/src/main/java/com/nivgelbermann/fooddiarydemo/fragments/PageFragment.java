@@ -51,8 +51,9 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     private boolean mIsVisible;
 
     /**
-//     * @param monthAndYear String in format of "month/year"
-     * @return {@link PageFragment} object that contains given page number.
+     * @param month month represented by page
+     * @param year year represented by page
+     * @return {@link PageFragment} object representing given month and year
      */
     public static PageFragment newInstance(int month, int year) {
         Bundle args = new Bundle();

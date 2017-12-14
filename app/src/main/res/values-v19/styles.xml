@@ -1,8 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-    <!--<style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">-->
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <!--   your app branding color for the app bar -->
@@ -12,15 +11,7 @@
         <!--   theme UI controls like checkboxes and text fields -->
         <item name="android:windowContentOverlay">@null</item>
         <!--   makes the shadow beneath the action bar disappear (for pre-sdk21)-->
+        <item name="android:windowTranslucentStatus">true</item>
+        <!--   makes status bar translucent (to display the nav drawer beneath it) -->
     </style>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="Theme.AppCompat.Light.NoActionBar"/>
-
-    <style name="AppTheme.PopupOverlay" parent="Theme.AppCompat.Light.NoActionBar"/>
-
 </resources>

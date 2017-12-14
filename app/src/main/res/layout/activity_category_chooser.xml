@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context="com.nivgelbermann.fooddiarydemo.fragments.HistoryFragment">
+    <!--android:paddingTop="@dimen/nav_drawer_top_padding"-->
 
     <!--<android.support.design.widget.AppBarLayout-->
-    <!--android:id="@+id/category_chooser_apl"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:theme="@style/AppTheme.AppBarOverlay">-->
+        <!--android:id="@+id/category_chooser_apl"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:theme="@style/AppTheme">-->
 
-    <!--<android.support.v7.widget.Toolbar-->
-    <!--android:id="@+id/category_chooser_toolbar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="?attr/actionBarSize"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:background="?attr/colorPrimary"-->
-    <!--android:minHeight="?attr/actionBarSize"-->
-    <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
-    <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>-->
-
+        <!--<android.support.v7.widget.Toolbar-->
+        <!--android:id="@+id/category_chooser_toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="?attr/actionBarSize"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:background="?attr/colorPrimary"-->
+        <!--android:minHeight="?attr/actionBarSize"-->
+        <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
+        <!--app:popupTheme="@style/ThemeOverlay.AppCompat"/>-->
     <!--</android.support.design.widget.AppBarLayout>-->
 
     <android.support.v7.widget.RecyclerView
@@ -30,7 +31,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
+
         tools:listitem="@layout/row_category_chooser_category"/>
     <!--android:layout_below="@+id/category_chooser_apl"-->
+    <!--android:paddingTop="?attr/actionBarSize"-->
 
-</RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
+
+<!--
+     The attribute that made the translucent status bar appear BLUE (as if covering the action bar)
+     instead of GREY (as if covering empty space)
+     was fitsSystemWindows
+     !!!!!!!!!!
+-->

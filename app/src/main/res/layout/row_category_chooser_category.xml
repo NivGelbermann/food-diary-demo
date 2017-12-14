@@ -51,11 +51,13 @@
 
     <View
         android:id="@+id/cc_row_divider"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="0dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
+        android:layout_marginStart="16dp"
         android:background="@color/md_grey_300"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -2,9 +2,15 @@ package com.nivgelbermann.fooddiarydemo.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +18,7 @@ import android.view.View;
 
 import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.adapters.InnerRecyclerViewAdapter;
+import com.nivgelbermann.fooddiarydemo.fragments.HistoryFragment;
 import com.nivgelbermann.fooddiarydemo.fragments.PageFragment;
 import com.nivgelbermann.fooddiarydemo.models.FoodItem;
 
@@ -24,12 +31,21 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
     private static final String TAG = "MainActivity";
 
     @BindView(R.id.main_fab) FloatingActionButton fab;
+    @BindView(R.id.main_drawer_layout) DrawerLayout drawerLayout; // Opens & closes nav drawer
+    @BindView(R.id.main_toolbar) Toolbar toolbar;
+    @BindView(R.id.main_navigation_view) NavigationView navigationView; // Nav drawer itself
+
+//    private ActionBarDrawerToggle drawerToggle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
 
         Calendar calendar = Calendar.getInstance();
         PageFragment fragment = PageFragment.newInstance(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
@@ -43,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
                 utilStartAddEditActivity(null);
             }
         });
+
+        setupDrawerContent(navigationView);
     }
 
     @Override
@@ -54,14 +72,14 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        // The action bar home/up action should open or close the drawer.
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -91,4 +109,72 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
         }
         startActivity(addEditIntent);
     }
+
+    /**
+     * Sets up listener for navigation drawer item selection.
+     *
+     * @param navigationView navigation view in which item was selected
+     */
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        selectDrawerItem(item);
+                        return true;
+                    }
+                }
+        );
+    }
+
+    /**
+     * Changes display to fragment selected by user (by nav drawer item click)
+     *
+     * @param item MenuItem representing the fragment selected by the user
+     */
+    private void selectDrawerItem(@NonNull MenuItem item) {
+        Log.d(TAG, "selectDrawerItem: starts");
+        // Create a new fragment and specify the fragment to show based on nav item clicked
+        Fragment fragment = null;
+        Calendar calendar;
+        switch (item.getItemId()) {
+            case R.id.menu_navdrawer_this_month:
+                calendar = Calendar.getInstance();
+                fragment = PageFragment.newInstance(
+                        calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
+                break;
+
+
+            case R.id.menu_navdrawer_history:
+                fragment = HistoryFragment.newInstance();
+                break;
+
+            // TODO Fill out with the rest of the fragments as they are created
+            // TODO Create matching CategoriesFragment class OR convert CategoriesChooserActivity to a fragment
+
+            default:
+                calendar = Calendar.getInstance();
+                fragment = PageFragment.newInstance(
+                        calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
+                break;
+        }
+
+        // If nav item clicked isn't the currently displayed fragment, then
+        // insert the fragment by replacing any existing fragment. Otherwise, skip.
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (!fragment.getClass().equals(fragmentManager.getFragments().get(0).getClass())) {
+            fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
+        }
+
+        // Highlight the selected item has been done by NavigationView
+        item.setChecked(true);
+        // Set action bar title
+        setTitle(item.getTitle());
+        // Close navigation drawer
+        drawerLayout.closeDrawers();
+        Log.d(TAG, "selectDrawerItem: ends, nav item clicked: " + fragment.getClass());
+    }
 }
+
+
+// TODO Format all in-class utility methods in project to either have "util" in method header or not. Adjust documentation accordingly.
