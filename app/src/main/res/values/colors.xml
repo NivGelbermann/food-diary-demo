@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- text color for unselected tabs in tablayout, with default (#3F51B5) colorPrimary background -->
+    <color name="unselectedTab">#C6CBE9</color>
 </resources>

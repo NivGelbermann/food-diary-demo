@@ -2,7 +2,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-    <!--<style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">-->
+        <!--<style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">-->
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <!--   your app branding color for the app bar -->
@@ -22,5 +22,19 @@
     <style name="AppTheme.AppBarOverlay" parent="Theme.AppCompat.Light.NoActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="Theme.AppCompat.Light.NoActionBar"/>
+
+    <!-- Style for TabLayout in fragment_history.xml. -->
+    <!-- Every item can be included in xml file as "app:itemName". -->
+    <style name="HistoryTabLayoutTheme">
+        <item name="tabBackground">@color/colorPrimary</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabIndicatorColor">@color/colorAccent</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabMinWidth">72dp</item>
+        <item name="tabMode">scrollable</item>
+        <item name="tabSelectedTextColor">@color/md_white_1000</item>
+        <item name="tabTextAppearance">@android:style/TextAppearance.DeviceDefault.Small</item>
+        <item name="tabTextColor">@color/unselectedTab</item>
+    </style>
 
 </resources>
