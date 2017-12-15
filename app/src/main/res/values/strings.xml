@@ -3,7 +3,8 @@
     <string name="action_settings">Settings</string>
 
     <!-- MonthsStatePagerAdapter -->
-    <string name="this_month">THIS MONTH</string>
+    <string name="this_month_upp">THIS MONTH</string>
+    <string name="this_month">This month</string>
     <string name="last_month">LAST MONTH</string>
 
     <!-- row_outer_rv_card -->

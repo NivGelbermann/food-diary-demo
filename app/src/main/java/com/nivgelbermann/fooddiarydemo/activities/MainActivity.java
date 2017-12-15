@@ -27,16 +27,15 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener {
+public class MainActivity
+        extends AppCompatActivity
+        implements InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener {
     private static final String TAG = "MainActivity";
 
     @BindView(R.id.main_fab) FloatingActionButton fab;
     @BindView(R.id.main_drawer_layout) DrawerLayout drawerLayout; // Opens & closes nav drawer
     @BindView(R.id.main_toolbar) Toolbar toolbar;
     @BindView(R.id.main_navigation_view) NavigationView navigationView; // Nav drawer itself
-
-//    private ActionBarDrawerToggle drawerToggle;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +45,11 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+        setTitle(R.string.this_month);
 
         Calendar calendar = Calendar.getInstance();
-        PageFragment fragment = PageFragment.newInstance(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
+        PageFragment fragment = PageFragment.newInstance(
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
         fragment.setUserVisibleHint(true);
@@ -164,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements InnerRecyclerView
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (!fragment.getClass().equals(fragmentManager.getFragments().get(0).getClass())) {
             fragmentManager.beginTransaction().replace(R.id.main_container, fragment).commit();
+            fragment.setUserVisibleHint(true);
         }
 
         // Highlight the selected item has been done by NavigationView

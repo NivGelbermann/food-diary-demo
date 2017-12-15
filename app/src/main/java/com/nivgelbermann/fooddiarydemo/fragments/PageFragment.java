@@ -52,7 +52,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     /**
      * @param month month represented by page
-     * @param year year represented by page
+     * @param year  year represented by page
      * @return {@link PageFragment} object representing given month and year
      */
     public static PageFragment newInstance(int month, int year) {
@@ -114,17 +114,17 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        Log.d(TAG, "setUserVisibleHint: starts");
+        Log.d(TAG, mMonth + "/" + mYear +" " +"setUserVisibleHint: starts");
         super.setUserVisibleHint(isVisibleToUser);
         mIsVisible = isVisibleToUser;
         if (mIsVisible && mIsStarted) {
-            Log.d(TAG, "setUserVisibleHint: page is visible and is started, initiating loaders");
+            Log.d(TAG, mMonth + "/" + mYear +" " + "setUserVisibleHint: page is visible and is started, initiating loaders");
             utilInitLoaders();
         } else {
-            Log.d(TAG, "setUserVisibleHint: page isn't started");
+            Log.d(TAG, mMonth + "/" + mYear +" " + "setUserVisibleHint: page isn't started");
             mIsStarted = false;
         }
-        Log.d(TAG, "setUserVisibleHint: ends");
+        Log.d(TAG, mMonth + "/" + mYear +" " + "setUserVisibleHint: ends");
     }
 
     @Override
@@ -138,7 +138,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
         switch (id) {
             case OUTER_LOADER_ID:
-                Log.d(TAG, "onCreateLoader: " + mMonth + "/" + mYear + " called with id OUTER_LOADER ID");
+                Log.d(TAG, mMonth + "/" + mYear + " onCreateLoader: called with id OUTER_LOADER ID");
                 // SOME UGLY SHIT SQL injection - alternative solution: https://stackoverflow.com/questions/24877815/distinct-query-for-cursorloader
                 projection = new String[]{"DISTINCT " + FoodsContract.Columns.DAY,
                         FoodsContract.Columns.MONTH,
@@ -156,7 +156,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
                         sortOrder);
 
             case INNER_LOADER_ID:
-                Log.d(TAG, "onCreateLoader: " + mMonth + "/" + mYear + " called with id INNER_LOADER_ID");
+                Log.d(TAG, mMonth + "/" + mYear + " onCreateLoader: called with id INNER_LOADER_ID");
                 projection = new String[]{FoodsContract.Columns._ID,
                         FoodsContract.Columns.FOOD_ITEM,
                         FoodsContract.Columns.DAY,
@@ -178,41 +178,41 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
             // Add cases for other Loader Id's for loading information from other databases
 
             default:
-                throw new InvalidParameterException(TAG + ".onCreateLoader called with invalid loader id: " + id);
+                throw new InvalidParameterException(TAG + " " + mMonth + "/" + mYear + " .onCreateLoader called with invalid loader id: " + id);
         }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cursor == null) {
-            throw new InvalidParameterException(TAG + ".onLoadFinished called with null cursor");
+            throw new InvalidParameterException(TAG + " " + mMonth + "/" + mYear + " .onLoadFinished called with null cursor");
         }
 
         switch (loader.getId()) {
             case OUTER_LOADER_ID:
-                Log.d(TAG, "onLoadFinished: " + mMonth + "/" + mYear + " starts with id OUTER_LOADER_ID");
+                Log.d(TAG, mMonth + "/" + mYear + " onLoadFinished: starts with id OUTER_LOADER_ID");
                 mAdapter.swapCursor(cursor);
 //                int count = mAdapter.getItemCount();
                 break;
 
             case INNER_LOADER_ID:
-                Log.d(TAG, "onLoadFinished: " + mMonth + "/" + mYear + " starts with id INNER_LOADER_ID");
-                Log.d(TAG, "onLoadFinished: swapping inner cursors");
+                Log.d(TAG, mMonth + "/" + mYear + " onLoadFinished: starts with id INNER_LOADER_ID");
+                Log.d(TAG, mMonth + "/" + mYear + " onLoadFinished: swapping inner cursors");
                 mAdapter.swapInnerCursors(cursor);
 //                int count = mAdapter.getInnerAdaptersCount();
                 break;
 
             default:
-                throw new InvalidParameterException(TAG + ".onLoadFinished called with invalid loader");
+                throw new InvalidParameterException(TAG + " " + mMonth + "/" + mYear + " .onLoadFinished called with invalid loader");
         }
 
 //        Log.d(TAG, "onLoadFinished: ends with count: " + count);
-        Log.d(TAG, "onLoadFinished: ends with item count: " + mAdapter.getItemCount());
+        Log.d(TAG, mMonth + "/" + mYear + " onLoadFinished: ends with item count: " + mAdapter.getItemCount());
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        Log.d(TAG, "onLoaderReset: called");
+        Log.d(TAG, mMonth + "/" + mYear + " onLoaderReset: called");
 
         switch (loader.getId()) {
             case OUTER_LOADER_ID:
@@ -224,7 +224,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
                 break;
 
             default:
-                throw new InvalidParameterException(TAG + ".onLoaderReset called with invalid loader");
+                throw new InvalidParameterException(TAG + " " + mMonth + "/" + mYear + " .onLoaderReset called with invalid loader");
         }
     }
 
@@ -233,7 +233,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 //    }
 
     private void utilInitLoaders() {
-        Log.d(TAG, "utilInitLoaders: called, initiating loaders");
+        Log.d(TAG, mMonth + "/" + mYear + " utilInitLoaders: called, initiating loaders");
         getLoaderManager().initLoader(OUTER_LOADER_ID, null, this);
         getLoaderManager().initLoader(INNER_LOADER_ID, null, this);
     }

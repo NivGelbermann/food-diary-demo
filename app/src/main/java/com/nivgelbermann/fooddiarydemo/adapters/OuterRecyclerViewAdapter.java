@@ -64,7 +64,7 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
         Log.d(TAG, "onBindViewHolder: starts with position " + position);
 
         boolean isHolderNew = (holder.date.getText().toString().trim().isEmpty());
-        DateCard date = new DateCard(0,"",0,0);
+        DateCard date = new DateCard(0, 0, 0);
 
         if ((mCursor == null) || (mCursor.getCount() == 0)) {
             // Do nothing for now
@@ -73,16 +73,13 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
                 throw new IllegalStateException("Couldn't move cursor to position " + position);
             }
 
-//            final DateCard date = new DateCard(
             date = new DateCard(
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.DAY)),
-                    "Tuesday", // TODO Change to get actual day of week, OR update DateCard to figure that out on its own
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.MONTH)),
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)));
             Log.d(TAG, "onBindViewHolder: date: " + date);
 
-//            holder.date.setText(String.valueOf(date.getDate()));
-            holder.date.setText(String.format(Locale.getDefault(),"%02d", date.getDate()));
+            holder.date.setText(String.format(Locale.getDefault(), "%02d", date.getDate()));
             holder.dayOfWeek.setText(date.getDayOfWeek());
             holder.month.setText(date.getMonthName());
             holder.year.setText(String.valueOf(date.getYear()));

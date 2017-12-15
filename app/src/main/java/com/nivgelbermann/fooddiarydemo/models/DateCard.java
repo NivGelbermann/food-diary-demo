@@ -15,11 +15,13 @@ public class DateCard implements Serializable {
     private int mMonth;
     private int mYear;
 
-    public DateCard(int date, String dayOfWeek, int month, int year) {
+    public DateCard(int date, int month, int year) {
         mDate = date;
-        mDayOfWeek = dayOfWeek;
         mMonth = month;
         mYear = year;
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, date);
+        mDayOfWeek = String.format("%tA", calendar);
     }
 
     public int getDate() {
