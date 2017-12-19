@@ -66,11 +66,11 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate: called");
+        Log.d(TAG, mMonth + "/" + mYear + " onCreate: called");
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args == null) {
-            throw new IllegalStateException(TAG + ".onCreate called without arguments, cannot load required data");
+            throw new IllegalStateException(TAG + " " + mMonth + "/" + mYear + " .onCreate called without arguments, cannot load required data");
         }
         mMonth = args.getInt(PAGE_MONTH);
         mYear = args.getInt(PAGE_YEAR);
@@ -79,7 +79,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: PageFragment created for MM/yy: " + mMonth + "/" + mYear);
+        Log.d(TAG, mMonth + "/" + mYear + " onCreateView: PageFragment created");
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         ButterKnife.bind(this, view);
         if (!(getContext() instanceof InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener)) {
@@ -96,14 +96,14 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onStart() {
-        Log.d(TAG, "onStart: starts");
+        Log.d(TAG, mMonth + "/" + mYear + " onStart: starts");
         super.onStart();
         mIsStarted = true;
         if (mIsVisible) {
-            Log.d(TAG, "onStart: page is visible, initiating loaders");
-            utilInitLoaders();
+            Log.d(TAG, mMonth + "/" + mYear + " onStart: page is visible, initiating loaders");
+            initilalizeLoaders();
         }
-        Log.d(TAG, "onStart: ends");
+        Log.d(TAG, mMonth + "/" + mYear + " onStart: ends");
     }
 
     @Override
@@ -119,7 +119,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         mIsVisible = isVisibleToUser;
         if (mIsVisible && mIsStarted) {
             Log.d(TAG, mMonth + "/" + mYear +" " + "setUserVisibleHint: page is visible and is started, initiating loaders");
-            utilInitLoaders();
+            initilalizeLoaders();
         } else {
             Log.d(TAG, mMonth + "/" + mYear +" " + "setUserVisibleHint: page isn't started");
             mIsStarted = false;
@@ -228,12 +228,12 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         }
     }
 
-//    public int getIdentifier() {
-//        return getArguments().getInt(PAGE_POSITION);
-//    }
-
-    private void utilInitLoaders() {
-        Log.d(TAG, mMonth + "/" + mYear + " utilInitLoaders: called, initiating loaders");
+    /**
+     * Small method for better readability when calling it.
+     * Initializes all loaders for PageFragment.
+     */
+    private void initilalizeLoaders() {
+        Log.d(TAG, mMonth + "/" + mYear + " initilalizeLoaders: called, initiating loaders");
         getLoaderManager().initLoader(OUTER_LOADER_ID, null, this);
         getLoaderManager().initLoader(INNER_LOADER_ID, null, this);
     }

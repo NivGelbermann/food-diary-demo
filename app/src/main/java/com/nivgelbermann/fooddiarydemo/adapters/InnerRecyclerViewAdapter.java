@@ -189,9 +189,9 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
      * Cursor, null is also returned.
      */
     public Cursor swapCursor(Cursor newCursor) {
-        Log.d(TAG, "swapCursor: starts");
+        Log.d(TAG, mRepresentedDayOfMonth + " swapCursor: starts");
         if (newCursor == mCursor) {
-            Log.d(TAG, "swapCursor: ends, returning null because cursor hasn't changed");
+            Log.d(TAG, mRepresentedDayOfMonth + " swapCursor: ends, returning null because cursor hasn't changed");
             return null;
         }
 
@@ -205,7 +205,7 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
             notifyItemRangeRemoved(0, getItemCount());
         }
 
-        Log.d(TAG, "swapCursor: ends, returning old cursor");
+        Log.d(TAG, mRepresentedDayOfMonth + " swapCursor: ends, returning old cursor");
         return oldCursor;
     }
 
