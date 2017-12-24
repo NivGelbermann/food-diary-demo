@@ -85,9 +85,14 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
         }
 
         void setFoodItem(FoodItem item) {
-            mFoodItem = item;
-            text.setText(mFoodItem.getName());
-            time.setText(Util.formatTime(mFoodItem.getTime(), "HH:mm"));
+            try {
+                mFoodItem = item;
+                text.setText(mFoodItem.getName());
+                time.setText(Util.formatTime(mFoodItem.getTime(), "HH:mm"));
+            } catch (NullPointerException e) {
+                Log.d(TAG, "setFoodItem: NullPointerExcpetion caught, couldn't set viewholder's properties to given item: " + item);
+                e.printStackTrace();
+            }
 
             ContentResolver contentResolver = icon.getContext().getContentResolver();
             Cursor cursor = contentResolver.query(

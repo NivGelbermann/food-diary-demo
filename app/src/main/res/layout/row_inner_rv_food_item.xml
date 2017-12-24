@@ -17,17 +17,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_stars_grey_500_24dp"/>
 
+    <!-- Note to self - other than wrap_content and match_parent, there's also 0dp -->
+    <!-- Which stands for match_constraints -->
+    <!-- This one line prevents textviews from overlapping horizontally -->
     <TextView
         android:id="@+id/food_text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginEnd="16dp"
         android:contentDescription="@string/food_text_textview_contdesc"
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="@+id/food_icon"
-        app:layout_constraintLeft_toRightOf="@+id/food_icon"
+        app:layout_constraintEnd_toStartOf="@id/food_time"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/food_icon"
         app:layout_constraintTop_toTopOf="@+id/food_icon"
         tools:text="Double cheeseburger"/>
 

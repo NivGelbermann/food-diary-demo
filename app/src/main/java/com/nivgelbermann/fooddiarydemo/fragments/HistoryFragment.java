@@ -79,6 +79,9 @@ public class HistoryFragment
         // Remove current month, as HistoryFragment only displays PAST months.
         // This seems more effective performance-wise than
         // checking each item added to mTabTitles in a loop.
+        if(mTabTitles.size()==0) {
+            return;
+        }
         mTabTitles.remove(mTabTitles.size()-1);
     }
 

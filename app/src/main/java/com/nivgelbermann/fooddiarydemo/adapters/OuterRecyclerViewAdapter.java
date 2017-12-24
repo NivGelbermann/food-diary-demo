@@ -61,7 +61,7 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
 
     @Override
     public void onBindViewHolder(CardDateViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: starts with position " + position);
+        // Log.d(TAG, "onBindViewHolder: starts with position " + position);
 
         boolean isHolderNew = (holder.date.getText().toString().trim().isEmpty());
         DateCard date = new DateCard(0, 0, 0);
@@ -77,19 +77,24 @@ public class OuterRecyclerViewAdapter extends RecyclerView.Adapter<OuterRecycler
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.DAY)),
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.MONTH)),
                     mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)));
-            Log.d(TAG, "onBindViewHolder: date: " + date);
+            // Log.d(TAG, "onBindViewHolder: date: " + date);
 
             holder.date.setText(String.format(Locale.getDefault(), "%02d", date.getDate()));
             holder.dayOfWeek.setText(date.getDayOfWeek());
             holder.month.setText(date.getMonthName());
             holder.year.setText(String.valueOf(date.getYear()));
-            Log.d(TAG, "onBindViewHolder: date has been set to views");
+            // Log.d(TAG, "onBindViewHolder: date has been set to views");
         }
 
         if (isHolderNew) {
             // If holder is new, create a new LinearLayoutManager for the holder's RecyclerView.
             // Otherwise, do nothing, holder's RecyclerView will re-use its LinearLayoutManager.
             holder.innerRecyclerView.setLayoutManager(new LinearLayoutManager(holder.innerRecyclerView.getContext()));
+            // TODO Compile to phone with above line commented and below lines un-commented. Check whether scrolling animation is actually smoother.
+//            LinearLayoutManager manager = new LinearLayoutManager(holder.innerRecyclerView.getContext());
+//            manager.setItemPrefetchEnabled(true);
+//            manager.setInitialPrefetchItemCount(6); // Could require modification
+//            holder.innerRecyclerView.setLayoutManager(manager);
         }
         InnerRecyclerViewAdapter adapter = new InnerRecyclerViewAdapter(
                 mInnerAdapterListener, date.getDate());

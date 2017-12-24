@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import com.nivgelbermann.fooddiarydemo.fragments.PageFragment;
 import com.nivgelbermann.fooddiarydemo.models.FoodItem;
 import com.nivgelbermann.fooddiarydemo.utils.Util;
 
+import java.security.InvalidParameterException;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -136,6 +138,42 @@ public class MainActivity
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        // Log.d(TAG, "onBackPressed: starts");
+        super.onBackPressed();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        String title;
+        // Get the title of the current (post-onBackPressered) fragment
+        if (fragmentManager.getBackStackEntryCount() == 0) {
+            title = PAGE_FRAGMENT_TAG;
+        } else {
+            BackStackEntry backStackEntry = getSupportFragmentManager().
+                    getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1);
+            title = backStackEntry.getName();
+        }
+
+        // Set activity title and nav drawer selection according to current fragment
+        MenuItem item;
+        switch (title) {
+            case PAGE_FRAGMENT_TAG:
+                item = navigationView.getMenu().findItem(R.id.menu_navdrawer_this_month);
+                break;
+
+            case HISTORY_FRAGMENT_TAG:
+                item = navigationView.getMenu().findItem(R.id.menu_navdrawer_history);
+                break;
+
+            // TODO Fill out with the rest of the fragment tags as they are created
+
+            default:
+                throw new InvalidParameterException(TAG + ".onBackPressed: Invalid backstack entry name found");
+        }
+        item.setChecked(true);
+        setTitle(item.getTitle());
+        // Log.d(TAG, "onBackPressed: ends. Returning to fragment: " + item.getTitle());
+    }
+
     /**
      * Utility method to start an AddEdit activity.
      *
@@ -210,6 +248,7 @@ public class MainActivity
         if (!fragment.getClass().equals(fragmentManager.getFragments().get(0).getClass())) {
             fragmentManager.beginTransaction()
                     .replace(R.id.main_container, fragment, tag)
+                    .addToBackStack(tag)
                     .commit();
             fragment.setUserVisibleHint(true);
         }
@@ -261,7 +300,7 @@ public class MainActivity
 
         Calendar calendar = Calendar.getInstance();
         Random random = new Random();
-        for (int dayOfMonth = 1; dayOfMonth < calendar.getActualMaximum(Calendar.MONTH); dayOfMonth++) {
+        for (int dayOfMonth = 1; dayOfMonth <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH); dayOfMonth++) {
             Log.d(TAG, "generateRandomItems: adding items to day: " + dayOfMonth);
 //            int items = ThreadLocalRandom.current().nextInt(1, foods.length);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);

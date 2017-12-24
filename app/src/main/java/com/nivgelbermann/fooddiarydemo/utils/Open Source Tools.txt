@@ -1,6 +1,3 @@
-nshmura's RecyclerTabLayout
-https://github.com/nshmura/RecyclerTabLayout/
-
 jakewharton's Butterknife
 jakewharton.github.io/butterknife/
 
