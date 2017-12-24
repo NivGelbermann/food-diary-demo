@@ -15,7 +15,7 @@ import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.data.CategoriesContract;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.models.FoodItem;
-import com.nivgelbermann.fooddiarydemo.utils.Util;
+import com.nivgelbermann.fooddiarydemo.helpers.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -87,7 +87,7 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
         void setFoodItem(FoodItem item) {
             try {
                 mFoodItem = item;
-                text.setText(mFoodItem.getName());
+                text.setText(mFoodItem.getName().trim());
                 time.setText(Util.formatTime(mFoodItem.getTime(), "HH:mm"));
             } catch (NullPointerException e) {
                 Log.d(TAG, "setFoodItem: NullPointerExcpetion caught, couldn't set viewholder's properties to given item: " + item);

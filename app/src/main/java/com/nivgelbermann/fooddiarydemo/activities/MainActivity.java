@@ -24,8 +24,8 @@ import com.nivgelbermann.fooddiarydemo.adapters.InnerRecyclerViewAdapter;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.fragments.HistoryFragment;
 import com.nivgelbermann.fooddiarydemo.fragments.PageFragment;
+import com.nivgelbermann.fooddiarydemo.helpers.Util;
 import com.nivgelbermann.fooddiarydemo.models.FoodItem;
-import com.nivgelbermann.fooddiarydemo.utils.Util;
 
 import java.security.InvalidParameterException;
 import java.util.Calendar;

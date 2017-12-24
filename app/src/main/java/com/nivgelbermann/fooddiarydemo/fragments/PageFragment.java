@@ -89,6 +89,11 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         mAdapter = new OuterRecyclerViewAdapter((InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener) getContext());
 
         outerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        // TODO Compile to phone with above line commented and below lines un-commented. Check whether scrolling animation is actually smoother.
+//        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+//        manager.setItemPrefetchEnabled(true);
+//        manager.setInitialPrefetchItemCount(10);
+//        outerRecyclerView.setLayoutManager(manager);
         outerRecyclerView.setAdapter(mAdapter);
 
         return view;
@@ -114,17 +119,17 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        Log.d(TAG, mMonth + "/" + mYear +" " +"setUserVisibleHint: starts");
+        Log.d(TAG, mMonth + "/" + mYear + " " + "setUserVisibleHint: starts");
         super.setUserVisibleHint(isVisibleToUser);
         mIsVisible = isVisibleToUser;
         if (mIsVisible && mIsStarted) {
-            Log.d(TAG, mMonth + "/" + mYear +" " + "setUserVisibleHint: page is visible and is started, initiating loaders");
+            Log.d(TAG, mMonth + "/" + mYear + " " + "setUserVisibleHint: page is visible and is started, initiating loaders");
             initilalizeLoaders();
         } else {
-            Log.d(TAG, mMonth + "/" + mYear +" " + "setUserVisibleHint: page isn't started");
+            Log.d(TAG, mMonth + "/" + mYear + " " + "setUserVisibleHint: page isn't started");
             mIsStarted = false;
         }
-        Log.d(TAG, mMonth + "/" + mYear +" " + "setUserVisibleHint: ends");
+        Log.d(TAG, mMonth + "/" + mYear + " " + "setUserVisibleHint: ends");
     }
 
     @Override

@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.nivgelbermann.fooddiarydemo.utils.Util.MILLISECONDS;
+import static com.nivgelbermann.fooddiarydemo.helpers.Util.MILLISECONDS;
 
 /**
  * Created by Niv on 14-Sep-17.

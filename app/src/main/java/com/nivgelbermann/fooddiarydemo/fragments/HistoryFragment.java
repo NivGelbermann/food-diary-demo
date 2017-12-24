@@ -31,9 +31,9 @@ public class HistoryFragment
         implements InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener {
     private static final String TAG = "HistoryFragment";
 
-//    @BindView(R.id.history_toolbar) Toolbar toolbar;
+    //    @BindView(R.id.history_toolbar) Toolbar toolbar;
     @BindView(R.id.history_pager) ViewPager viewPager;
-//    @BindView(R.id.history_fab) FloatingActionButton fab;
+    //    @BindView(R.id.history_fab) FloatingActionButton fab;
 //    @BindView(R.id.history_recycler_tab_layout) RecyclerTabLayout recyclerTabLayout;
     @BindView(R.id.history_tab_layout) TabLayout tabLayout;
 
@@ -79,10 +79,10 @@ public class HistoryFragment
         // Remove current month, as HistoryFragment only displays PAST months.
         // This seems more effective performance-wise than
         // checking each item added to mTabTitles in a loop.
-        if(mTabTitles.size()==0) {
+        if (mTabTitles.size() == 0) {
             return;
         }
-        mTabTitles.remove(mTabTitles.size()-1);
+        mTabTitles.remove(mTabTitles.size() - 1);
     }
 
     @Nullable
