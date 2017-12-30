@@ -1,6 +1,5 @@
 package com.nivgelbermann.fooddiarydemo.adapters;
 
-import android.content.ContentResolver;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -12,10 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.data.CategoriesContract;
-import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
-import com.nivgelbermann.fooddiarydemo.models.FoodItem;
+import com.nivgelbermann.fooddiarydemo.data.Category;
 import com.nivgelbermann.fooddiarydemo.helpers.Util;
+import com.nivgelbermann.fooddiarydemo.models.FoodItem;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,10 +30,18 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
     private Cursor mCursor;
     private FoodItemViewHolder.FoodItemListener mFoodItemListener;
     private int mRepresentedDayOfMonth;
+    private List<FoodItem> mItems;
+    private List<Category> mCategories;
 
-    InnerRecyclerViewAdapter(FoodItemViewHolder.FoodItemListener listener, int dayOfMonth) {
+    //    InnerRecyclerViewAdapter(FoodItemViewHolder.FoodItemListener listener, int dayOfMonth) {
+    InnerRecyclerViewAdapter(FoodItemViewHolder.FoodItemListener listener, int dayOfMonth, List<FoodItem> items, List<Category> categories) {
         mFoodItemListener = listener;
         mRepresentedDayOfMonth = dayOfMonth;
+        mItems = items;
+        for (FoodItem item : mItems) {
+            Log.d(TAG, mRepresentedDayOfMonth + " InnerRecyclerViewAdapter mItems item: " + item.toString());
+        }
+        mCategories = categories;
     }
 
     public static class FoodItemViewHolder extends RecyclerView.ViewHolder {
@@ -76,36 +84,38 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
                     mListener.onFoodItemClicked(mFoodItem);
                 }
             });
-            view.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    return mListener.onFoodItemLongClicked(mFoodItem);
-                }
-            });
+//            view.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View view) {
+//                    return mListener.onFoodItemLongClicked(mFoodItem);
+//                }
+//            });
         }
 
-        void setFoodItem(FoodItem item) {
+        void setFoodItem(FoodItem item, String color) {
             try {
                 mFoodItem = item;
                 text.setText(mFoodItem.getName().trim());
                 time.setText(Util.formatTime(mFoodItem.getTime(), "HH:mm"));
+                icon.setColorFilter(Color.parseColor(color));
             } catch (NullPointerException e) {
                 Log.d(TAG, "setFoodItem: NullPointerExcpetion caught, couldn't set viewholder's properties to given item: " + item);
                 e.printStackTrace();
             }
 
-            ContentResolver contentResolver = icon.getContext().getContentResolver();
-            Cursor cursor = contentResolver.query(
-                    CategoriesContract.buildCategoryUri(item.getCategoryId()),
-                    null,
-                    null,
-                    null,
-                    null);
-            if (cursor != null && cursor.moveToFirst()) {
-                icon.setColorFilter(Color.parseColor(
-                        cursor.getString(cursor.getColumnIndex(CategoriesContract.Columns.COLOR))));
-                cursor.close();
-            }
+            // TODO Rebuild this shit
+//            ContentResolver contentResolver = icon.getContext().getContentResolver();
+//            Cursor cursor = contentResolver.query(
+//                    CategoriesContract.buildCategoryUri(item.getCategoryId()),
+//                    null,
+//                    null,
+//                    null,
+//                    null);
+//            if (cursor != null && cursor.moveToFirst()) {
+//                icon.setColorFilter(Color.parseColor(
+//                        cursor.getString(cursor.getColumnIndex(CategoriesContract.Columns.COLOR))));
+//                cursor.close();
+//            }
         }
 
         void hide() {
@@ -136,44 +146,56 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
 
     @Override
     public FoodItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Log.d(TAG, "onCreateViewHolder: new view requested");
+        Log.d(TAG, mRepresentedDayOfMonth + " onCreateViewHolder: new view requested");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_inner_rv_food_item, parent, false);
         return new FoodItemViewHolder(view, mFoodItemListener);
     }
 
     @Override
     public void onBindViewHolder(FoodItemViewHolder holder, int position) {
-        // Log.d(TAG, "onBindViewHolder: starts with position " + position);
+        Log.d(TAG, mRepresentedDayOfMonth + " onBindViewHolder: starts with position " + position);
 
-        if ((mCursor == null) || (mCursor.getCount() == 0)) {
-            Log.d(TAG, "onBindViewHolder: mCursor empty or null");
-        } else {
-            if (!mCursor.moveToPosition(position)) {
-                throw new IllegalStateException("Couldn't move cursor to position " + position);
+//        if ((mCursor == null) || (mCursor.getCount() == 0)) {
+//            Log.d(TAG, mRepresentedDayOfMonth + " onBindViewHolder: mCursor empty or null");
+//        } else {
+//            if (!mCursor.moveToPosition(position)) {
+//                throw new IllegalStateException("Couldn't move cursor to position " + position);
+//            }
+//
+//            int currentDay = mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.DAY));
+//            if (currentDay != mRepresentedDayOfMonth) {
+//                // Commented out logging for testing
+//                // Log.d(TAG, "onBindViewHolder: DB item at position " + position + " is not from represented day: " + mRepresentedDayOfMonth);
+//                // Log.d(TAG, "onBindViewHolder: item's current day: " + currentDay);
+//                holder.destroy();
+////                holder.hide(); // Calling .destroy makes OuterAdapter's mViewPool call methods on null (destroyed) holders and create NPEs
+//                holder = null;
+//                Log.d(TAG, mRepresentedDayOfMonth + " onBindViewHolder: not current day, destroying holder");
+//                return;
+//            }
+////            Log.d(TAG, mRepresentedDayOfMonth + " onBindViewHolder: starts with position " + position);
+//
+//            final FoodItem row = new FoodItem(
+//                    mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns._ID)),
+//                    mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns.FOOD_ITEM)),
+//                    mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.HOUR)),
+//                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.DAY)),
+//                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.MONTH)),
+//                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)),
+//                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.CATEGORY_ID)));
+//            holder.setFoodItem(row);
+//        }
+
+        FoodItem item = mItems.get(position);
+        String color = null;
+        for (Category category : mCategories) {
+            if (category.getId().equals(item.getCategoryId())) {
+                color = category.getColor();
             }
-
-            int currentDay = mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.DAY));
-            if (currentDay != mRepresentedDayOfMonth) {
-                // Commented out logging for testing
-                // Log.d(TAG, "onBindViewHolder: DB item at position " + position + " is not from represented day: " + mRepresentedDayOfMonth);
-                // Log.d(TAG, "onBindViewHolder: item's current day: " + currentDay);
-                holder.destroy();
-                holder = null;
-                return;
-            }
-
-            final FoodItem row = new FoodItem(
-                    mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns._ID)),
-                    mCursor.getString(mCursor.getColumnIndex(FoodsContract.Columns.FOOD_ITEM)),
-                    mCursor.getLong(mCursor.getColumnIndex(FoodsContract.Columns.HOUR)),
-                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.DAY)),
-                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.MONTH)),
-                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.YEAR)),
-                    mCursor.getInt(mCursor.getColumnIndex(FoodsContract.Columns.CATEGORY_ID)));
-            holder.setFoodItem(row);
         }
+        holder.setFoodItem(mItems.get(position), color);
 
-        // Log.d(TAG, "onBindViewHolder: ends");
+        Log.d(TAG, mRepresentedDayOfMonth + " onBindViewHolder: ends");
     }
 
     @Override
@@ -181,7 +203,8 @@ public class InnerRecyclerViewAdapter extends RecyclerView.Adapter<InnerRecycler
         if (mCursor == null) {
             return 0;
         }
-        return mCursor.getCount();
+//        return mCursor.getCount();
+        return mItems.size();
     }
 
     /**

@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
 
 public class CategoriesContract {
 
-    static final String TABLE_NAME = "Categories";
+    public static final String TABLE_NAME = "Categories";
 
     // Categories table fields
     public static class Columns implements BaseColumns {

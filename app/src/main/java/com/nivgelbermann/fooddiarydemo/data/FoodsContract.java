@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
 
 public class FoodsContract {
 
-    static final String TABLE_NAME = "Foods";
+    public static final String TABLE_NAME = "Foods";
 
     // Foods table fields
     public static class Columns implements BaseColumns {

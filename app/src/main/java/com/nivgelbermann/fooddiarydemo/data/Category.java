@@ -13,8 +13,8 @@ public class Category implements Serializable {
     private String mName;
     private String mColor;
 
-    public Category(String m_Id, String name, String color) {
-        this.m_Id = m_Id;
+    public Category(String id, String name, String color) {
+        m_Id = id;
         mName = name;
         mColor = color;
     }

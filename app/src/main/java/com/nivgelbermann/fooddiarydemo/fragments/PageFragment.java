@@ -1,5 +1,9 @@
 package com.nivgelbermann.fooddiarydemo.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,8 +22,11 @@ import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.adapters.InnerRecyclerViewAdapter;
 import com.nivgelbermann.fooddiarydemo.adapters.OuterRecyclerViewAdapter;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
+import com.nivgelbermann.fooddiarydemo.models.FoodItem;
+import com.nivgelbermann.fooddiarydemo.services.TableRetrieverService;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +57,9 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     private boolean mIsStarted;
     private boolean mIsVisible;
 
+//    private ResponseReceiver mResponseReceiver;
+    private ArrayList<FoodItem> mFoodItems;
+
     /**
      * @param month month represented by page
      * @param year  year represented by page
@@ -74,6 +84,11 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         }
         mMonth = args.getInt(PAGE_MONTH);
         mYear = args.getInt(PAGE_YEAR);
+
+//        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
+//        filter.addCategory(Intent.CATEGORY_DEFAULT);
+//        mResponseReceiver = new ResponseReceiver();
+//        getContext().registerReceiver(mResponseReceiver, filter);
     }
 
     @Nullable
@@ -86,7 +101,8 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
             throw new ClassCastException(getContext().getClass().getSimpleName()
                     + " must implement FoodItemListener interface");
         }
-        mAdapter = new OuterRecyclerViewAdapter((InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener) getContext());
+//        mAdapter = new OuterRecyclerViewAdapter((InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener) getContext());
+        mAdapter = new OuterRecyclerViewAdapter(getContext(), getList());
 
         outerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // TODO Compile to phone with above line commented and below lines un-commented. Check whether scrolling animation is actually smoother.
@@ -94,6 +110,7 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
 //        manager.setItemPrefetchEnabled(true);
 //        manager.setInitialPrefetchItemCount(10);
 //        outerRecyclerView.setLayoutManager(manager);
+        outerRecyclerView.setHasFixedSize(true); // Helps performance optimization
         outerRecyclerView.setAdapter(mAdapter);
 
         return view;
@@ -242,4 +259,67 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         getLoaderManager().initLoader(OUTER_LOADER_ID, null, this);
         getLoaderManager().initLoader(INNER_LOADER_ID, null, this);
     }
+
+    private ArrayList<FoodItem> getList() {
+        ContentResolver contentResolver = getContext().getContentResolver();
+        if (contentResolver == null) {
+            throw new IllegalStateException(TAG + ".onHandleWork: couldn't get ContentResolver.");
+        }
+
+        String[] projection = new String[]{FoodsContract.Columns._ID,
+                FoodsContract.Columns.FOOD_ITEM,
+                FoodsContract.Columns.DAY,
+                FoodsContract.Columns.MONTH,
+                FoodsContract.Columns.YEAR,
+                FoodsContract.Columns.HOUR,
+                FoodsContract.Columns.CATEGORY_ID};
+        String selection = FoodsContract.Columns.MONTH + "=? AND "
+                + FoodsContract.Columns.YEAR + "=?";
+        String[] selectionArgs = new String[]{
+                String.valueOf(mMonth),
+                String.valueOf(mYear)};
+        String sortOrder = FoodsContract.Columns.HOUR + " DESC,"
+                + FoodsContract.Columns.FOOD_ITEM + " COLLATE NOCASE DESC";
+        Cursor cursor = contentResolver.query(FoodsContract.CONTENT_URI,
+                projection,
+                selection,
+                selectionArgs,
+                sortOrder);
+        if (cursor == null || !cursor.moveToFirst()) {
+            throw new IllegalStateException(TAG + "onHandleWork: Couldn't move cursor to first");
+        }
+        ArrayList<FoodItem> items = new ArrayList<>();
+        do {
+            items.add(new FoodItem(
+                    cursor.getString(cursor.getColumnIndex(FoodsContract.Columns._ID)),
+                    cursor.getString(cursor.getColumnIndex(FoodsContract.Columns.FOOD_ITEM)),
+                    cursor.getLong(cursor.getColumnIndex(FoodsContract.Columns.HOUR)),
+                    cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.DAY)),
+                    cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.MONTH)),
+                    cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.YEAR)),
+                    cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.CATEGORY_ID))));
+        } while (cursor.moveToNext());
+        cursor.close();
+        return items;
+    }
+
+
+    public class ResponseReceiver extends BroadcastReceiver {
+        private static final String TAG = "ResponseReceiver";
+
+        public static final String ACTION_RESP = "com.nivgelbermann.intent.action.MESSAGE_PROCESSED";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive: starts");
+            try {
+                mFoodItems = (ArrayList<FoodItem>)
+                        intent.getSerializableExtra(TableRetrieverService.LIST_RESULT);
+            } catch (ClassCastException e) {
+                Log.d(TAG, "onReceive: could not cast received object to ArrayList<FoodItem>.");
+            }
+            Log.d(TAG, "onReceive: ends");
+        }
+    }
+
 }
