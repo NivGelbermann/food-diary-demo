@@ -61,7 +61,7 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
                 || (month == 11 && year == currentYear - 1)) {
             return "LAST MONTH"; // TODO Convert to use string resource
         }
-        return utilFormatPageTitle(Integer.valueOf(segments[0]), Integer.valueOf(segments[1])); // TODO Change to local variables month & year
+        return formatPageTitle(Integer.valueOf(segments[0]), Integer.valueOf(segments[1])); // TODO Change to local variables month & year
     }
 
     public int getCurrentMonthPosition() {
@@ -87,7 +87,7 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
      * @param year  Integer value of year
      * @return formatted String
      */
-    private String utilFormatPageTitle(int month, int year) {
+    private String formatPageTitle(int month, int year) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.YEAR, year);

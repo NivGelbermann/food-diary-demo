@@ -20,7 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.adapters.InnerRecyclerViewAdapter;
+import com.nivgelbermann.fooddiarydemo.adapters.SectionedRVAdapter;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.fragments.HistoryFragment;
 import com.nivgelbermann.fooddiarydemo.fragments.PageFragment;
@@ -36,17 +36,20 @@ import butterknife.ButterKnife;
 
 public class MainActivity
         extends AppCompatActivity
-        implements InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener {
+        implements SectionedRVAdapter.ChildViewHolder.FoodItemListener {
     private static final String TAG = "MainActivity";
 
     private static final String CURRENT_FRAGMENT_TAG = "CurrentFragment";
     private static final String PAGE_FRAGMENT_TAG = "PageFragment";
     private static final String HISTORY_FRAGMENT_TAG = "HistoryFragment";
+    private static final int REQUEST_ADD_EDIT = 1;
 
     @BindView(R.id.main_fab) FloatingActionButton fab;
     @BindView(R.id.main_drawer_layout) DrawerLayout drawerLayout; // Opens & closes nav drawer
     @BindView(R.id.main_toolbar) Toolbar toolbar;
     @BindView(R.id.main_navigation_view) NavigationView navigationView; // Nav drawer itself
+
+    private Fragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class MainActivity
                     .replace(R.id.main_container, fragment, PAGE_FRAGMENT_TAG)
                     .commit();
             fragment.setUserVisibleHint(true);
+            mFragment = fragment;
         } else {
             // Get last-displayed fragment tag from bundle
             String tag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
@@ -77,12 +81,13 @@ public class MainActivity
                     .replace(R.id.main_container, fragment, tag)
                     .commit();
             fragment.setUserVisibleHint(true);
+            mFragment = fragment;
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                utilStartAddEditActivity(null);
+                startAddEditActivity(null);
             }
         });
 
@@ -129,7 +134,7 @@ public class MainActivity
 
     @Override
     public void onFoodItemClicked(FoodItem item) {
-        utilStartAddEditActivity(item);
+        startAddEditActivity(item);
     }
 
     @Override
@@ -174,19 +179,48 @@ public class MainActivity
         // Log.d(TAG, "onBackPressed: ends. Returning to fragment: " + item.getTitle());
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult: called with result code: " + resultCode);
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode != REQUEST_ADD_EDIT) {
+            throw new InvalidParameterException(TAG + ".onActivityResult called with invalid request code: " + requestCode);
+        }
+        switch (resultCode) {
+            case RESULT_OK:
+                if (mFragment instanceof PageFragment) {
+                    PageFragment fragment = (PageFragment) mFragment;
+                    fragment.updateDisplay();
+                } else if (mFragment instanceof HistoryFragment) {
+                    HistoryFragment fragment = (HistoryFragment) mFragment;
+                    fragment.updateDisplay();
+                }
+                break;
+
+            case RESULT_CANCELED:
+                // Do nothing
+                break;
+
+            default:
+                throw new InvalidParameterException(TAG + ".onActivityResult called with invalid result code: " + resultCode);
+        }
+    }
+
     /**
      * Utility method to start an AddEdit activity.
      *
      * @param item Pass item to edit it, otherwise pass null to create a new item
      */
-    private void utilStartAddEditActivity(FoodItem item) {
-        Log.d(TAG, "utilStartAddEditActivity: called");
+    private void startAddEditActivity(FoodItem item) {
+        Log.d(TAG, "startAddEditActivity: called");
 
         Intent addEditIntent = new Intent(this, AddEditActivity.class);
         if (item != null) {
             addEditIntent.putExtra(FoodItem.class.getSimpleName(), item);
         }
-        startActivity(addEditIntent);
+//        startActivity(addEditIntent);
+        startActivityForResult(addEditIntent, REQUEST_ADD_EDIT);
     }
 
     /**
@@ -251,6 +285,7 @@ public class MainActivity
                     .addToBackStack(tag)
                     .commit();
             fragment.setUserVisibleHint(true);
+            mFragment = fragment;
         }
 
         // Highlight the selected item has been done by NavigationView
@@ -305,8 +340,8 @@ public class MainActivity
 //            int items = ThreadLocalRandom.current().nextInt(1, foods.length);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             // Template: random.nextInt((max - min) + 1) + min;
-//            int items = random.nextInt((8 - 5) + 1) + 5;
-            int items = random.nextInt((4 - 2) + 1) + 2;
+//            int items = random.nextInt((4 - 2) + 1) + 2;
+            int items = 2;
             for (int i = 0; i < items; i++) {
                 int itemId = random.nextInt(foods.length - 1) + 1;
                 ContentValues values = new ContentValues();
@@ -323,5 +358,5 @@ public class MainActivity
     }
 }
 
-
-// TODO  Format all in-class utility methods in project to either have "util" in method header or not. Adjust documentation accordingly.
+// TODO Display current month, instead of latest in DB
+// TODO Try replacing every instance of finding current fragment using FragmentManager, with using mFragment

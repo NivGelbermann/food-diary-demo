@@ -169,6 +169,6 @@ public class FoodItem implements Serializable {
      */
     public boolean isValid() {
         return !(mName == null || mName.trim().isEmpty()
-                || mTime == 0L || mDay == 0 || mMonth == 0 || mYear == 0 || mCategoryId < 1);
+                || mTime == 0L || mDay < 0 || mMonth < 0 || mYear < 0 || mCategoryId < 1);
     }
 }

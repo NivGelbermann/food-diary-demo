@@ -25,8 +25,8 @@ import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.data.CategoriesContract;
 import com.nivgelbermann.fooddiarydemo.data.Category;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
-import com.nivgelbermann.fooddiarydemo.models.FoodItem;
 import com.nivgelbermann.fooddiarydemo.helpers.Util;
+import com.nivgelbermann.fooddiarydemo.models.FoodItem;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -44,7 +44,7 @@ public class AddEditActivity extends AppCompatActivity
 
     private static final String DATE_PICKER_TAG = "DatePickerDialog";
     private static final String TIME_PICKER_TAG = "TimePickerDialog";
-    private static final int REQUEST_CODE_CHOOSE_CATEGORY = 1;
+    private static final int REQUEST_CHOOSE_CATEGORY = 1;
 
     @BindView(R.id.add_edit_coordinator_layout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.add_edit_input) EditText input;
@@ -81,8 +81,8 @@ public class AddEditActivity extends AppCompatActivity
             mFoodItem.setTime(now.getTimeInMillis() / Util.MILLISECONDS);
         }
 
-        utilDisplayFoodItem();
-        utilSetOnClickListeners();
+        displayFoodItem();
+        setOnClickListeners();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
@@ -130,12 +130,14 @@ public class AddEditActivity extends AppCompatActivity
 
             case R.id.menu_addedit_delete:
                 ContentResolver contentResolver = getContentResolver();
-                utilUpdateDeleteItem(contentResolver, null);
+                updateDeleteItem(contentResolver, null);
+                setResult(RESULT_OK);
                 break;
 
             // Handles home-button behaviour in pre-21sdk
             case android.R.id.home:
 //                NavUtils.navigateUpFromSameTask(this);
+                setResult(RESULT_CANCELED);
                 break;
 
             default:
@@ -175,7 +177,7 @@ public class AddEditActivity extends AppCompatActivity
         Log.d(TAG, "onActivityResult: called with result code: " + resultCode);
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode != REQUEST_CODE_CHOOSE_CATEGORY) {
+        if (requestCode != REQUEST_CHOOSE_CATEGORY) {
             throw new InvalidParameterException(TAG + ".onActivityResult called with invalid request code: " + requestCode);
         }
         switch (resultCode) {
@@ -208,7 +210,7 @@ public class AddEditActivity extends AppCompatActivity
      * Utility method for displaying the item to be edited
      * in the layout's rows: Category, Date, Time (and more to come).
      */
-    private void utilDisplayFoodItem() {
+    private void displayFoodItem() {
         input.setText(mFoodItem.getName());
         dateContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
         timeContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
@@ -237,7 +239,7 @@ public class AddEditActivity extends AppCompatActivity
             categoryContent.setText("Other"); // TODO After enabling user-defined categories, set this to load the default one
         }
 
-        Log.d(TAG, "utilDisplayFoodItem: " + mFoodItem);
+        Log.d(TAG, "displayFoodItem: " + mFoodItem);
     }
 
     /**
@@ -245,13 +247,13 @@ public class AddEditActivity extends AppCompatActivity
      * the setting of OnClickListeners to each row of food item content -
      * Category, Date, Time (and more to come).
      */
-    private void utilSetOnClickListeners() {
+    private void setOnClickListeners() {
         categoryLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent categoryIntent = new Intent(AddEditActivity.this, CategoryChooserActivity.class);
                 categoryIntent.putExtra(CategoriesContract.Columns._ID, mFoodItem.getCategoryId());
-                startActivityForResult(categoryIntent, REQUEST_CODE_CHOOSE_CATEGORY);
+                startActivityForResult(categoryIntent, REQUEST_CHOOSE_CATEGORY);
             }
         });
 
@@ -310,16 +312,19 @@ public class AddEditActivity extends AppCompatActivity
                 values.put(FoodsContract.Columns.DAY, mFoodItem.getDay());
                 values.put(FoodsContract.Columns.HOUR, mFoodItem.getTime());
                 values.put(FoodsContract.Columns.CATEGORY_ID, mFoodItem.getCategoryId());
+                Log.d(TAG, "onClick: mFoodItem: " + mFoodItem.toString());
 
                 if (mFoodItem.isValid()) {
                     if (mEditMode) {
-                        utilUpdateDeleteItem(contentResolver, values);
+                        updateDeleteItem(contentResolver, values);
                     } else {
                         // Insert new record into DB.
                         Log.d(TAG, "fab.onClick: adding new item");
                         contentResolver.insert(FoodsContract.CONTENT_URI, values);
                     }
+                    setResult(RESULT_OK);
                 }
+
                 finish();
             }
         });
@@ -328,11 +333,11 @@ public class AddEditActivity extends AppCompatActivity
     /**
      * Utility method for simplifying the edit and delete functionality code.
      *
-     * @param resolver ContentResolver for this method to use.
+     * @param contentResolver ContentResolver for this method to use.
      * @param values   ContentValues for to update if in edit mode. Otherwise pass Null (to delete).
      */
-    private void utilUpdateDeleteItem(ContentResolver resolver, ContentValues values) {
-        Cursor cursor = resolver.query(FoodsContract.CONTENT_URI,
+    private void updateDeleteItem(ContentResolver contentResolver, ContentValues values) {
+        Cursor cursor = contentResolver.query(FoodsContract.CONTENT_URI,
                 new String[]{FoodsContract.Columns._ID},
                 "_id=?",
                 new String[]{mFoodItem.getId()},
@@ -349,10 +354,10 @@ public class AddEditActivity extends AppCompatActivity
             cursor.close();
             if (values != null) {
                 Log.d(TAG, "fab.onClick: updating item");
-                resolver.update(FoodsContract.buildFoodItemUri(itemId), values, null, null);
+                contentResolver.update(FoodsContract.buildFoodItemUri(itemId), values, null, null);
             } else {
                 Log.d(TAG, "fab.onClick: deleting item");
-                resolver.delete(FoodsContract.buildFoodItemUri(itemId), null, null);
+                contentResolver.delete(FoodsContract.buildFoodItemUri(itemId), null, null);
             }
         }
     }
@@ -360,3 +365,4 @@ public class AddEditActivity extends AppCompatActivity
 
 // TODO Add to app settings: allow users to choose whether item time is selected in hour format, or {morning, noon, evening...} format
 // TODO Add prevention of adding future items
+// TODO If opened in edit mode, do not pop keyboard

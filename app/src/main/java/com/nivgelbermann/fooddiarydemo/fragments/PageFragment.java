@@ -1,16 +1,10 @@
 package com.nivgelbermann.fooddiarydemo.fragments;
 
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,15 +12,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.adapters.InnerRecyclerViewAdapter;
-import com.nivgelbermann.fooddiarydemo.adapters.OuterRecyclerViewAdapter;
+import com.nivgelbermann.fooddiarydemo.adapters.SectionedRVAdapter;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
+import com.nivgelbermann.fooddiarydemo.models.DateHeader;
 import com.nivgelbermann.fooddiarydemo.models.FoodItem;
-import com.nivgelbermann.fooddiarydemo.services.TableRetrieverService;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,7 +36,7 @@ import butterknife.ButterKnife;
  * create separate class+layout files for each required fragment.
  */
 
-public class PageFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class PageFragment extends Fragment {
     private static final String TAG = "PageFragment";
 
     @BindView(R.id.page_outer_recyclerView) RecyclerView outerRecyclerView;
@@ -50,14 +46,15 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
     private static final int OUTER_LOADER_ID = 0;
     private static final int INNER_LOADER_ID = 1;
 
-    private OuterRecyclerViewAdapter mAdapter;
+    //    private OuterRecyclerViewAdapter mAdapter;
+    private SectionedRVAdapter mAdapter;
     // Variables for querying the relevant mMonth from DB
     private int mMonth;
     private int mYear;
     private boolean mIsStarted;
     private boolean mIsVisible;
 
-//    private ResponseReceiver mResponseReceiver;
+    //    private ResponseReceiver mResponseReceiver;
     private ArrayList<FoodItem> mFoodItems;
 
     /**
@@ -84,11 +81,6 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         }
         mMonth = args.getInt(PAGE_MONTH);
         mYear = args.getInt(PAGE_YEAR);
-
-//        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
-//        filter.addCategory(Intent.CATEGORY_DEFAULT);
-//        mResponseReceiver = new ResponseReceiver();
-//        getContext().registerReceiver(mResponseReceiver, filter);
     }
 
     @Nullable
@@ -97,12 +89,12 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         Log.d(TAG, mMonth + "/" + mYear + " onCreateView: PageFragment created");
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         ButterKnife.bind(this, view);
-        if (!(getContext() instanceof InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener)) {
+//        if (!(getContext() instanceof InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener)) {
+        if (!(getContext() instanceof SectionedRVAdapter.ChildViewHolder.FoodItemListener)) {
             throw new ClassCastException(getContext().getClass().getSimpleName()
                     + " must implement FoodItemListener interface");
         }
-//        mAdapter = new OuterRecyclerViewAdapter((InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener) getContext());
-        mAdapter = new OuterRecyclerViewAdapter(getContext(), getList());
+        mAdapter = new SectionedRVAdapter(getContext(), getDateList(getFoodList()));
 
         outerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         // TODO Compile to phone with above line commented and below lines un-commented. Check whether scrolling animation is actually smoother.
@@ -116,154 +108,69 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
         return view;
     }
 
-    @Override
-    public void onStart() {
-        Log.d(TAG, mMonth + "/" + mYear + " onStart: starts");
-        super.onStart();
-        mIsStarted = true;
-        if (mIsVisible) {
-            Log.d(TAG, mMonth + "/" + mYear + " onStart: page is visible, initiating loaders");
-            initilalizeLoaders();
+    /**
+     * Retrieves a list of DateHeader objects, representing every date with food entries
+     * for month represented by this PageFragment.
+     *
+     * @param foodItems ArrayList containing all food items for month
+     * @return ArrayList containing all dates for month
+     */
+    private ArrayList<DateHeader> getDateList(List<FoodItem> foodItems) { // TODO Can this be changed to use mFoodItems?
+        Log.d(TAG, mMonth + "/" + mYear + " getDatesList: called");
+        if (foodItems.isEmpty()) {
+            return new ArrayList<>();
         }
-        Log.d(TAG, mMonth + "/" + mYear + " onStart: ends");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mIsStarted = false;
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        Log.d(TAG, mMonth + "/" + mYear + " " + "setUserVisibleHint: starts");
-        super.setUserVisibleHint(isVisibleToUser);
-        mIsVisible = isVisibleToUser;
-        if (mIsVisible && mIsStarted) {
-            Log.d(TAG, mMonth + "/" + mYear + " " + "setUserVisibleHint: page is visible and is started, initiating loaders");
-            initilalizeLoaders();
-        } else {
-            Log.d(TAG, mMonth + "/" + mYear + " " + "setUserVisibleHint: page isn't started");
-            mIsStarted = false;
+        ContentResolver contentResolver = getContext().getContentResolver();
+        if (contentResolver == null) {
+            throw new IllegalStateException(TAG + " " + mMonth + "/" + mYear + " .onHandleWork: couldn't get ContentResolver.");
         }
-        Log.d(TAG, mMonth + "/" + mYear + " " + "setUserVisibleHint: ends");
-    }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        String[] projection;
-        String sortOrder;
-
+        String[] projection = new String[]{"DISTINCT " + FoodsContract.Columns.DAY,
+                FoodsContract.Columns.MONTH,
+                FoodsContract.Columns.YEAR};
         String selection = FoodsContract.Columns.MONTH + "=? AND "
                 + FoodsContract.Columns.YEAR + "=?";
         String[] selectionArgs = new String[]{String.valueOf(mMonth), String.valueOf(mYear)};
-
-        switch (id) {
-            case OUTER_LOADER_ID:
-                Log.d(TAG, mMonth + "/" + mYear + " onCreateLoader: called with id OUTER_LOADER ID");
-                // SOME UGLY SHIT SQL injection - alternative solution: https://stackoverflow.com/questions/24877815/distinct-query-for-cursorloader
-                projection = new String[]{"DISTINCT " + FoodsContract.Columns.DAY,
-                        FoodsContract.Columns.MONTH,
-                        FoodsContract.Columns.YEAR};
-                // Sort by Year -> Month -> Day
-                // 'ORDER BY Foods.Year, Foods.Month, Foods.Day DESC'
-                sortOrder = FoodsContract.Columns.YEAR + ","
-                        + FoodsContract.Columns.MONTH + ","
-                        + FoodsContract.Columns.DAY + " DESC";
-                return new CursorLoader(getActivity(),
-                        FoodsContract.CONTENT_URI,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        sortOrder);
-
-            case INNER_LOADER_ID:
-                Log.d(TAG, mMonth + "/" + mYear + " onCreateLoader: called with id INNER_LOADER_ID");
-                projection = new String[]{FoodsContract.Columns._ID,
-                        FoodsContract.Columns.FOOD_ITEM,
-                        FoodsContract.Columns.DAY,
-                        FoodsContract.Columns.MONTH,
-                        FoodsContract.Columns.YEAR,
-                        FoodsContract.Columns.HOUR,
-                        FoodsContract.Columns.CATEGORY_ID};
-                // Sort by Year -> Month -> Day -> Hour -> Name
-                // 'ORDER BY Foods.Year, Foods.Month, Foods.Day, Foods.Hour, Foods.FoodItem COLLATE NOCASE DESC'
-                sortOrder = FoodsContract.Columns.HOUR + " DESC,"
-                        + FoodsContract.Columns.FOOD_ITEM + " COLLATE NOCASE DESC";
-                return new CursorLoader(getActivity(),
-                        FoodsContract.CONTENT_URI,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        sortOrder);
-
-            // Add cases for other Loader Id's for loading information from other databases
-
-            default:
-                throw new InvalidParameterException(TAG + " " + mMonth + "/" + mYear + " .onCreateLoader called with invalid loader id: " + id);
-        }
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (cursor == null) {
-            throw new InvalidParameterException(TAG + " " + mMonth + "/" + mYear + " .onLoadFinished called with null cursor");
+        String sortOrder = FoodsContract.Columns.YEAR + ","
+                + FoodsContract.Columns.MONTH + ","
+                + FoodsContract.Columns.DAY + " DESC";
+        Cursor cursor = contentResolver.query(FoodsContract.CONTENT_URI,
+                projection,
+                selection,
+                selectionArgs,
+                sortOrder);
+        if (cursor == null || cursor.getCount() == 0) {
+            throw new IllegalStateException(TAG + " " + mMonth + "/" + mYear + " getDatesList: couldn't move cursor to first");
         }
 
-        switch (loader.getId()) {
-            case OUTER_LOADER_ID:
-                Log.d(TAG, mMonth + "/" + mYear + " onLoadFinished: starts with id OUTER_LOADER_ID");
-                mAdapter.swapCursor(cursor);
-//                int count = mAdapter.getItemCount();
-                break;
+        ArrayList<DateHeader> dates = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            // Get current day's food items
+            final int day = cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.DAY));
+            Collection<FoodItem> filteredCollection = Collections2.filter(foodItems,
+                    new Predicate<FoodItem>() {
+                        @Override
+                        public boolean apply(FoodItem input) {
+                            return input.getDay() == day;
+                        }
+                    });
+            List<FoodItem> items = new ArrayList<>(filteredCollection);
 
-            case INNER_LOADER_ID:
-                Log.d(TAG, mMonth + "/" + mYear + " onLoadFinished: starts with id INNER_LOADER_ID");
-                Log.d(TAG, mMonth + "/" + mYear + " onLoadFinished: swapping inner cursors");
-                mAdapter.swapInnerCursors(cursor);
-//                int count = mAdapter.getInnerAdaptersCount();
-                break;
-
-            default:
-                throw new InvalidParameterException(TAG + " " + mMonth + "/" + mYear + " .onLoadFinished called with invalid loader");
+            // Add new DateHeader to dates list, containing said items
+            dates.add(new DateHeader(
+                    items,
+                    day,
+                    cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.MONTH)),
+                    cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.YEAR))));
         }
 
-//        Log.d(TAG, "onLoadFinished: ends with count: " + count);
-        Log.d(TAG, mMonth + "/" + mYear + " onLoadFinished: ends with item count: " + mAdapter.getItemCount());
+        return dates;
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        Log.d(TAG, mMonth + "/" + mYear + " onLoaderReset: called");
-
-        switch (loader.getId()) {
-            case OUTER_LOADER_ID:
-                mAdapter.swapCursor(null);
-                break;
-
-            case INNER_LOADER_ID:
-                mAdapter.swapInnerCursors(null);
-                break;
-
-            default:
-                throw new InvalidParameterException(TAG + " " + mMonth + "/" + mYear + " .onLoaderReset called with invalid loader");
-        }
-    }
-
-    /**
-     * Small method for better readability when calling it.
-     * Initializes all loaders for PageFragment.
-     */
-    private void initilalizeLoaders() {
-        Log.d(TAG, mMonth + "/" + mYear + " initilalizeLoaders: called, initiating loaders");
-        getLoaderManager().initLoader(OUTER_LOADER_ID, null, this);
-        getLoaderManager().initLoader(INNER_LOADER_ID, null, this);
-    }
-
-    private ArrayList<FoodItem> getList() {
+    private ArrayList<FoodItem> getFoodList() {
         ContentResolver contentResolver = getContext().getContentResolver();
         if (contentResolver == null) {
-            throw new IllegalStateException(TAG + ".onHandleWork: couldn't get ContentResolver.");
+            throw new IllegalStateException(TAG + " " + mMonth + "/" + mYear + " .onHandleWork: couldn't get ContentResolver.");
         }
 
         String[] projection = new String[]{FoodsContract.Columns._ID,
@@ -285,11 +192,14 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
                 selection,
                 selectionArgs,
                 sortOrder);
-        if (cursor == null || !cursor.moveToFirst()) {
-            throw new IllegalStateException(TAG + "onHandleWork: Couldn't move cursor to first");
+        if (cursor == null || cursor.getCount() == 0) {
+            // TODO Delete all items from current month, then deal with exception thrown here
+//            throw new IllegalStateException(TAG + " getFoodList: cursor is null.");
+            Log.d(TAG, mMonth + "/" + mYear + " getFoodList: cursor null or empty. Assuming no items exist for requested month.");
+            return new ArrayList<>();
         }
         ArrayList<FoodItem> items = new ArrayList<>();
-        do {
+        while (cursor.moveToNext()) {
             items.add(new FoodItem(
                     cursor.getString(cursor.getColumnIndex(FoodsContract.Columns._ID)),
                     cursor.getString(cursor.getColumnIndex(FoodsContract.Columns.FOOD_ITEM)),
@@ -298,28 +208,16 @@ public class PageFragment extends Fragment implements LoaderManager.LoaderCallba
                     cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.MONTH)),
                     cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.YEAR)),
                     cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.CATEGORY_ID))));
-        } while (cursor.moveToNext());
+        }
         cursor.close();
         return items;
     }
 
-
-    public class ResponseReceiver extends BroadcastReceiver {
-        private static final String TAG = "ResponseReceiver";
-
-        public static final String ACTION_RESP = "com.nivgelbermann.intent.action.MESSAGE_PROCESSED";
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive: starts");
-            try {
-                mFoodItems = (ArrayList<FoodItem>)
-                        intent.getSerializableExtra(TableRetrieverService.LIST_RESULT);
-            } catch (ClassCastException e) {
-                Log.d(TAG, "onReceive: could not cast received object to ArrayList<FoodItem>.");
-            }
-            Log.d(TAG, "onReceive: ends");
-        }
+    /**
+     * Refreshes items display.
+     */
+    public void updateDisplay() {
+        Log.d(TAG, "updateDisplay: called");
+        mAdapter.notifyDataChanged(getDateList(getFoodList()));
     }
-
 }
