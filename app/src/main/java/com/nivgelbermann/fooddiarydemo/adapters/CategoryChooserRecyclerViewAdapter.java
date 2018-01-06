@@ -17,10 +17,6 @@ import com.nivgelbermann.fooddiarydemo.data.Category;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Niv on 29-Oct-17.
- */
-
 public class CategoryChooserRecyclerViewAdapter
         extends RecyclerView.Adapter<CategoryChooserRecyclerViewAdapter.CategoryViewHolder> {
     private static final String TAG = "CategoryChooserRecycler";
@@ -40,7 +36,6 @@ public class CategoryChooserRecyclerViewAdapter
         @BindView(R.id.cc_row_category_name) TextView name;
         @BindView(R.id.cc_row_checked_ic) ImageView checked;
         @BindView(R.id.cc_row_divider) View divider;
-        // TODO Copy divider to row_outer_rv_card
 
         CategoryListener mListener;
         Category mCategory;

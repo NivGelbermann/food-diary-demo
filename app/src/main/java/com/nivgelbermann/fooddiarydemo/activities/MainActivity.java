@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.adapters.SectionedRVAdapter;
@@ -40,6 +41,7 @@ public class MainActivity
     private static final String TAG = "MainActivity";
 
     private static final String CURRENT_FRAGMENT_TAG = "CurrentFragment";
+    private static final String CURRENT_TITLE_TAG = "CurrentTitle";
     private static final String PAGE_FRAGMENT_TAG = "PageFragment";
     private static final String HISTORY_FRAGMENT_TAG = "HistoryFragment";
     private static final int REQUEST_ADD_EDIT = 1;
@@ -59,7 +61,6 @@ public class MainActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
-        setTitle(R.string.this_month);
 
         // If activity is created for the first time, use PageFragment as content.
         // Otherwise, set last-displayed fragment as content.
@@ -73,6 +74,7 @@ public class MainActivity
                     .commit();
             fragment.setUserVisibleHint(true);
             mFragment = fragment;
+            setTitle(R.string.this_month);
         } else {
             // Get last-displayed fragment tag from bundle
             String tag = savedInstanceState.getString(CURRENT_FRAGMENT_TAG);
@@ -82,6 +84,7 @@ public class MainActivity
                     .commit();
             fragment.setUserVisibleHint(true);
             mFragment = fragment;
+            setTitle(savedInstanceState.getString(CURRENT_TITLE_TAG));
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +132,7 @@ public class MainActivity
         //        .getName();
         String tag = getSupportFragmentManager().getFragments().get(0).getTag();
         outState.putString(CURRENT_FRAGMENT_TAG, tag);
+        outState.putString(CURRENT_TITLE_TAG, getTitle().toString());
         Log.d(TAG, "onSaveInstanceState: ends with tag: " + tag);
     }
 
@@ -146,17 +150,25 @@ public class MainActivity
     @Override
     public void onBackPressed() {
         // Log.d(TAG, "onBackPressed: starts");
+        if (drawerLayout.isDrawerOpen(navigationView)) {
+            drawerLayout.closeDrawers();
+            return;
+        }
+
+//        mFragment = fragmentManager.getFragments().get(fragmentManager.getBackStackEntryCount()-1);
         super.onBackPressed();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         String title;
-        // Get the title of the current (post-onBackPressered) fragment
+        // Get the title of the current (post-onBackPressed) fragment
         if (fragmentManager.getBackStackEntryCount() == 0) {
             title = PAGE_FRAGMENT_TAG;
         } else {
-            BackStackEntry backStackEntry = getSupportFragmentManager().
-                    getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1);
+            BackStackEntry backStackEntry = fragmentManager
+                    .getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
             title = backStackEntry.getName();
         }
+        mFragment = fragmentManager.findFragmentByTag(title);
 
         // Set activity title and nav drawer selection according to current fragment
         MenuItem item;
@@ -190,6 +202,7 @@ public class MainActivity
         switch (resultCode) {
             case RESULT_OK:
                 if (mFragment instanceof PageFragment) {
+                    Log.d(TAG, "onActivityResult: updating display for PageFragment");
                     PageFragment fragment = (PageFragment) mFragment;
                     fragment.updateDisplay();
                 } else if (mFragment instanceof HistoryFragment) {
@@ -238,6 +251,40 @@ public class MainActivity
                     }
                 }
         );
+
+        // Template: random.nextInt((max - min) + 1) + min;
+        Random random = new Random();
+        int index = random.nextInt(5);
+        int drawableId;
+        switch (index) {
+            case 0:
+                drawableId = R.drawable.nav_drawer_berries;
+                break;
+
+            case 1:
+                drawableId = R.drawable.nav_drawer_muffin;
+                break;
+
+            case 2:
+                drawableId = R.drawable.nav_drawer_spaghetti_bolognese;
+                break;
+
+            case 3:
+                drawableId = R.drawable.nav_drawer_strawberries;
+                break;
+
+            case 4:
+                drawableId = R.drawable.nav_drawer_white_cake;
+                break;
+
+            default:
+                throw new InvalidParameterException(TAG + ".setupDrawerContent: invalid index generated");
+        }
+        View headerView = navigationView.getHeaderView(0);
+        if (headerView != null) {
+            LinearLayout drawerHeaderLayout = headerView.findViewById(R.id.nav_drawer_header_layout);
+            drawerHeaderLayout.setBackgroundResource(drawableId);
+        }
     }
 
     /**
@@ -248,7 +295,7 @@ public class MainActivity
     private void selectDrawerItem(@NonNull MenuItem item) {
         Log.d(TAG, "selectDrawerItem: starts");
         // Create a new fragment and specify the fragment to show based on nav item clicked
-        Fragment fragment = null;
+        Fragment fragment;
         String tag;
         Calendar calendar;
         switch (item.getItemId()) {
@@ -286,6 +333,11 @@ public class MainActivity
                     .commit();
             fragment.setUserVisibleHint(true);
             mFragment = fragment;
+        }
+        // If new fragment is "this month" (default one), clear backstack
+        // to make back button exit app from its opening screen.
+        if (fragment.getClass().equals(PageFragment.class)) {
+            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
 
         // Highlight the selected item has been done by NavigationView
@@ -355,8 +407,6 @@ public class MainActivity
                 Log.d(TAG, "generateRandomItems: item saved: " + values.toString());
             }
         }
+        ((PageFragment) mFragment).updateDisplay();
     }
 }
-
-// TODO Display current month, instead of latest in DB
-// TODO Try replacing every instance of finding current fragment using FragmentManager, with using mFragment

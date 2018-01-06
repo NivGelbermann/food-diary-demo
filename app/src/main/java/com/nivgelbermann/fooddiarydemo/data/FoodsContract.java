@@ -4,10 +4,6 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-/**
- * Created by Niv on 09-Sep-17.
- */
-
 public class FoodsContract {
 
     public static final String TABLE_NAME = "Foods";

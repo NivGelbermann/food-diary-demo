@@ -5,10 +5,6 @@ import com.intrusoft.sectionedrecyclerview.Section;
 import java.util.Calendar;
 import java.util.List;
 
-/**
- * Created by Niv on 31-Dec-17.
- */
-
 public class DateHeader implements Section<FoodItem> {
     private static final String TAG = "DateHeader";
 
@@ -57,7 +53,7 @@ public class DateHeader implements Section<FoodItem> {
 
     @Override
     public String toString() {
-        return "DateCard{" +
+        return "DateHeader{" +
                 "date=" + mDate +
                 ", dayOfWeek='" + mDayOfWeek + '\'' +
                 ", month=" + mMonth +

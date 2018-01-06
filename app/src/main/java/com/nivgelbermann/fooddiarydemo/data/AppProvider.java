@@ -12,8 +12,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 /**
- * Created by Niv on 10-Sep-17.
- * <p>
  * Provider for the FoodDiaryDemo app.
  * This is the only class that knows about {@link AppDatabase}.
  * <p>

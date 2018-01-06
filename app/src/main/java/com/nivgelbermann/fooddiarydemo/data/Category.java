@@ -2,10 +2,6 @@ package com.nivgelbermann.fooddiarydemo.data;
 
 import java.io.Serializable;
 
-/**
- * Created by Niv on 31-Oct-17.
- */
-
 public class Category implements Serializable {
     private static final long serialVersionUID = 1603102270117255964L;
 

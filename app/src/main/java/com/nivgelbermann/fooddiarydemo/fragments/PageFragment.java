@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.adapters.HistoryStatePagerAdapter;
 import com.nivgelbermann.fooddiarydemo.adapters.SectionedRVAdapter;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.models.DateHeader;
@@ -28,34 +29,26 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by Niv on 21-Aug-17.
- * <p>
  * Defines a tab's layout.
  * <p>
  * In case different tab layouts are required,
  * create separate class+layout files for each required fragment.
  */
 
-public class PageFragment extends Fragment {
+public class PageFragment extends Fragment
+        implements HistoryStatePagerAdapter.QueryFragmentUpdateStatus {
     private static final String TAG = "PageFragment";
 
-    @BindView(R.id.page_outer_recyclerView) RecyclerView outerRecyclerView;
+    @BindView(R.id.page_recyclerView) RecyclerView recyclerView;
 
     public static final String PAGE_MONTH = "PageMonth";
     public static final String PAGE_YEAR = "PageYear";
-    private static final int OUTER_LOADER_ID = 0;
-    private static final int INNER_LOADER_ID = 1;
 
-    //    private OuterRecyclerViewAdapter mAdapter;
     private SectionedRVAdapter mAdapter;
     // Variables for querying the relevant mMonth from DB
     private int mMonth;
     private int mYear;
-    private boolean mIsStarted;
-    private boolean mIsVisible;
-
-    //    private ResponseReceiver mResponseReceiver;
-    private ArrayList<FoodItem> mFoodItems;
+    private boolean mUpdated;
 
     /**
      * @param month month represented by page
@@ -81,6 +74,7 @@ public class PageFragment extends Fragment {
         }
         mMonth = args.getInt(PAGE_MONTH);
         mYear = args.getInt(PAGE_YEAR);
+        mUpdated = false;
     }
 
     @Nullable
@@ -96,16 +90,18 @@ public class PageFragment extends Fragment {
         }
         mAdapter = new SectionedRVAdapter(getContext(), getDateList(getFoodList()));
 
-        outerRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        // TODO Compile to phone with above line commented and below lines un-commented. Check whether scrolling animation is actually smoother.
-//        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-//        manager.setItemPrefetchEnabled(true);
-//        manager.setInitialPrefetchItemCount(10);
-//        outerRecyclerView.setLayoutManager(manager);
-        outerRecyclerView.setHasFixedSize(true); // Helps performance optimization
-        outerRecyclerView.setAdapter(mAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true); // Helps performance optimization
+        recyclerView.setAdapter(mAdapter);
 
         return view;
+    }
+
+    @Override
+    public boolean wasDataUpdated() {
+        boolean updateStatus = mUpdated;
+        mUpdated = false;
+        return updateStatus;
     }
 
     /**
@@ -115,7 +111,7 @@ public class PageFragment extends Fragment {
      * @param foodItems ArrayList containing all food items for month
      * @return ArrayList containing all dates for month
      */
-    private ArrayList<DateHeader> getDateList(List<FoodItem> foodItems) { // TODO Can this be changed to use mFoodItems?
+    private ArrayList<DateHeader> getDateList(List<FoodItem> foodItems) {
         Log.d(TAG, mMonth + "/" + mYear + " getDatesList: called");
         if (foodItems.isEmpty()) {
             return new ArrayList<>();
@@ -163,7 +159,8 @@ public class PageFragment extends Fragment {
                     cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.MONTH)),
                     cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.YEAR))));
         }
-
+        cursor.close();
+        mUpdated = true;
         return dates;
     }
 
@@ -193,8 +190,6 @@ public class PageFragment extends Fragment {
                 selectionArgs,
                 sortOrder);
         if (cursor == null || cursor.getCount() == 0) {
-            // TODO Delete all items from current month, then deal with exception thrown here
-//            throw new IllegalStateException(TAG + " getFoodList: cursor is null.");
             Log.d(TAG, mMonth + "/" + mYear + " getFoodList: cursor null or empty. Assuming no items exist for requested month.");
             return new ArrayList<>();
         }
@@ -214,7 +209,7 @@ public class PageFragment extends Fragment {
     }
 
     /**
-     * Refreshes items display.
+     * Refreshes page display.
      */
     public void updateDisplay() {
         Log.d(TAG, "updateDisplay: called");

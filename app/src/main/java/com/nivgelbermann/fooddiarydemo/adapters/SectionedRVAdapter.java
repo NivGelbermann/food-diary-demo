@@ -21,10 +21,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Niv on 31-Dec-17.
- */
-
 public class SectionedRVAdapter
         extends SectionRecyclerViewAdapter<
         DateHeader,
@@ -41,7 +37,7 @@ public class SectionedRVAdapter
         @BindView(R.id.sec_header_month) TextView month;
         @BindView(R.id.sec_header_year) TextView year;
 
-        public SectionViewHolder(View view) {
+        SectionViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
@@ -57,7 +53,7 @@ public class SectionedRVAdapter
 
         /**
          * Interface to be implemented by activities containing a RecyclerView
-         * with {@link InnerRecyclerViewAdapter}.
+         * with {@link SectionedRVAdapter}.
          */
         public interface FoodItemListener {
             /**
@@ -89,12 +85,12 @@ public class SectionedRVAdapter
             });
             // Following lines commented for optimization, because
             // creating anonymous listeners is considered heavy
-            // view.setOnLongClickListener(new View.OnLongClickListener() {
-            //     @Override
-            //     public boolean onLongClick(View view) {
-            //         return mListener.onFoodItemLongClicked(mFoodItem);
-            //     }
-            // });
+            /* view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    return mListener.onFoodItemLongClicked(mFoodItem);
+                }
+            }); */
         }
 
         void setFoodItem(FoodItem item, String color) {
@@ -107,9 +103,9 @@ public class SectionedRVAdapter
                 Log.d(TAG, "setFoodItem: NullPointerExcpetion caught, couldn't set viewholder's properties to given item: " + item);
                 e.printStackTrace();
             }
-//            }
         }
 
+/*
         void hide() {
             if (icon != null) {
                 icon.setVisibility(View.GONE);
@@ -130,6 +126,7 @@ public class SectionedRVAdapter
                 time = null;
             }
         }
+*/
     }
 
     public SectionedRVAdapter(Context context, List<DateHeader> sectionItemList) {
@@ -168,5 +165,3 @@ public class SectionedRVAdapter
         childViewHolder.setFoodItem(foodItem, "#9E9E9E");
     }
 }
-
-// TODO AddEdit not adding items + Add live sync from DB

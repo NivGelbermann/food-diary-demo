@@ -8,8 +8,6 @@ import java.util.Date;
 import static com.nivgelbermann.fooddiarydemo.helpers.Util.MILLISECONDS;
 
 /**
- * Created by Niv on 14-Sep-17.
- * <p>
  * Represents a row in the Foods table in the database.
  */
 
@@ -30,18 +28,8 @@ public class FoodItem implements Serializable {
         mCategoryId = 1;
     }
 
-    public FoodItem(String id, String name, long time, int day, int month, int year) {
+    public FoodItem(String id, String name, long time, int day, int month, int year, int categoryId) {
         this.m_Id = id;
-        mName = name;
-        mTime = time;
-        mDay = day;
-        mMonth = month;
-        mYear = year;
-        mCategoryId = 1;
-    }
-
-    public FoodItem(String m_Id, String name, long time, int day, int month, int year, int categoryId) {
-        this.m_Id = m_Id;
         mName = name;
         mTime = time;
         mDay = day;
@@ -151,14 +139,18 @@ public class FoodItem implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         FoodItem item = (FoodItem) obj;
-        return (m_Id.equals(item.getId())
+        return (this == obj
+                || (m_Id.equals(item.getId())
                 && mName.equals(item.getName())
                 && mTime == item.getTime()
                 && mDay == item.getDay()
                 && mMonth == item.getMonth()
                 && mYear == item.getYear()
-                && mCategoryId == item.getCategoryId());
+                && mCategoryId == item.getCategoryId()));
     }
 
 

@@ -142,7 +142,8 @@ public class AddEditActivity extends AppCompatActivity
 
             default:
                 // throw new InvalidParameterException(TAG + ".onOptionsItemSelected called with invalid MenuItem " + item.getTitle());
-                Snackbar.make(getWindow().getDecorView().getRootView(), R.string.add_edit_general_error, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(coordinatorLayout, R.string.add_edit_general_error,
+                        Snackbar.LENGTH_LONG).show();
         }
 
         finish();
@@ -151,6 +152,16 @@ public class AddEditActivity extends AppCompatActivity
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        // Ignore future dates
+        // TODO Before going into production, add conditions for preventing any future item
+        Calendar calendar = Calendar.getInstance();
+        if ((monthOfYear > calendar.get(Calendar.MONTH) && year == calendar.get(Calendar.YEAR))
+                || year > calendar.get(Calendar.YEAR)) {
+            Snackbar.make(coordinatorLayout, R.string.add_edit_time_input_error,
+                    Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
         // Update mFoodItem
         mFoodItem.setDate(year, monthOfYear, dayOfMonth);
 
@@ -312,7 +323,6 @@ public class AddEditActivity extends AppCompatActivity
                 values.put(FoodsContract.Columns.DAY, mFoodItem.getDay());
                 values.put(FoodsContract.Columns.HOUR, mFoodItem.getTime());
                 values.put(FoodsContract.Columns.CATEGORY_ID, mFoodItem.getCategoryId());
-                Log.d(TAG, "onClick: mFoodItem: " + mFoodItem.toString());
 
                 if (mFoodItem.isValid()) {
                     if (mEditMode) {
@@ -324,7 +334,6 @@ public class AddEditActivity extends AppCompatActivity
                     }
                     setResult(RESULT_OK);
                 }
-
                 finish();
             }
         });
@@ -334,7 +343,7 @@ public class AddEditActivity extends AppCompatActivity
      * Utility method for simplifying the edit and delete functionality code.
      *
      * @param contentResolver ContentResolver for this method to use.
-     * @param values   ContentValues for to update if in edit mode. Otherwise pass Null (to delete).
+     * @param values          ContentValues for to update if in edit mode. Otherwise pass Null (to delete).
      */
     private void updateDeleteItem(ContentResolver contentResolver, ContentValues values) {
         Cursor cursor = contentResolver.query(FoodsContract.CONTENT_URI,
@@ -345,8 +354,8 @@ public class AddEditActivity extends AppCompatActivity
 
         if ((cursor == null) || (!cursor.moveToFirst())) {
             // Cursor wasn't returned or matching item wasn't found
-            Snackbar.make(getWindow().getDecorView().getRootView(),
-                    R.string.add_edit_general_error, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(coordinatorLayout, R.string.add_edit_general_error,
+                    Snackbar.LENGTH_LONG).show();
             String errorSource = (values == null) ? "Menu.Delete" : "FAB";
             Log.d(TAG, errorSource + ".onClick: a match in the DB wasn't found for the food item loaded in edit mode. Exiting AddEditActivity.");
         } else {
@@ -364,5 +373,4 @@ public class AddEditActivity extends AppCompatActivity
 }
 
 // TODO Add to app settings: allow users to choose whether item time is selected in hour format, or {morning, noon, evening...} format
-// TODO Add prevention of adding future items
 // TODO If opened in edit mode, do not pop keyboard

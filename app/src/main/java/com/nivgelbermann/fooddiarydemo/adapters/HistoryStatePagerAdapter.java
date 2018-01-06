@@ -1,31 +1,48 @@
 package com.nivgelbermann.fooddiarydemo.adapters;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
+import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.fragments.PageFragment;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by Niv on 08-Sep-17.
- * <p>
  * Creates scrollable tabs according to given list of tab titles.
  * Each tab's fragment is handled by {@link PageFragment}.
  */
 
-public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
-    private static final String TAG = "MonthsStatePagerAdapter";
+public class HistoryStatePagerAdapter extends FragmentStatePagerAdapter {
+    private static final String TAG = "HistoryStatePagerAdapte";
 
     // Contains the strings for each tab title in format: month/year
     private List<String> mTabTitles;
+    private WeakReference<Context> mContext;
 
-    public MonthsStatePagerAdapter(FragmentManager fm, ArrayList<String> tabTitles) {
+    /**
+     * Interface for communicating with child fragments.
+     * Used for querying whether fragment data was changed, and its display needs to be updated.
+     */
+    public interface QueryFragmentUpdateStatus {
+        /**
+         * Checks whether fragment data was updated, then resets its update status.
+         * @return true if fragment display needs to be updated, otherwise false.
+         */
+        public boolean wasDataUpdated();
+    }
+
+    public HistoryStatePagerAdapter(FragmentManager fm, ArrayList<String> tabTitles, Context context) {
         super(fm);
         mTabTitles = tabTitles;
+        mContext = new WeakReference<>(context);
     }
 
     @Override
@@ -56,12 +73,24 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
         int currentMonth = calendar.get(Calendar.MONTH);
 
         if (month == currentMonth && year == currentYear) {
-            return "THIS MONTH"; // TODO Convert to use string resource
+            return mContext.get().getResources().getString(R.string.this_month_upp);
         } else if ((month == currentMonth - 1 && year == currentYear)
                 || (month == 11 && year == currentYear - 1)) {
-            return "LAST MONTH"; // TODO Convert to use string resource
+            return mContext.get().getResources().getString(R.string.last_month_upp);
         }
-        return formatPageTitle(Integer.valueOf(segments[0]), Integer.valueOf(segments[1])); // TODO Change to local variables month & year
+        return formatPageTitle(month, year);
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        Log.d(TAG, "getItemPosition: called");
+        PageFragment fragment = (PageFragment) object;
+        if(fragment.wasDataUpdated()) {
+            Log.d(TAG, "getItemPosition: ended with POSITION_NONE");
+            return POSITION_NONE;
+        }
+        Log.d(TAG, "getItemPosition: ended with POSITION_UNCHANGED");
+        return POSITION_UNCHANGED;
     }
 
     public int getCurrentMonthPosition() {
@@ -77,7 +106,7 @@ public class MonthsStatePagerAdapter extends FragmentStatePagerAdapter {
                 return i;
             }
         }
-        return getCount()-1;
+        return getCount() - 1;
     }
 
     /**

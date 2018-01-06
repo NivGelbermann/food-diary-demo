@@ -4,8 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by Niv on 10-Sep-17.
- *
  * This class defines every global constant used in this app.
  */
 
@@ -26,7 +24,6 @@ public class Util {
      * @return String for time formatted
      */
     public static String formatTime(long time, String timeFormat) {
-        // TODO Merge this utility method with the one in FoodItem.java, and move into a util class?
         SimpleDateFormat dateFormat = new SimpleDateFormat(timeFormat);
         return dateFormat.format(new Date(time * MILLISECONDS));
     }

@@ -4,10 +4,6 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-/**
- * Created by Niv on 24-Oct-17.
- */
-
 public class CategoriesContract {
 
     public static final String TABLE_NAME = "Categories";

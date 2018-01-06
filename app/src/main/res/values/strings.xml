@@ -2,10 +2,10 @@
     <string name="app_name">FoodDiaryDemo</string>
     <string name="action_settings">Settings</string>
 
-    <!-- MonthsStatePagerAdapter -->
+    <!-- HistoryStatePagerAdapter -->
     <string name="this_month_upp">THIS MONTH</string>
     <string name="this_month">This month</string>
-    <string name="last_month">LAST MONTH</string>
+    <string name="last_month_upp">LAST MONTH</string>
 
     <!-- row_outer_rv_card -->
     <string name="card_header_date_textview_contdesc">The day in the month</string>
@@ -34,6 +34,7 @@
     <string name="add_edit_recyclerview_item_time_message">Tap to select time</string>
     <string name="add_edit_general_error">An error has occurred, changes have not been saved</string>
     <string name="add_edit_name_input_error">No name was entered</string>
+    <string name="add_edit_time_input_error">Can\'t choose future month. Changes dismissed</string>
     <string name="title_activity_add_edit">AddEditActivity</string>
     <string name="add_edit_category_header">Category</string>
     <string name="add_edit_date_header">Date</string>

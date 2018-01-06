@@ -6,14 +6,11 @@ import android.util.Log;
 import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 /**
- * Created by Niv on 09-Sep-17.
- * <p>
  * Basic database class for the application.
  * <p>
  * The only class that should use this class is {@link AppProvider}.
  */
 
-//class AppDatabase extends SQLiteOpenHelper {
 class AppDatabase extends SQLiteAssetHelper {
     private static final String TAG = "AppDatabase";
 

@@ -16,19 +16,20 @@ import android.view.ViewGroup;
 
 import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.activities.AddEditActivity;
-import com.nivgelbermann.fooddiarydemo.adapters.InnerRecyclerViewAdapter;
-import com.nivgelbermann.fooddiarydemo.adapters.MonthsStatePagerAdapter;
+import com.nivgelbermann.fooddiarydemo.adapters.HistoryStatePagerAdapter;
+import com.nivgelbermann.fooddiarydemo.adapters.SectionedRVAdapter;
 import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.models.FoodItem;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HistoryFragment
         extends Fragment
-        implements InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener {
+        implements SectionedRVAdapter.ChildViewHolder.FoodItemListener {
     private static final String TAG = "HistoryFragment";
 
     //    @BindView(R.id.history_toolbar) Toolbar toolbar;
@@ -37,7 +38,7 @@ public class HistoryFragment
     @BindView(R.id.history_tab_layout) TabLayout tabLayout;
 
     private ArrayList<String> mTabTitles;
-    private MonthsStatePagerAdapter mPagerAdapter;
+    private HistoryStatePagerAdapter mPagerAdapter;
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
@@ -69,23 +70,27 @@ public class HistoryFragment
             // TODO This method generates tabs only for months that exist in the DB. Make it generate a tab for every month since the FIRST IN THE DB to the CURRENT DATE
             // Right now, if the DB contains items in June and August but no items in July, a tab for July would not be created
             // TODO Add empty database scenario
+            Calendar calendar = Calendar.getInstance();
+            int currentMonth = calendar.get(Calendar.MONTH);
+            int currentYear = calendar.get(Calendar.YEAR);
             while (cursor.moveToNext()) {
-                mTabTitles.add(cursor.getString(
-                        cursor.getColumnIndex(FoodsContract.Columns.MONTH)) + "/"
-                        + cursor.getString(cursor.getColumnIndex(FoodsContract.Columns.YEAR)));
+                String month = cursor.getString(
+                        cursor.getColumnIndex(FoodsContract.Columns.MONTH));
+                String year = cursor.getString(cursor.getColumnIndex(FoodsContract.Columns.YEAR));
+                if (Integer.valueOf(month) == currentMonth && Integer.valueOf(year) == currentYear) {
+                    break;
+                }
+                mTabTitles.add(month + "/" + year);
             }
-
-            for(int i=0 ; i<mTabTitles.size() ; i++) {
-                Log.d(TAG, "onCreate: title[" + i + "]: " + mTabTitles.get(i));
-            }
+            cursor.close();
         }
-        // Remove current month, as HistoryFragment only displays PAST months.
-        // This seems more effective performance-wise than
-        // checking each item added to mTabTitles in a loop.
-        if (mTabTitles.size() == 0) {
-            return;
-        }
-        mTabTitles.remove(mTabTitles.size() - 1);
+//        // Remove current month, as HistoryFragment only displays PAST months.
+//        // This seems more effective performance-wise than
+//        // checking each item added to mTabTitles in a loop.
+//        if (mTabTitles.size() == 0) {
+//            return;
+//        }
+//        mTabTitles.remove(mTabTitles.size() - 1);
     }
 
     @Nullable
@@ -96,7 +101,7 @@ public class HistoryFragment
         ButterKnife.bind(this, view);
 
         mPagerAdapter =
-                new MonthsStatePagerAdapter(getChildFragmentManager(), mTabTitles);
+                new HistoryStatePagerAdapter(getChildFragmentManager(), mTabTitles, getContext());
         viewPager.setAdapter(mPagerAdapter);
         viewPager.setCurrentItem(mPagerAdapter.getCurrentMonthPosition());
 //        recyclerTabLayout.setUpWithViewPager(viewPager);
@@ -137,8 +142,7 @@ public class HistoryFragment
      */
     public void updateDisplay() {
         Log.d(TAG, "updateDisplay: called");
-//        mPagerAdapter.updatePage(viewPager.getCurrentItem());
-        // TODO Add dynamic updating of all pages OR currently displayed page.
+        mPagerAdapter.notifyDataSetChanged();
     }
 }
 

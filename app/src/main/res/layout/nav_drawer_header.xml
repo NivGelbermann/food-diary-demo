@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/nav_drawer_header_layout"
               android:layout_width="match_parent"
               android:layout_height="192dp"
               android:background="?attr/colorPrimaryDark"
@@ -18,3 +19,5 @@
 
     <!-- TODO Make this cooler -->
     <!-- Nav drawer will ultimately display user info. So make its appearance pleasing, but don't stuff it with content. -->
+    <!-- Right now, images are displayed as background for the LinearLayout programatically. -->
+    <!-- A better solution has to be used, since these images weigh down the APK significantly. -->
