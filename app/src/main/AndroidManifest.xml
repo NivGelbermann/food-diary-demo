@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
@@ -25,27 +25,27 @@
         </activity>
 
         <provider
-            android:name=".data.AppProvider"
+            android:name=".data.sqlite_to_be_deprecated.AppProvider"
             android:authorities="com.nivgelbermann.fooddiarydemo.provider"
             android:exported="false"/>
 
         <activity
-            android:name=".activities.AddEditActivity"
+            android:name=".ui.add_edit.AddEditActivity"
             android:label="@string/title_activity_add_edit"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.MainActivity"
+            android:parentActivityName=".ui.MainActivity"
             android:windowSoftInputMode="adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.nivgelbermann.fooddiarydemo.activities.MainActivity"/>
+                android:value="com.nivgelbermann.fooddiarydemo.ui.MainActivity"/>
         </activity>
         <activity
-            android:name=".activities.CategoryChooserActivity"
+            android:name=".ui.add_edit.CategoryChooserActivity"
             android:label="@string/title_activity_category_chooser"
-            android:parentActivityName=".activities.AddEditActivity">
+            android:parentActivityName=".ui.add_edit.AddEditActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.nivgelbermann.fooddiarydemo.activities.AddEditActivity"/>
+                android:value="com.nivgelbermann.fooddiarydemo.ui.add_edit.AddEditActivity"/>
         </activity>
 
         <service

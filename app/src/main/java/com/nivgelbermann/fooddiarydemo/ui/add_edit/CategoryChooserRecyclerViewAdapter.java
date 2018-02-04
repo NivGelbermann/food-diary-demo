@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo.adapters;
+package com.nivgelbermann.fooddiarydemo.ui.add_edit;
 
 import android.database.Cursor;
 import android.graphics.Color;
@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.data.CategoriesContract;
-import com.nivgelbermann.fooddiarydemo.data.Category;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.CategoriesContract;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.Category;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

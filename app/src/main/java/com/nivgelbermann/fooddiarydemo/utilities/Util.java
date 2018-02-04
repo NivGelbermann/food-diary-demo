@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo.helpers;
+package com.nivgelbermann.fooddiarydemo.utilities;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo.activities;
+package com.nivgelbermann.fooddiarydemo.ui.add_edit;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -22,11 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.data.CategoriesContract;
-import com.nivgelbermann.fooddiarydemo.data.Category;
-import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
-import com.nivgelbermann.fooddiarydemo.helpers.Util;
-import com.nivgelbermann.fooddiarydemo.models.FoodItem;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.CategoriesContract;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.Category;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
+import com.nivgelbermann.fooddiarydemo.utilities.Util;
+import com.nivgelbermann.fooddiarydemo.data.database.FoodItem;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 

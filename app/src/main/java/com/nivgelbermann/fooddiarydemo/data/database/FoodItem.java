@@ -1,11 +1,11 @@
-package com.nivgelbermann.fooddiarydemo.models;
+package com.nivgelbermann.fooddiarydemo.data.database;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.nivgelbermann.fooddiarydemo.helpers.Util.MILLISECONDS;
+import static com.nivgelbermann.fooddiarydemo.utilities.Util.MILLISECONDS;
 
 /**
  * Represents a row in the Foods table in the database.

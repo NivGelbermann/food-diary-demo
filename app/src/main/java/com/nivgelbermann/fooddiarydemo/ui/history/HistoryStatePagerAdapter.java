@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo.adapters;
+package com.nivgelbermann.fooddiarydemo.ui.history;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.fragments.PageFragment;
+import com.nivgelbermann.fooddiarydemo.ui.PageFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

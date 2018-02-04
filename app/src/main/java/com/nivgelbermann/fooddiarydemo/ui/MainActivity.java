@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo.activities;
+package com.nivgelbermann.fooddiarydemo.ui;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -21,12 +21,11 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.adapters.SectionedRVAdapter;
-import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
-import com.nivgelbermann.fooddiarydemo.fragments.HistoryFragment;
-import com.nivgelbermann.fooddiarydemo.fragments.PageFragment;
-import com.nivgelbermann.fooddiarydemo.helpers.Util;
-import com.nivgelbermann.fooddiarydemo.models.FoodItem;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
+import com.nivgelbermann.fooddiarydemo.ui.add_edit.AddEditActivity;
+import com.nivgelbermann.fooddiarydemo.ui.history.HistoryFragment;
+import com.nivgelbermann.fooddiarydemo.utilities.Util;
+import com.nivgelbermann.fooddiarydemo.data.database.FoodItem;
 
 import java.security.InvalidParameterException;
 import java.util.Calendar;

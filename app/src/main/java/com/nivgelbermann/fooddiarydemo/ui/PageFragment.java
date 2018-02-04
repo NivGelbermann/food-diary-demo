@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo.fragments;
+package com.nivgelbermann.fooddiarydemo.ui;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
@@ -16,11 +16,10 @@ import android.widget.TextView;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.adapters.HistoryStatePagerAdapter;
-import com.nivgelbermann.fooddiarydemo.adapters.SectionedRVAdapter;
-import com.nivgelbermann.fooddiarydemo.data.FoodsContract;
-import com.nivgelbermann.fooddiarydemo.models.DateHeader;
-import com.nivgelbermann.fooddiarydemo.models.FoodItem;
+import com.nivgelbermann.fooddiarydemo.ui.history.HistoryStatePagerAdapter;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
+import com.nivgelbermann.fooddiarydemo.data.database.DateHeader;
+import com.nivgelbermann.fooddiarydemo.data.database.FoodItem;
 
 import java.util.ArrayList;
 import java.util.Collection;

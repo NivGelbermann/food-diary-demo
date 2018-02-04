@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo.adapters;
+package com.nivgelbermann.fooddiarydemo.ui;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.intrusoft.sectionedrecyclerview.SectionRecyclerViewAdapter;
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.helpers.Util;
-import com.nivgelbermann.fooddiarydemo.models.DateHeader;
-import com.nivgelbermann.fooddiarydemo.models.FoodItem;
+import com.nivgelbermann.fooddiarydemo.utilities.Util;
+import com.nivgelbermann.fooddiarydemo.data.database.DateHeader;
+import com.nivgelbermann.fooddiarydemo.data.database.FoodItem;
 
 import java.util.List;
 

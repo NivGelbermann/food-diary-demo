@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo.models;
+package com.nivgelbermann.fooddiarydemo.data.database;
 
 import com.intrusoft.sectionedrecyclerview.Section;
 

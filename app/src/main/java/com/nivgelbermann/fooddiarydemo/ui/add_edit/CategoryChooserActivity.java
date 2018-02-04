@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo.activities;
+package com.nivgelbermann.fooddiarydemo.ui.add_edit;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,9 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.adapters.CategoryChooserRecyclerViewAdapter;
-import com.nivgelbermann.fooddiarydemo.data.CategoriesContract;
-import com.nivgelbermann.fooddiarydemo.data.Category;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.CategoriesContract;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.Category;
 
 import java.security.InvalidParameterException;
 
