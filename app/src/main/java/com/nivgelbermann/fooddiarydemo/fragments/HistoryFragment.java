@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.activities.AddEditActivity;
@@ -36,6 +37,7 @@ public class HistoryFragment
     @BindView(R.id.history_pager) ViewPager viewPager;
     //    @BindView(R.id.history_fab) FloatingActionButton fab;
     @BindView(R.id.history_tab_layout) TabLayout tabLayout;
+    @BindView(R.id.history_empty_pager_textview) TextView emptyDBMessage;
 
     private ArrayList<String> mTabTitles;
     private HistoryStatePagerAdapter mPagerAdapter;
@@ -69,7 +71,6 @@ public class HistoryFragment
         } else {
             // TODO This method generates tabs only for months that exist in the DB. Make it generate a tab for every month since the FIRST IN THE DB to the CURRENT DATE
             // Right now, if the DB contains items in June and August but no items in July, a tab for July would not be created
-            // TODO Add empty database scenario
             Calendar calendar = Calendar.getInstance();
             int currentMonth = calendar.get(Calendar.MONTH);
             int currentYear = calendar.get(Calendar.YEAR);
@@ -84,13 +85,6 @@ public class HistoryFragment
             }
             cursor.close();
         }
-//        // Remove current month, as HistoryFragment only displays PAST months.
-//        // This seems more effective performance-wise than
-//        // checking each item added to mTabTitles in a loop.
-//        if (mTabTitles.size() == 0) {
-//            return;
-//        }
-//        mTabTitles.remove(mTabTitles.size() - 1);
     }
 
     @Nullable
@@ -104,8 +98,11 @@ public class HistoryFragment
                 new HistoryStatePagerAdapter(getChildFragmentManager(), mTabTitles, getContext());
         viewPager.setAdapter(mPagerAdapter);
         viewPager.setCurrentItem(mPagerAdapter.getCurrentMonthPosition());
-//        recyclerTabLayout.setUpWithViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
+
+        if (mTabTitles.size() == 0) {
+            toggleEmptyDisplay();
+        }
 
         Log.d(TAG, "onCreateView: ends, returning view");
         return view;
@@ -142,8 +139,33 @@ public class HistoryFragment
      */
     public void updateDisplay() {
         Log.d(TAG, "updateDisplay: called");
+        toggleEmptyDisplay();
         mPagerAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Switches between displaying empty database message, and history tabs,
+     * according the what's currently displayed.
+     */
+    private void toggleEmptyDisplay() {
+        // TODO When adding items to an empty HistoryFragment, make it update correctly and display new items.
+        // Right now it hides empty DB message and displays tabs, but the tabs themselves aren't updated correctly.
+        Log.d(TAG, "toggleEmptyDisplay: called");
+        if (/*mPagerAdapter.getCount() == 0 && */emptyDBMessage.getVisibility() == View.GONE) {
+            Log.d(TAG, "toggleEmptyDisplay: display set to empty");
+            emptyDBMessage.setVisibility(View.VISIBLE);
+            tabLayout.setVisibility(View.GONE);
+            viewPager.setVisibility(View.GONE);
+        } else if (/*mPagerAdapter.getCount() != 0 && */ emptyDBMessage.getVisibility() == View.VISIBLE) {
+            Log.d(TAG, "toggleEmptyDisplay: display to to items");
+            emptyDBMessage.setVisibility(View.GONE);
+            tabLayout.setVisibility(View.VISIBLE);
+            viewPager.setVisibility(View.VISIBLE);
+        }
     }
 }
 
 // TODO Hide ActionBar, leave tabs visible (like in Tasks To Do app)
+// https://stackoverflow.com/questions/33009127/hide-tablayout-on-scroll-of-content-instead-of-toolbar
+// https://android.jlelse.eu/scrolling-behavior-for-appbars-in-android-41aff9c5c468
+// https://mzgreen.github.io/2015/06/23/How-to-hideshow-Toolbar-when-list-is-scrolling(part3)/

@@ -68,9 +68,8 @@
     <string name="navdrawer_item_feedback">Send feedback</string>
     <string name="title_activity_main">MainActivity</string>
 
-    <!-- fragment_empty_db -->
-    <string name="empty_db_message">Whoa! You haven't eaten at all yet!\nBetter get to work...</string>
-    <string name="empty_db_message_contdesc">Whoa! You haven't eaten at all yet! Better get to work...</string>
+    <!-- fragment_page -->
+    <string name="empty_db_message">Whoa! There\'s nothing here!\nBetter get to work...</string>
 
 
 </resources>

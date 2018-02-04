@@ -29,7 +29,7 @@ public class SectionedRVAdapter
         SectionedRVAdapter.ChildViewHolder> {
     private static final String TAG = "SectionedRVAdapter";
 
-    private Context mContext;
+    private Context mContext; // TODO Replace with WeakReference??
 
     static class SectionViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.sec_header_date) TextView date;

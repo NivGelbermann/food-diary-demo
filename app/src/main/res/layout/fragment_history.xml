@@ -17,9 +17,9 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/history_tab_layout"
+            style="@style/HistoryTabLayoutTheme"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/HistoryTabLayoutTheme"/>
+            android:layout_height="wrap_content"/>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
@@ -30,6 +30,15 @@
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp">
-    </android.support.v4.view.ViewPager>
+        android:layout_marginTop="0dp"/>
+
+    <TextView
+        android:id="@+id/history_empty_pager_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/empty_db_message"
+        android:text="@string/empty_db_message"
+        android:textAlignment="center"
+        android:visibility="gone"/>
 </RelativeLayout>

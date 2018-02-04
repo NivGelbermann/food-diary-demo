@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -40,6 +41,7 @@ public class PageFragment extends Fragment
     private static final String TAG = "PageFragment";
 
     @BindView(R.id.page_recyclerView) RecyclerView recyclerView;
+    @BindView(R.id.page_empty_rv_textview) TextView emptyDBMessage;
 
     public static final String PAGE_MONTH = "PageMonth";
     public static final String PAGE_YEAR = "PageYear";
@@ -88,12 +90,18 @@ public class PageFragment extends Fragment
             throw new ClassCastException(getContext().getClass().getSimpleName()
                     + " must implement FoodItemListener interface");
         }
-        mAdapter = new SectionedRVAdapter(getContext(), getDateList(getFoodList()));
 
+        List<DateHeader> dateList = getDateList(getFoodList());
+        if (dateList.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            emptyDBMessage.setVisibility(View.VISIBLE);
+            return view;
+        }
+
+        mAdapter = new SectionedRVAdapter(getContext(), dateList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true); // Helps performance optimization
         recyclerView.setAdapter(mAdapter);
-
         return view;
     }
 
@@ -213,6 +221,22 @@ public class PageFragment extends Fragment
      */
     public void updateDisplay() {
         Log.d(TAG, "updateDisplay: called");
-        mAdapter.notifyDataChanged(getDateList(getFoodList()));
+
+        List<DateHeader> dateList = getDateList(getFoodList());
+        if (dateList.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            emptyDBMessage.setVisibility(View.VISIBLE);
+            mAdapter = null;
+            return;
+        }
+
+        emptyDBMessage.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        if (mAdapter == null) {
+            mAdapter = new SectionedRVAdapter(getContext(), dateList);
+            recyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.notifyDataChanged(dateList);
+        }
     }
 }
