@@ -11,7 +11,7 @@ public class FoodsContract {
     // Foods table fields
     public static class Columns implements BaseColumns {
         // If you ever change the database schema,
-        // you must increment the database version in AppDatabase.
+        // you must increment the database version in AppDatabaseOld.
         public static final String DAY = "Day";             // INTEGER
         public static final String MONTH = "Month";         // INTEGER where JAN=0, DEC=11
         public static final String YEAR = "Year";           // INTEGER

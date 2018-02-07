@@ -11,15 +11,15 @@ import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
  * The only class that should use this class is {@link AppProvider}.
  */
 
-class AppDatabase extends SQLiteAssetHelper {
-    private static final String TAG = "AppDatabase";
+class AppDatabaseOld extends SQLiteAssetHelper {
+    private static final String TAG = "AppDatabaseOld";
 
     private static final String DATABASE_NAME = "FoodDiaryDemo.db";
     private static final int DATABASE_VERSION = 2;
 
-    private static AppDatabase instance = null;
+    private static AppDatabaseOld instance = null;
 
-    private AppDatabase(Context context) {
+    private AppDatabaseOld(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
         // you can use an alternate constructor to specify a database location
@@ -29,10 +29,10 @@ class AppDatabase extends SQLiteAssetHelper {
         // super(context, DATABASE_NAME, context.getExternalFilesDir(null).getAbsolutePath(), null, DATABASE_VERSION);
     }
 
-    static AppDatabase getInstance(Context context) {
+    static AppDatabaseOld getInstance(Context context) {
         if (instance == null) {
             Log.d(TAG, "getInstance: creating new instance");
-            instance = new AppDatabase(context);
+            instance = new AppDatabaseOld(context);
         }
         return instance;
     }

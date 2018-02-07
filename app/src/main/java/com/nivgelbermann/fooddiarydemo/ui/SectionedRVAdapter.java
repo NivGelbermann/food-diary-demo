@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.intrusoft.sectionedrecyclerview.SectionRecyclerViewAdapter;
 import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.utilities.Util;
-import com.nivgelbermann.fooddiarydemo.data.database.DateHeader;
-import com.nivgelbermann.fooddiarydemo.data.database.FoodItem;
+import com.nivgelbermann.fooddiarydemo.data.DateHeader;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodItem;
 
 import java.util.List;
 

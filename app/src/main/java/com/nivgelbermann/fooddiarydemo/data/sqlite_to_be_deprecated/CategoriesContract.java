@@ -11,7 +11,7 @@ public class CategoriesContract {
     // Categories table fields
     public static class Columns implements BaseColumns {
         // If you ever change the database schema,
-        // you must increment the database version in AppDatabase.
+        // you must increment the database version in AppDatabaseOld.
 
         // Default-created _id column represents category ID
         // as used in Foods table

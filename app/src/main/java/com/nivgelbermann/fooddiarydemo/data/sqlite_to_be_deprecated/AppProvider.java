@@ -13,7 +13,7 @@ import android.util.Log;
 
 /**
  * Provider for the FoodDiaryDemo app.
- * This is the only class that knows about {@link AppDatabase}.
+ * This is the only class that knows about {@link AppDatabaseOld}.
  * <p>
  * Every class extending {@link ContentProvider} (e.g this class) should be declared
  * in the AndroidManifest.xml file.
@@ -23,7 +23,7 @@ import android.util.Log;
 public class AppProvider extends ContentProvider {
     private static final String TAG = "AppProvider";
 
-    private AppDatabase mAssetHelper;
+    private AppDatabaseOld mAssetHelper;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
     static final String CONTENT_AUTHORITY = "com.nivgelbermann.fooddiarydemo.provider";
@@ -54,7 +54,7 @@ public class AppProvider extends ContentProvider {
     public boolean onCreate() {
         // Might have to change this method to perform on a separate thread
         // because creating a DB is performance-heavy and might cause the app to freeze
-        mAssetHelper = AppDatabase.getInstance(getContext());
+        mAssetHelper = AppDatabaseOld.getInstance(getContext());
         return true;
     }
 

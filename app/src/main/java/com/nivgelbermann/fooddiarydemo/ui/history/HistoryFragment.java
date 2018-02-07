@@ -19,7 +19,7 @@ import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.ui.add_edit.AddEditActivity;
 import com.nivgelbermann.fooddiarydemo.ui.SectionedRVAdapter;
 import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
-import com.nivgelbermann.fooddiarydemo.data.database.FoodItem;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodItem;
 
 import java.util.ArrayList;
 import java.util.Calendar;

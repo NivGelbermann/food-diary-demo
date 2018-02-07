@@ -26,7 +26,7 @@ import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.CategoriesCo
 import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.Category;
 import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.utilities.Util;
-import com.nivgelbermann.fooddiarydemo.data.database.FoodItem;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodItem;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 

@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo.data.database;
+package com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;

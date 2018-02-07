@@ -1,6 +1,7 @@
-package com.nivgelbermann.fooddiarydemo.data.database;
+package com.nivgelbermann.fooddiarydemo.data;
 
 import com.intrusoft.sectionedrecyclerview.Section;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodItem;
 
 import java.util.Calendar;
 import java.util.List;

@@ -18,8 +18,8 @@ import com.google.common.collect.Collections2;
 import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.ui.history.HistoryStatePagerAdapter;
 import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
-import com.nivgelbermann.fooddiarydemo.data.database.DateHeader;
-import com.nivgelbermann.fooddiarydemo.data.database.FoodItem;
+import com.nivgelbermann.fooddiarydemo.data.DateHeader;
+import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
