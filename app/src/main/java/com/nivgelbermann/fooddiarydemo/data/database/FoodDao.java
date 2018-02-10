@@ -13,16 +13,46 @@ import java.util.List;
  * on 'food' table in database.
  */
 
+// TODO MAJOR TASK! Test Room!
+// https://developer.android.com/training/testing/unit-testing/instrumented-unit-tests.html
+// https://commonsware.com/AndroidArch/previews/testing-room
+
 @Dao
 public interface FoodDao {
 
     /**
      * Gets all food entries from database
      *
-     * @return {@link LiveData} of {@link List} containing food entries
+     * @return {@link LiveData} of {@link List} containing {@link FoodEntry} objects
      */
     @Query("SELECT * FROM food")
     LiveData<List<FoodEntry>> getAll();
+
+    /**
+     * Gets all food entries matching a given time.
+     *
+     * @param month
+     * @param year
+     * @return {@link LiveData} of {@link List} containing {@link FoodEntry} objects
+     */
+    // TODO Test. Parameters could be ints or strings.
+    @Query("SELECT * FROM food WHERE datetime(time, '%m') = :month " +
+            "AND datetime(time, '%y') = :year")
+    LiveData<List<FoodEntry>> getByTime(int month, int year);
+
+    /**
+     * Gets all food entries matching a given time.
+     *
+     * @param day
+     * @param month
+     * @param year
+     * @return {@link LiveData} of {@link List} containing {@link FoodEntry} objects
+     */
+    // TODO Test. Parameters could be ints or strings.
+    @Query("SELECT * FROM food WHERE datetime(time, '%d') = :day " +
+            "AND datetime(time, '%m') = :month " +
+            "AND datetime(time, '%y') = :year")
+    LiveData<List<FoodEntry>> getByTime(int day, int month, int year);
 
     /**
      * Gets the {@link FoodEntry} matching a given id
@@ -31,23 +61,15 @@ public interface FoodDao {
      * @return Matching {@link FoodEntry}
      */
     @Query("SELECT * FROM food WHERE _id = :id")
-    FoodEntry get(int id);
-
-    /**
-     * Inserts a list of {@link FoodEntry} into database
-     *
-     * @param food A list of food entries to insert
-     */
-    @Insert
-    void insertAll(FoodEntry... food);
+    LiveData<FoodEntry> getById(int id);
 
     /**
      * Inserts a single {@link FoodEntry} into database
      *
-     * @param food FoodEntry to insert
+     * @param food FoodEntry to save
      */
     @Insert
-    void insert(FoodEntry food);
+    void insert(FoodEntry entry);
 
     /**
      * Deletes a single entry from database
@@ -55,14 +77,21 @@ public interface FoodDao {
      * @param food {@link FoodEntry} to delete
      */
     @Delete
-    void delete(FoodEntry food);
+    void delete(FoodEntry entry);
 
-    /**
-     * Deletes a single entry from database
-     *
-     * @param id id of entry to delete
-     */
-    @Query("DELETE FROM food WHERE _id = :id")
-    void delete(int id);
-
+//    /**
+//     * Inserts a list of {@link FoodEntry} into database
+//     *
+//     * @param food A list of food entries to save
+//     */
+//    @Insert
+//    void insertAll(FoodEntry... food);
+//
+//    /**
+//     * Deletes a single entry from database
+//     *
+//     * @param id id of entry to delete
+//     */
+//    @Query("DELETE FROM food WHERE _id = :id")
+//    void delete(int id);
 }

@@ -21,3 +21,6 @@ https://github.com/jgilfelt/android-sqlite-asset-helper
 
 google's guava
 https://github.com/google/guava
+
+Android Open Source Project
+

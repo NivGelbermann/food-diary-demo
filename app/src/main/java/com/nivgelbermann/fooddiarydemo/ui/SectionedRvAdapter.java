@@ -21,13 +21,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SectionedRVAdapter
+public class SectionedRvAdapter
         extends SectionRecyclerViewAdapter<
         DateHeader,
         FoodItem,
-        SectionedRVAdapter.SectionViewHolder,
-        SectionedRVAdapter.ChildViewHolder> {
-    private static final String TAG = "SectionedRVAdapter";
+        SectionedRvAdapter.SectionViewHolder,
+        SectionedRvAdapter.ChildViewHolder> {
+    private static final String TAG = "SectionedRvAdapter";
 
     private Context mContext; // TODO Replace with WeakReference??
 
@@ -48,12 +48,12 @@ public class SectionedRVAdapter
         @BindView(R.id.sec_child_food_text) TextView text;
         @BindView(R.id.sec_child_food_time) TextView time;
 
-        SectionedRVAdapter.ChildViewHolder.FoodItemListener mListener;
+        SectionedRvAdapter.ChildViewHolder.FoodItemListener mListener;
         FoodItem mFoodItem;
 
         /**
          * Interface to be implemented by activities containing a RecyclerView
-         * with {@link SectionedRVAdapter}.
+         * with {@link SectionedRvAdapter}.
          */
         public interface FoodItemListener {
             /**
@@ -72,7 +72,7 @@ public class SectionedRVAdapter
             boolean onFoodItemLongClicked(FoodItem item);
         }
 
-        ChildViewHolder(View view, final SectionedRVAdapter.ChildViewHolder.FoodItemListener listener) {
+        ChildViewHolder(View view, final SectionedRvAdapter.ChildViewHolder.FoodItemListener listener) {
             super(view);
             ButterKnife.bind(this, view);
             mListener = listener;
@@ -129,7 +129,7 @@ public class SectionedRVAdapter
 */
     }
 
-    public SectionedRVAdapter(Context context, List<DateHeader> sectionItemList) {
+    public SectionedRvAdapter(Context context, List<DateHeader> sectionItemList) {
         super(context, sectionItemList);
         mContext = context;
     }

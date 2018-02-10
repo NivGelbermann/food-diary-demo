@@ -45,7 +45,7 @@ public class PageFragment extends Fragment
     public static final String PAGE_MONTH = "PageMonth";
     public static final String PAGE_YEAR = "PageYear";
 
-    private SectionedRVAdapter mAdapter;
+    private SectionedRvAdapter mAdapter;
     // Variables for querying the relevant mMonth from DB
     private int mMonth;
     private int mYear;
@@ -85,7 +85,7 @@ public class PageFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         ButterKnife.bind(this, view);
 //        if (!(getContext() instanceof InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener)) {
-        if (!(getContext() instanceof SectionedRVAdapter.ChildViewHolder.FoodItemListener)) {
+        if (!(getContext() instanceof SectionedRvAdapter.ChildViewHolder.FoodItemListener)) {
             throw new ClassCastException(getContext().getClass().getSimpleName()
                     + " must implement FoodItemListener interface");
         }
@@ -97,7 +97,7 @@ public class PageFragment extends Fragment
             return view;
         }
 
-        mAdapter = new SectionedRVAdapter(getContext(), dateList);
+        mAdapter = new SectionedRvAdapter(getContext(), dateList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true); // Helps performance optimization
         recyclerView.setAdapter(mAdapter);
@@ -232,7 +232,7 @@ public class PageFragment extends Fragment
         emptyDBMessage.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
         if (mAdapter == null) {
-            mAdapter = new SectionedRVAdapter(getContext(), dateList);
+            mAdapter = new SectionedRvAdapter(getContext(), dateList);
             recyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataChanged(dateList);

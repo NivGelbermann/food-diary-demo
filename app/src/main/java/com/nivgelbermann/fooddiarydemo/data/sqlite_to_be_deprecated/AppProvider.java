@@ -135,7 +135,7 @@ public class AppProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        Log.d(TAG, "Entering insert, called with URI: " + uri);
+        Log.d(TAG, "Entering save, called with URI: " + uri);
         final int match = sUriMatcher.match(uri);
         Log.d(TAG, "match is " + match);
 
@@ -151,7 +151,7 @@ public class AppProvider extends ContentProvider {
                 if (recordId >= 0) {
                     returnUri = FoodsContract.buildFoodItemUri(recordId);
                 } else {
-                    throw new android.database.SQLException("Failed to insert into " + uri.toString());
+                    throw new android.database.SQLException("Failed to save into " + uri.toString());
                 }
                 break;
 
@@ -161,7 +161,7 @@ public class AppProvider extends ContentProvider {
                 if (recordId >= 0) {
                     returnUri = CategoriesContract.buildCategoryUri(recordId);
                 } else {
-                    throw new android.database.SQLException("Failed to insert into " + uri.toString());
+                    throw new android.database.SQLException("Failed to save into " + uri.toString());
                 }
                 break;
 
@@ -174,7 +174,7 @@ public class AppProvider extends ContentProvider {
         db.close();
         if (recordId >= 0) {
             // If something was inserted, notify any listeners about changes
-            Log.d(TAG, "insert: settings notifyChanged with: " + uri);
+            Log.d(TAG, "save: settings notifyChanged with: " + uri);
             try {
                 getContext().getContentResolver().notifyChange(uri, null);
             } catch (NullPointerException e) {
@@ -183,10 +183,10 @@ public class AppProvider extends ContentProvider {
                 return null;
             }
         } else {
-            Log.d(TAG, "insert: nothing inserted");
+            Log.d(TAG, "save: nothing inserted");
         }
 
-        Log.d(TAG, "Exiting insert, returning " + returnUri);
+        Log.d(TAG, "Exiting save, returning " + returnUri);
         return returnUri;
     }
 

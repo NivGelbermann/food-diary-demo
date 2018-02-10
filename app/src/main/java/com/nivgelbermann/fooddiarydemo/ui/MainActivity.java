@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity
         extends AppCompatActivity
-        implements SectionedRVAdapter.ChildViewHolder.FoodItemListener {
+        implements SectionedRvAdapter.ChildViewHolder.FoodItemListener {
     private static final String TAG = "MainActivity";
 
     private static final String CURRENT_FRAGMENT_TAG = "CurrentFragment";
@@ -323,7 +323,7 @@ public class MainActivity
         }
 
         // If nav item clicked isn't the currently displayed fragment, then
-        // insert the fragment by replacing any existing fragment. Otherwise, skip.
+        // save the fragment by replacing any existing fragment. Otherwise, skip.
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (!fragment.getClass().equals(fragmentManager.getFragments().get(0).getClass())) {
             fragmentManager.beginTransaction()

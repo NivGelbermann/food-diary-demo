@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.nivgelbermann.fooddiarydemo.R;
 import com.nivgelbermann.fooddiarydemo.ui.add_edit.AddEditActivity;
-import com.nivgelbermann.fooddiarydemo.ui.SectionedRVAdapter;
+import com.nivgelbermann.fooddiarydemo.ui.SectionedRvAdapter;
 import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodItem;
 
@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 
 public class HistoryFragment
         extends Fragment
-        implements SectionedRVAdapter.ChildViewHolder.FoodItemListener {
+        implements SectionedRvAdapter.ChildViewHolder.FoodItemListener {
     private static final String TAG = "HistoryFragment";
 
     //    @BindView(R.id.history_toolbar) Toolbar toolbar;
