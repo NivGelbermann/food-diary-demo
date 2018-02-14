@@ -13,10 +13,6 @@ import java.util.List;
  * on 'food' table in database.
  */
 
-// TODO MAJOR TASK! Test Room!
-// https://developer.android.com/training/testing/unit-testing/instrumented-unit-tests.html
-// https://commonsware.com/AndroidArch/previews/testing-room
-
 @Dao
 public interface FoodDao {
 
@@ -27,6 +23,7 @@ public interface FoodDao {
      */
     @Query("SELECT * FROM food")
     LiveData<List<FoodEntry>> getAll();
+//    List<FoodEntry> getAll();
 
     /**
      * Gets all food entries matching a given time.
@@ -35,7 +32,10 @@ public interface FoodDao {
      * @param year
      * @return {@link LiveData} of {@link List} containing {@link FoodEntry} objects
      */
-    // TODO Test. Parameters could be ints or strings.
+    /* TODO Test. Parameters could be ints or strings.
+    http://www.sqlitetutorial.net/sqlite-date/
+    https://www.sqlite.org/lang_datefunc.html
+     */
     @Query("SELECT * FROM food WHERE datetime(time, '%m') = :month " +
             "AND datetime(time, '%y') = :year")
     LiveData<List<FoodEntry>> getByTime(int month, int year);
@@ -64,17 +64,17 @@ public interface FoodDao {
     LiveData<FoodEntry> getById(int id);
 
     /**
-     * Inserts a single {@link FoodEntry} into database
+     * Inserts a single entry into database
      *
-     * @param food FoodEntry to save
+     * @param entry {@link FoodEntry} to save
      */
     @Insert
-    void insert(FoodEntry entry);
+    long insert(FoodEntry entry);
 
     /**
      * Deletes a single entry from database
      *
-     * @param food {@link FoodEntry} to delete
+     * @param entry {@link FoodEntry} to delete
      */
     @Delete
     void delete(FoodEntry entry);

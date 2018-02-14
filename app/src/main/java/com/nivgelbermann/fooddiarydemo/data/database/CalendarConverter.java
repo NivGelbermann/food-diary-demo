@@ -9,14 +9,11 @@ import java.util.Calendar;
  */
 
 public class CalendarConverter {
-    private static final String TAG = "CalendarConverter";
-
-    private static final String FORMAT = "YYYY-MM-DDTHH:MM[+-]HH:MM";
 
     @TypeConverter
     public static Calendar toCalendar(long timestamp) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(timestamp); // TODO See whether miliseconds adjustment required
+        calendar.setTimeInMillis(timestamp); // TODO See whether DateUtils.SECOND_IN_MILLIS adjustment required
         return calendar;
     }
 
@@ -26,6 +23,10 @@ public class CalendarConverter {
     }
 
     /* =========== Calendar to String convertion ===========
+    private static final String TAG = "CalendarConverter";
+    private static final String FORMAT = "YYYY-MM-DDTHH:MM[+-]HH:MM";
+
+     The following code is relevant (though not tested!) for implementing timezones
     @TypeConverter
     public static Calendar toCalendar(String time) {
         Calendar calendar = Calendar.getInstance();

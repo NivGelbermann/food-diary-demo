@@ -23,4 +23,7 @@ google's guava
 https://github.com/google/guava
 
 Android Open Source Project
+App Architecture Components
+Codelabs
+https://github.com/googlesamples/android-architecture-components/blob/master/GithubBrowserSample/app/src/test-common/java/com/android/example/github/util/LiveDataTestUtil.java
 

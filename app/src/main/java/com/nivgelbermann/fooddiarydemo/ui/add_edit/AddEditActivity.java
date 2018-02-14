@@ -22,11 +22,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.data.SectionChildFood;
 import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.CategoriesContract;
 import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.Category;
 import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.utilities.Util;
-import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodItem;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -57,7 +57,7 @@ public class AddEditActivity extends AppCompatActivity
     @BindView(R.id.add_edit_date_content) TextView dateContent;
     @BindView(R.id.add_edit_time_content) TextView timeContent;
 
-    private FoodItem mFoodItem;
+    private SectionChildFood mFoodItem;
     private boolean mEditMode;
     private boolean mMode24Hours = true; // TODO Incorporate into app settings
 
@@ -68,12 +68,12 @@ public class AddEditActivity extends AppCompatActivity
         setContentView(R.layout.activity_add_edit);
         ButterKnife.bind(this);
 
-        mFoodItem = new FoodItem();
+        mFoodItem = new SectionChildFood();
 
         Bundle arguments = getIntent().getExtras();
         mEditMode = arguments != null;
         if (mEditMode) {
-            mFoodItem = (FoodItem) arguments.getSerializable(FoodItem.class.getSimpleName());
+            mFoodItem = (SectionChildFood) arguments.getSerializable(SectionChildFood.class.getSimpleName());
         } else {
             // If adding an item, initialize it for right now's date and time
             Calendar now = Calendar.getInstance();
@@ -123,7 +123,7 @@ public class AddEditActivity extends AppCompatActivity
                         getResources().getString(R.string.add_edit_share_item_info,
                                 mFoodItem.getName(),
                                 categoryContent.getText().toString(),
-                                FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy @ HH:mm")));
+                                SectionChildFood.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy @ HH:mm")));
                 shareIntent.setType("text/plain");
                 startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.add_edit_share_chooser_header)));
                 break;
@@ -166,7 +166,7 @@ public class AddEditActivity extends AppCompatActivity
         mFoodItem.setDate(year, monthOfYear, dayOfMonth);
 
         // Update display
-        String formattedTime = FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy");
+        String formattedTime = SectionChildFood.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy");
         dateContent.setText(formattedTime);
         Log.d(TAG, "onDateSet: date: " + formattedTime);
     }
@@ -179,8 +179,8 @@ public class AddEditActivity extends AppCompatActivity
         mFoodItem.setTime(calendar.getTimeInMillis() / Util.MILLISECONDS);
 
         // Update display
-        timeContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
-        Log.d(TAG, "onTimeSet: time: " + FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
+        timeContent.setText(SectionChildFood.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
+        Log.d(TAG, "onTimeSet: time: " + SectionChildFood.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
     }
 
     @Override
@@ -223,8 +223,8 @@ public class AddEditActivity extends AppCompatActivity
      */
     private void displayFoodItem() {
         input.setText(mFoodItem.getName());
-        dateContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
-        timeContent.setText(FoodItem.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
+        dateContent.setText(SectionChildFood.getFormattedTime(mFoodItem.getTime(), "dd/MM/yy"));
+        timeContent.setText(SectionChildFood.getFormattedTime(mFoodItem.getTime(), "HH:mm"));
 
         if (mEditMode) {
             // Set fab icon to "save"

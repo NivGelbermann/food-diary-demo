@@ -1,10 +1,10 @@
 package com.nivgelbermann.fooddiarydemo.data.database;
 
-import android.arch.persistence.room.Room;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Room;
 
 import java.util.Calendar;
 
@@ -14,7 +14,6 @@ import java.util.Calendar;
 
 @Entity(tableName = "food")
 public class FoodEntry {
-    private static final String TAG = "FoodEntry";
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
@@ -59,6 +58,10 @@ public class FoodEntry {
         mCategory = category;
     }
 
+    public int getId() {
+        return mId;
+    }
+
     public String getName() {
         return mName;
     }
@@ -76,8 +79,24 @@ public class FoodEntry {
         return "FoodEntry{" +
                 "id=" + mId +
                 ", name='" + mName + '\'' +
-                ", time='" + mTime + '\'' +
+                ", time='" + mTime.getTimeInMillis() + '\'' +
                 ", category=" + mCategory +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object anObject) {
+        if (this == anObject) {
+            return true;
+        }
+        if (anObject instanceof FoodEntry) {
+            FoodEntry anFoodEntry = (FoodEntry) anObject;
+
+            // TODO This equals method does not compare id!!!!!! Might cause issues later on, used for testing dao for now
+            return mName.equals(anFoodEntry.getName())
+                    && mTime.equals(anFoodEntry.getTime())
+                    && mCategory == anFoodEntry.getCategory();
+        }
+        return false;
     }
 }

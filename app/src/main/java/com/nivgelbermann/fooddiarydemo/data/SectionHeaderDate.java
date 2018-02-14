@@ -1,21 +1,20 @@
 package com.nivgelbermann.fooddiarydemo.data;
 
 import com.intrusoft.sectionedrecyclerview.Section;
-import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodItem;
 
 import java.util.Calendar;
 import java.util.List;
 
-public class DateHeader implements Section<FoodItem> {
-    private static final String TAG = "DateHeader";
+public class SectionHeaderDate implements Section<SectionChildFood> {
+    private static final String TAG = "SectionHeaderDate";
 
-    List<FoodItem> mChildItems;
+    List<SectionChildFood> mChildItems;
     private int mDate;
     private String mDayOfWeek;
     private int mMonth;
     private int mYear;
 
-    public DateHeader(List<FoodItem> childItems, int date, int month, int year) {
+    public SectionHeaderDate(List<SectionChildFood> childItems, int date, int month, int year) {
         mChildItems = childItems;
         mDate = date;
         mMonth = month;
@@ -26,7 +25,7 @@ public class DateHeader implements Section<FoodItem> {
     }
 
     @Override
-    public List<FoodItem> getChildItems() {
+    public List<SectionChildFood> getChildItems() {
         return mChildItems;
     }
 
@@ -54,7 +53,7 @@ public class DateHeader implements Section<FoodItem> {
 
     @Override
     public String toString() {
-        return "DateHeader{" +
+        return "SectionHeaderDate{" +
                 "date=" + mDate +
                 ", dayOfWeek='" + mDayOfWeek + '\'' +
                 ", month=" + mMonth +

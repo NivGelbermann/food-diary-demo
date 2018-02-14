@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.intrusoft.sectionedrecyclerview.SectionRecyclerViewAdapter;
 import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.data.SectionChildFood;
+import com.nivgelbermann.fooddiarydemo.data.SectionHeaderDate;
 import com.nivgelbermann.fooddiarydemo.utilities.Util;
-import com.nivgelbermann.fooddiarydemo.data.DateHeader;
-import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodItem;
 
 import java.util.List;
 
@@ -23,8 +23,8 @@ import butterknife.ButterKnife;
 
 public class SectionedRvAdapter
         extends SectionRecyclerViewAdapter<
-        DateHeader,
-        FoodItem,
+        SectionHeaderDate,
+        SectionChildFood,
         SectionedRvAdapter.SectionViewHolder,
         SectionedRvAdapter.ChildViewHolder> {
     private static final String TAG = "SectionedRvAdapter";
@@ -49,7 +49,7 @@ public class SectionedRvAdapter
         @BindView(R.id.sec_child_food_time) TextView time;
 
         SectionedRvAdapter.ChildViewHolder.FoodItemListener mListener;
-        FoodItem mFoodItem;
+        SectionChildFood mSectionChildFood;
 
         /**
          * Interface to be implemented by activities containing a RecyclerView
@@ -59,17 +59,17 @@ public class SectionedRvAdapter
             /**
              * Called when FoodItemViewHolder is clicked.
              *
-             * @param item The FoodItem object contained in the clicked FoodItemViewHolder
+             * @param item The SectionChildFood object contained in the clicked FoodItemViewHolder
              */
-            void onFoodItemClicked(FoodItem item);
+            void onFoodItemClicked(SectionChildFood item);
 
             /**
              * Called when FoodItemViewHolder is long-clicked.
              *
-             * @param item The FoodItem object contained in the clicked FoodItemViewHolder
+             * @param item The SectionChildFood object contained in the clicked FoodItemViewHolder
              * @return Returns true if callback consumed the event, false otherwise.
              */
-            boolean onFoodItemLongClicked(FoodItem item);
+            boolean onFoodItemLongClicked(SectionChildFood item);
         }
 
         ChildViewHolder(View view, final SectionedRvAdapter.ChildViewHolder.FoodItemListener listener) {
@@ -80,7 +80,7 @@ public class SectionedRvAdapter
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mListener.onFoodItemClicked(mFoodItem);
+                    mListener.onFoodItemClicked(mSectionChildFood);
                 }
             });
             // Following lines commented for optimization, because
@@ -88,16 +88,16 @@ public class SectionedRvAdapter
             /* view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    return mListener.onFoodItemLongClicked(mFoodItem);
+                    return mListener.onFoodItemLongClicked(mSectionChildFood);
                 }
             }); */
         }
 
-        void setFoodItem(FoodItem item, String color) {
+        void setFoodItem(SectionChildFood item, String color) {
             try {
-                mFoodItem = item;
-                text.setText(mFoodItem.getName().trim());
-                time.setText(Util.formatTime(mFoodItem.getTime(), "HH:mm"));
+                mSectionChildFood = item;
+                text.setText(mSectionChildFood.getName().trim());
+                time.setText(Util.formatTime(mSectionChildFood.getTime(), "HH:mm"));
                 icon.setColorFilter(Color.parseColor(color));
             } catch (NullPointerException e) {
                 Log.d(TAG, "setFoodItem: NullPointerExcpetion caught, couldn't set viewholder's properties to given item: " + item);
@@ -129,7 +129,7 @@ public class SectionedRvAdapter
 */
     }
 
-    public SectionedRvAdapter(Context context, List<DateHeader> sectionItemList) {
+    public SectionedRvAdapter(Context context, List<SectionHeaderDate> sectionItemList) {
         super(context, sectionItemList);
         mContext = context;
     }
@@ -151,17 +151,17 @@ public class SectionedRvAdapter
     }
 
     @Override
-    public void onBindSectionViewHolder(SectionViewHolder sectionViewHolder, int sectionPosition, DateHeader dateHeader) {
-        Log.d(TAG, "onBindSectionViewHolder: dateHeader: " + dateHeader.toString());
-        sectionViewHolder.date.setText(String.valueOf(dateHeader.getDate()));
-        sectionViewHolder.month.setText(dateHeader.getMonthName());
-        sectionViewHolder.year.setText(String.valueOf(dateHeader.getYear()));
-        sectionViewHolder.dayOfWeek.setText(dateHeader.getDayOfWeek());
+    public void onBindSectionViewHolder(SectionViewHolder sectionViewHolder, int sectionPosition, SectionHeaderDate sectionHeaderDate) {
+        Log.d(TAG, "onBindSectionViewHolder: sectionHeaderDate: " + sectionHeaderDate.toString());
+        sectionViewHolder.date.setText(String.valueOf(sectionHeaderDate.getDate()));
+        sectionViewHolder.month.setText(sectionHeaderDate.getMonthName());
+        sectionViewHolder.year.setText(String.valueOf(sectionHeaderDate.getYear()));
+        sectionViewHolder.dayOfWeek.setText(sectionHeaderDate.getDayOfWeek());
     }
 
     @Override
-    public void onBindChildViewHolder(ChildViewHolder childViewHolder, int sectionPosition, int childPosition, FoodItem foodItem) {
+    public void onBindChildViewHolder(ChildViewHolder childViewHolder, int sectionPosition, int childPosition, SectionChildFood sectionChildFood) {
         // TODO Replace hard-coded string with getting color values either from DB or from a new Map<int id, Category c> in Util class. Later on repalce with switch for choosing category icon.
-        childViewHolder.setFoodItem(foodItem, "#9E9E9E");
+        childViewHolder.setFoodItem(sectionChildFood, "#9E9E9E");
     }
 }

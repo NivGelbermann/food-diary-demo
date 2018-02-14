@@ -15,6 +15,13 @@ import java.util.List;
  * (for now only {@link FoodDao}) and the app.
  */
 
+/* TODO Move database handling to disk thread?
+   https://codelabs.developers.google.com/codelabs/build-app-with-arch-components/index.html?index=..%2F..%2Findex#10
+   In above codelab, under "Your Turn: Observe the LiveData" clause 3, we're instructed to move
+   DB handling to a different thread using local class AppExecutors.
+   Doesn't Room do that for us with every Dao method?
+ */
+
 public class FoodRepository {
     private static final String TAG = "FoodRepository";
 

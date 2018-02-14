@@ -1,4 +1,4 @@
-package com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated;
+package com.nivgelbermann.fooddiarydemo.data;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -11,7 +11,7 @@ import static com.nivgelbermann.fooddiarydemo.utilities.Util.MILLISECONDS;
  * Represents a row in the Foods table in the database.
  */
 
-public class FoodItem implements Serializable {
+public class SectionChildFood implements Serializable {
     // 14-09-2017
     private static final long serialVersionUID = -931179032962101040L;
 
@@ -23,12 +23,12 @@ public class FoodItem implements Serializable {
     private int mYear;
     private int mCategoryId;
 
-    public FoodItem() {
-        // Initialize an empty FoodItem, to be manually filled in
+    public SectionChildFood() {
+        // Initialize an empty SectionChildFood, to be manually filled in
         mCategoryId = 1;
     }
 
-    public FoodItem(String id, String name, long time, int day, int month, int year, int categoryId) {
+    public SectionChildFood(String id, String name, long time, int day, int month, int year, int categoryId) {
         this.m_Id = id;
         mName = name;
         mTime = time;
@@ -126,7 +126,7 @@ public class FoodItem implements Serializable {
 
     @Override
     public String toString() {
-        return "FoodItem{" +
+        return "SectionChildFood{" +
                 "id=" + m_Id +
                 ", name='" + mName + '\'' +
                 ", time=" + mTime +
@@ -142,7 +142,7 @@ public class FoodItem implements Serializable {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        FoodItem item = (FoodItem) obj;
+        SectionChildFood item = (SectionChildFood) obj;
         return (this == obj
                 || (m_Id.equals(item.getId())
                 && mName.equals(item.getName())
@@ -155,7 +155,7 @@ public class FoodItem implements Serializable {
 
 
     /**
-     * Verify all of FoodItem object's parameters are set and valid.
+     * Verify all of SectionChildFood object's parameters are set and valid.
      *
      * @return true if valid, otherwise false.
      */

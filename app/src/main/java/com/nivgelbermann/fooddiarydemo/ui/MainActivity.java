@@ -21,11 +21,11 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.data.SectionChildFood;
 import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.ui.add_edit.AddEditActivity;
 import com.nivgelbermann.fooddiarydemo.ui.history.HistoryFragment;
 import com.nivgelbermann.fooddiarydemo.utilities.Util;
-import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodItem;
 
 import java.security.InvalidParameterException;
 import java.util.Calendar;
@@ -136,12 +136,12 @@ public class MainActivity
     }
 
     @Override
-    public void onFoodItemClicked(FoodItem item) {
+    public void onFoodItemClicked(SectionChildFood item) {
         startAddEditActivity(item);
     }
 
     @Override
-    public boolean onFoodItemLongClicked(FoodItem item) {
+    public boolean onFoodItemLongClicked(SectionChildFood item) {
         // Ignore long clicks, consume event by returning true
         return true;
     }
@@ -224,12 +224,12 @@ public class MainActivity
      *
      * @param item Pass item to edit it, otherwise pass null to create a new item
      */
-    private void startAddEditActivity(FoodItem item) {
+    private void startAddEditActivity(SectionChildFood item) {
         Log.d(TAG, "startAddEditActivity: called");
 
         Intent addEditIntent = new Intent(this, AddEditActivity.class);
         if (item != null) {
-            addEditIntent.putExtra(FoodItem.class.getSimpleName(), item);
+            addEditIntent.putExtra(SectionChildFood.class.getSimpleName(), item);
         }
 //        startActivity(addEditIntent);
         startActivityForResult(addEditIntent, REQUEST_ADD_EDIT);

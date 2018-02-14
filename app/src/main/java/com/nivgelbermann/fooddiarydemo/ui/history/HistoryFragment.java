@@ -16,10 +16,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.data.SectionChildFood;
 import com.nivgelbermann.fooddiarydemo.ui.add_edit.AddEditActivity;
 import com.nivgelbermann.fooddiarydemo.ui.SectionedRvAdapter;
 import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
-import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodItem;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -108,12 +108,12 @@ public class HistoryFragment
     }
 
     @Override
-    public void onFoodItemClicked(FoodItem item) {
+    public void onFoodItemClicked(SectionChildFood item) {
         startAddEditActivity(item);
     }
 
     @Override
-    public boolean onFoodItemLongClicked(FoodItem item) {
+    public boolean onFoodItemLongClicked(SectionChildFood item) {
         // Ignore long clicks, consume event by returning true
         return true;
     }
@@ -123,12 +123,12 @@ public class HistoryFragment
      *
      * @param item Pass item to edit it, otherwise pass null to create a new item
      */
-    private void startAddEditActivity(FoodItem item) {
+    private void startAddEditActivity(SectionChildFood item) {
         Log.d(TAG, "startAddEditActivity: called");
 
         Intent addEditIntent = new Intent(getActivity(), AddEditActivity.class);
         if (item != null) {
-            addEditIntent.putExtra(FoodItem.class.getSimpleName(), item);
+            addEditIntent.putExtra(SectionChildFood.class.getSimpleName(), item);
         }
         startActivity(addEditIntent);
     }

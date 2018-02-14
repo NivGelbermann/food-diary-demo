@@ -13,7 +13,7 @@ import android.util.Log;
  */
 
 @Database(entities = {FoodEntry.class}, version = 1)
-@TypeConverters(CalendarConverter.class)
+@TypeConverters({CalendarConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     private static final String TAG = "AppDatabase";
 
