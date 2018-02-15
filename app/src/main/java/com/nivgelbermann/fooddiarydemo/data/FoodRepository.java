@@ -1,6 +1,7 @@
 package com.nivgelbermann.fooddiarydemo.data;
 
 import android.arch.lifecycle.LiveData;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -8,6 +9,7 @@ import com.nivgelbermann.fooddiarydemo.data.database.FoodDao;
 import com.nivgelbermann.fooddiarydemo.data.database.FoodEntry;
 
 import java.security.InvalidParameterException;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -28,7 +30,7 @@ public class FoodRepository {
     // Singleton instantiation
     private static final Object LOCK = new Object();
     private static FoodRepository sInstance;
-    private LiveData<List<FoodEntry>> mFoodCache = null;
+    private LiveData<List<FoodEntry>> mFoodCache = null; // TODO Incorporate Cache in all "get" methods
 
     private final FoodDao mFoodDao;
     // private final AppExecutors mAppExecutors; // Example in Sunshine project. Useful for sending tasks to different pre-defined threads.
@@ -86,7 +88,7 @@ public class FoodRepository {
      * @return {@link LiveData} containing {@link List} of {@link FoodEntry} objects for chosen date.
      */
     public LiveData<List<FoodEntry>> getByDate(@Nullable Integer day, int month, int year) {
-        // TODO Conditions can probably be streamlined
+        // TODO Split into two methods for readability
         if (!(month > 0 && year > 0)) {
             throw new InvalidParameterException(TAG + ".getByDate: invalid date received");
         }
@@ -97,6 +99,10 @@ public class FoodRepository {
             throw new InvalidParameterException(TAG + ".getByDate: invalid date received");
         }
         return mFoodDao.getByTime(month, year);
+    }
+
+    public LiveData<List<FoodEntry>> getByTime(@NonNull Calendar time) {
+        return mFoodDao.getByTime(time);
     }
 
     /**

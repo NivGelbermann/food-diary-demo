@@ -63,9 +63,9 @@ public class FoodDaoTest {
 
         assertNotNull(data);
         assertFalse(data.isEmpty());
-        assertTrue(data.get(0).getName().equals("Schnitzel"));
-        assertTrue(data.get(0).getCategory() == 4);
-        assertTrue(data.get(0).getTime().equals(time));
+        assertTrue(data.get(0).getName().equals(entry.getName()));
+        assertTrue(data.get(0).getCategory() == entry.getCategory());
+        assertTrue(data.get(0).getTime().equals(entry.getTime()));
     }
 
     @Test
@@ -82,10 +82,67 @@ public class FoodDaoTest {
         List<FoodEntry> data = LiveDataTestUtil.getValue(mFoodDao.getAll());
         assertNotNull(data);
         assertFalse(data.isEmpty());
-        // The following lines are not going to work, because entry1/2/3 do not have a valid id
+        assertTrue(data.size() == 3);
+        // The following lines are relevant if and only if FoodEntry.equals ignores entry's id.
         assertTrue(data.contains(entry1));
         assertTrue(data.contains(entry2));
         assertTrue(data.contains(entry3));
+    }
+
+    @Test
+    public void insertMultipleEntriesAtOnce() throws Exception {
+        Calendar time = Calendar.getInstance();
+        FoodEntry entry1 = new FoodEntry("Corn dog", time, 4);
+        FoodEntry entry2 = new FoodEntry("Caesar salad", time, 2);
+        FoodEntry entry3 = new FoodEntry("A gallon of beer", time, 7);
+        mFoodDao.insertAll(entry1, entry2, entry3);
+
+        List<FoodEntry> data = LiveDataTestUtil.getValue(mFoodDao.getAll());
+        assertNotNull(data);
+        assertFalse(data.isEmpty());
+        assertTrue(data.size() == 3);
+        // The following lines are relevant if and only if FoodEntry.equals ignores entry's id.
+        assertTrue(data.contains(entry1));
+        assertTrue(data.contains(entry2));
+        assertTrue(data.contains(entry3));
+    }
+
+    @Test
+    public void getByMonthAndYear() throws Exception {
+        // =========== Set up db content =========== //
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.MONTH, 0);
+        time.set(Calendar.YEAR, 2018);
+        FoodEntry entry1 = new FoodEntry("Fruit salad", time, 6);
+
+        time.set(Calendar.MONTH, 1);
+        time.set(Calendar.YEAR, 2018);
+        FoodEntry entry2 = new FoodEntry("Chicken soup", time, 4);
+
+        time.set(Calendar.MONTH, 11);
+        time.set(Calendar.YEAR, 2017);
+        FoodEntry entry3 = new FoodEntry("Mashed potatoes", time, 2);
+
+        mFoodDao.insertAll(entry1, entry2, entry3);
+
+        // =========== Test db content =========== //
+        List<FoodEntry> data = LiveDataTestUtil.getValue(mFoodDao.getByTime(0, 2018));
+        assertNotNull(data);
+        assertFalse(data.isEmpty());
+        assertTrue(data.size() == 1);
+        assertTrue(data.get(0).getName().equals(entry1.getName()));
+
+        data = LiveDataTestUtil.getValue(mFoodDao.getByTime(1, 2018));
+        assertNotNull(data);
+        assertFalse(data.isEmpty());
+        assertTrue(data.size() == 1);
+        assertTrue(data.get(0).getName().equals(entry2.getName()));
+
+        data = LiveDataTestUtil.getValue(mFoodDao.getByTime(11, 2017));
+        assertNotNull(data);
+        assertFalse(data.isEmpty());
+        assertTrue(data.size() == 1);
+        assertTrue(data.get(0).getName().equals(entry3.getName()));
     }
 
 }

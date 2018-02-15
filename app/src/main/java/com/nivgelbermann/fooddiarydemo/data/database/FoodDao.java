@@ -6,6 +6,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -23,7 +24,6 @@ public interface FoodDao {
      */
     @Query("SELECT * FROM food")
     LiveData<List<FoodEntry>> getAll();
-//    List<FoodEntry> getAll();
 
     /**
      * Gets all food entries matching a given time.
@@ -33,8 +33,8 @@ public interface FoodDao {
      * @return {@link LiveData} of {@link List} containing {@link FoodEntry} objects
      */
     /* TODO Test. Parameters could be ints or strings.
-    http://www.sqlitetutorial.net/sqlite-date/
-    https://www.sqlite.org/lang_datefunc.html
+       http://www.sqlitetutorial.net/sqlite-date/
+       https://www.sqlite.org/lang_datefunc.html
      */
     @Query("SELECT * FROM food WHERE datetime(time, '%m') = :month " +
             "AND datetime(time, '%y') = :year")
@@ -55,6 +55,14 @@ public interface FoodDao {
     LiveData<List<FoodEntry>> getByTime(int day, int month, int year);
 
     /**
+     * Gets all food entries matching a given time.
+     * @param time {@link Calendar} time of relevant entries
+     * @return {@link LiveData} of {@link List} containing {@link FoodEntry} objects
+     */
+    @Query("SELECT * FROM food WHERE time = :time")
+    LiveData<List<FoodEntry>> getByTime(Calendar time);
+
+    /**
      * Gets the {@link FoodEntry} matching a given id
      *
      * @param id - given id
@@ -69,7 +77,15 @@ public interface FoodDao {
      * @param entry {@link FoodEntry} to save
      */
     @Insert
-    long insert(FoodEntry entry);
+    void insert(FoodEntry entry);
+
+    /**
+     * Inserts a list of {@link FoodEntry} into database
+     *
+     * @param food A list of food entries to save
+     */
+    @Insert
+    void insertAll(FoodEntry... food);
 
     /**
      * Deletes a single entry from database
@@ -78,14 +94,6 @@ public interface FoodDao {
      */
     @Delete
     void delete(FoodEntry entry);
-
-//    /**
-//     * Inserts a list of {@link FoodEntry} into database
-//     *
-//     * @param food A list of food entries to save
-//     */
-//    @Insert
-//    void insertAll(FoodEntry... food);
 //
 //    /**
 //     * Deletes a single entry from database

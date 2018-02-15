@@ -1,7 +1,11 @@
 package com.nivgelbermann.fooddiarydemo.data.database;
 
 import android.arch.persistence.room.TypeConverter;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
@@ -9,7 +13,32 @@ import java.util.Calendar;
  */
 
 public class CalendarConverter {
+    private static final String TAG = "CalendarConverter";
 
+    private static final String FORMAT = "dd/MM/yyyy/HH:mm";
+
+    @TypeConverter
+    public static Calendar toCalendar(@NonNull String time) {
+        Calendar calendar = null;
+        SimpleDateFormat sdf = new SimpleDateFormat(FORMAT);
+        try {
+            calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(time));
+        } catch (ParseException e) {
+            Log.d(TAG, "toCalendar: ParseException caught: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return calendar;
+    }
+
+    @TypeConverter
+    public static String toString(@NonNull Calendar calendar) {
+        SimpleDateFormat sdf = new SimpleDateFormat(FORMAT);
+        return sdf.format(calendar.getTime());
+    }
+
+
+    /* =========== Calendar to long convertion ===========
     @TypeConverter
     public static Calendar toCalendar(long timestamp) {
         Calendar calendar = Calendar.getInstance();
@@ -21,8 +50,9 @@ public class CalendarConverter {
     public static long toLong(Calendar time) {
         return time.getTimeInMillis();
     }
+    */
 
-    /* =========== Calendar to String convertion ===========
+    /* =========== Calendar to String convertion TO SUPPORT TIMEZONES ===========
     private static final String TAG = "CalendarConverter";
     private static final String FORMAT = "YYYY-MM-DDTHH:MM[+-]HH:MM";
 
