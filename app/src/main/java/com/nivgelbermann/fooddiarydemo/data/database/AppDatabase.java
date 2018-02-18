@@ -42,7 +42,7 @@ public abstract class AppDatabase extends RoomDatabase {
      */
     public abstract FoodDao foodDao();
 
-    /* =========== Example Migration class ===========
+    /* ============================= Example Migration class =============================
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {

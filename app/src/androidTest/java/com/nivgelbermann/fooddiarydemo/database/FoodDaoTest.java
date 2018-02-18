@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -50,7 +51,12 @@ public class FoodDaoTest {
     @Test
     public void insertSingleEntry() throws Exception {
         Calendar time = Calendar.getInstance();
-        FoodEntry entry = new FoodEntry("Schnitzel", time, 4);
+        FoodEntry entry = new FoodEntry("Schnitzel",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                4);
         mFoodDao.insert(entry);
 
         /* Using LiveDataTestUtil.getValue to get value (list of entries)
@@ -65,16 +71,30 @@ public class FoodDaoTest {
         assertFalse(data.isEmpty());
         assertTrue(data.get(0).getName().equals(entry.getName()));
         assertTrue(data.get(0).getCategory() == entry.getCategory());
-        assertTrue(data.get(0).getTime().equals(entry.getTime()));
+        assertTrue(data.get(0).getTime() == entry.getTime());
     }
 
     @Test
     public void insertMultipleEntries() throws Exception {
         Calendar time = Calendar.getInstance();
-        FoodEntry entry1 = new FoodEntry("Hot fries", time, 3);
-        FoodEntry entry2 = new FoodEntry("Tuna fish", time, 4);
-        FoodEntry entry3 = new FoodEntry("Devil cake", time, 8);
-//        mFoodDao.insertAll(entry1, entry2, entry3); TODO Write another test for this
+        FoodEntry entry1 = new FoodEntry("Hot fries",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                3);
+        FoodEntry entry2 = new FoodEntry("Tuna fish",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                4);
+        FoodEntry entry3 = new FoodEntry("Devil cake",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                8);
         mFoodDao.insert(entry1);
         mFoodDao.insert(entry2);
         mFoodDao.insert(entry3);
@@ -92,9 +112,24 @@ public class FoodDaoTest {
     @Test
     public void insertMultipleEntriesAtOnce() throws Exception {
         Calendar time = Calendar.getInstance();
-        FoodEntry entry1 = new FoodEntry("Corn dog", time, 4);
-        FoodEntry entry2 = new FoodEntry("Caesar salad", time, 2);
-        FoodEntry entry3 = new FoodEntry("A gallon of beer", time, 7);
+        FoodEntry entry1 = new FoodEntry("Corn dog",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                4);
+        FoodEntry entry2 = new FoodEntry("Caesar salad",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                2);
+        FoodEntry entry3 = new FoodEntry("A gallon of beer",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                7);
         mFoodDao.insertAll(entry1, entry2, entry3);
 
         List<FoodEntry> data = LiveDataTestUtil.getValue(mFoodDao.getAll());
@@ -108,47 +143,136 @@ public class FoodDaoTest {
     }
 
     @Test
-    public void getByMonthAndYear() throws Exception {
+    public void retrieveEntriesByMonth() throws Exception {
         // =========== Set up db content =========== //
         Calendar time = Calendar.getInstance();
         time.set(Calendar.MONTH, 0);
         time.set(Calendar.YEAR, 2018);
-        FoodEntry entry1 = new FoodEntry("Fruit salad", time, 6);
+        FoodEntry entry1 = new FoodEntry("Fruit salad",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                6);
 
         time.set(Calendar.MONTH, 1);
         time.set(Calendar.YEAR, 2018);
-        FoodEntry entry2 = new FoodEntry("Chicken soup", time, 4);
+        FoodEntry entry2 = new FoodEntry("Chicken soup",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                4);
 
         time.set(Calendar.MONTH, 11);
         time.set(Calendar.YEAR, 2017);
-        FoodEntry entry3 = new FoodEntry("Mashed potatoes", time, 2);
+        FoodEntry entry3 = new FoodEntry("Mashed potatoes",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                2);
 
         mFoodDao.insertAll(entry1, entry2, entry3);
 
         // =========== Test db content =========== //
-        List<FoodEntry> data = LiveDataTestUtil.getValue(mFoodDao.getByTime(0, 2018));
+        List<FoodEntry> data = LiveDataTestUtil.getValue(mFoodDao.getByMonth(0, 2018));
         assertNotNull(data);
         assertFalse(data.isEmpty());
         assertTrue(data.size() == 1);
         assertTrue(data.get(0).getName().equals(entry1.getName()));
 
-        data = LiveDataTestUtil.getValue(mFoodDao.getByTime(1, 2018));
+        data = LiveDataTestUtil.getValue(mFoodDao.getByMonth(1, 2018));
         assertNotNull(data);
         assertFalse(data.isEmpty());
         assertTrue(data.size() == 1);
         assertTrue(data.get(0).getName().equals(entry2.getName()));
 
-        data = LiveDataTestUtil.getValue(mFoodDao.getByTime(11, 2017));
+        data = LiveDataTestUtil.getValue(mFoodDao.getByMonth(11, 2017));
         assertNotNull(data);
         assertFalse(data.isEmpty());
         assertTrue(data.size() == 1);
         assertTrue(data.get(0).getName().equals(entry3.getName()));
     }
 
+    @Test
+    public void retrieveEntriesByDay() throws Exception {
+        // =========== Set up db content =========== //
+        Calendar time = Calendar.getInstance();
+        time.set(Calendar.DAY_OF_MONTH, 18);
+        time.set(Calendar.MONTH, 0);
+        time.set(Calendar.YEAR, 2018);
+        FoodEntry entry1 = new FoodEntry("Gorgonzola cheese",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                6);
+
+        time.set(Calendar.DAY_OF_MONTH, 5);
+        time.set(Calendar.MONTH, 11);
+        time.set(Calendar.YEAR, 2017);
+        FoodEntry entry2 = new FoodEntry("Orange soda",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                4);
+
+        mFoodDao.insertAll(entry1, entry2);
+
+        // =========== Test db content =========== //
+        List<FoodEntry> data = LiveDataTestUtil.getValue(mFoodDao.getByDay(18, 0, 2018));
+        assertNotNull(data);
+        assertFalse(data.isEmpty());
+        assertTrue(data.size() == 1);
+        assertTrue(data.get(0).getName().equals(entry1.getName()));
+
+        data = LiveDataTestUtil.getValue(mFoodDao.getByDay(5, 11, 2017));
+        assertNotNull(data);
+        assertFalse(data.isEmpty());
+        assertTrue(data.size() == 1);
+        assertTrue(data.get(0).getName().equals(entry2.getName()));
+    }
+
+    @Test
+    public void retrieveEntryById() throws Exception {
+        Calendar time = Calendar.getInstance();
+        FoodEntry entry = new FoodEntry("Hawaiian pizza",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                5);
+        mFoodDao.insert(entry);
+
+        List<FoodEntry> data = LiveDataTestUtil.getValue(mFoodDao.getAll());
+        assertNotNull(data);
+        assertFalse(data.isEmpty());
+        assertTrue(data.size() == 1);
+
+        FoodEntry retreievedEntry = data.get(0);
+        assertNotNull(retreievedEntry);
+        assertTrue(retreievedEntry.getName().equals(entry.getName()));
+
+        FoodEntry retrievedEntryById = LiveDataTestUtil.getValue(
+                mFoodDao.getById(retreievedEntry.getId()));
+        assertNotNull(retrievedEntryById);
+        assertEquals(retreievedEntry, retrievedEntryById);
+    }
+
+    @Test
+    public void deleteEntry() throws Exception {
+        Calendar time = Calendar.getInstance();
+        FoodEntry entry = new FoodEntry("Paella",
+                time.getTimeInMillis(),
+                time.get(Calendar.DAY_OF_MONTH),
+                time.get(Calendar.MONTH),
+                time.get(Calendar.YEAR),
+                3);
+        mFoodDao.insert(entry);
+
+        FoodEntry retrievedEntry = LiveDataTestUtil.getValue(mFoodDao.getAll()).get(0);
+        assertTrue(mFoodDao.delete(retrievedEntry) == 1);
+    }
 }
-
-
-/* TODO Next tests to write:
-   * FoodRepositoryTest
-   * ?
- */

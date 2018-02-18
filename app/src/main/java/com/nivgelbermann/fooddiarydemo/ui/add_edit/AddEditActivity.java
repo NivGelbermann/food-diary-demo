@@ -299,6 +299,7 @@ public class AddEditActivity extends AppCompatActivity
                         calendar.get(Calendar.MINUTE),
                         0,
                         mMode24Hours);
+                picker.setTimeInterval(1, 5);
                 picker.show(getFragmentManager(), TIME_PICKER_TAG);
             }
         });

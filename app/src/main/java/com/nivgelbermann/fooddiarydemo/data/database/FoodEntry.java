@@ -6,8 +6,6 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.Room;
 
-import java.util.Calendar;
-
 /**
  * Defines the schema of a table in {@link Room} for a single food item.
  */
@@ -23,7 +21,16 @@ public class FoodEntry {
     private String mName;
 
     @ColumnInfo(name = "time")
-    private Calendar mTime;
+    private long mTime;
+
+    @ColumnInfo(name = "day")
+    private int day;
+
+    @ColumnInfo(name = "month")
+    private int month;
+
+    @ColumnInfo(name = "year")
+    private int year;
 
     @ColumnInfo(name = "category")
     private int mCategory;
@@ -31,14 +38,20 @@ public class FoodEntry {
     /**
      * Constructor for creating {@link FoodEntry} objects to be inserted into the DB.
      *
-     * @param name     Entry name
-     * @param time     Entry time and date
-     * @param category Entry category
+     * @param name     entry name
+     * @param time     entry time (hour)
+     * @param day      entry day
+     * @param month    entry month
+     * @param year     entry year
+     * @param category entry category
      */
     @Ignore
-    public FoodEntry(String name, Calendar time, int category) {
+    public FoodEntry(String name, long time, int day, int month, int year, int category) {
         mName = name;
         mTime = time;
+        this.day = day;
+        this.month = month;
+        this.year = year;
         mCategory = category;
     }
 
@@ -46,15 +59,21 @@ public class FoodEntry {
      * Constructor for creating {@link FoodEntry} objects by the DB.
      * Should not be used manually.
      *
-     * @param id       Entry id
-     * @param name     Entry name
-     * @param time     Entry time and date
-     * @param category Entry category
+     * @param id       entry id
+     * @param name     entry name
+     * @param time     entry time (hour)
+     * @param day      entry day
+     * @param month    entry month
+     * @param year     entry year
+     * @param category entry category
      */
-    public FoodEntry(int id, String name, Calendar time, int category) {
+    public FoodEntry(int id, String name, long time, int day, int month, int year, int category) {
         mId = id;
         mName = name;
         mTime = time;
+        this.day = day;
+        this.month = month;
+        this.year = year;
         mCategory = category;
     }
 
@@ -66,8 +85,20 @@ public class FoodEntry {
         return mName;
     }
 
-    public Calendar getTime() {
+    public long getTime() {
         return mTime;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getYear() {
+        return year;
     }
 
     public int getCategory() {
@@ -79,7 +110,7 @@ public class FoodEntry {
         return "FoodEntry{" +
                 "id=" + mId +
                 ", name='" + mName + '\'' +
-                ", time='" + mTime.getTimeInMillis() + '\'' +
+                ", time='" + mTime + '\'' +
                 ", category=" + mCategory +
                 '}';
     }
@@ -94,7 +125,7 @@ public class FoodEntry {
 
             // TODO This equals method does not compare id!!!!!! Might cause issues later on, used for testing dao for now
             return mName.equals(anFoodEntry.getName())
-                    && mTime.equals(anFoodEntry.getTime())
+                    && mTime==anFoodEntry.getTime()
                     && mCategory == anFoodEntry.getCategory();
         }
         return false;

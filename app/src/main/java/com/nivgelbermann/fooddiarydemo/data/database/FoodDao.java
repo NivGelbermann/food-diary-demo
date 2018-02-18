@@ -6,8 +6,9 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-import java.util.Calendar;
 import java.util.List;
+
+import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
 /**
  * {@link Dao} which provides an API for all data operations
@@ -32,13 +33,9 @@ public interface FoodDao {
      * @param year
      * @return {@link LiveData} of {@link List} containing {@link FoodEntry} objects
      */
-    /* TODO Test. Parameters could be ints or strings.
-       http://www.sqlitetutorial.net/sqlite-date/
-       https://www.sqlite.org/lang_datefunc.html
-     */
-    @Query("SELECT * FROM food WHERE datetime(time, '%m') = :month " +
-            "AND datetime(time, '%y') = :year")
-    LiveData<List<FoodEntry>> getByTime(int month, int year);
+    @Query("SELECT * FROM food WHERE month = :month " +
+            "AND year = :year")
+    LiveData<List<FoodEntry>> getByMonth(int month, int year);
 
     /**
      * Gets all food entries matching a given time.
@@ -48,19 +45,10 @@ public interface FoodDao {
      * @param year
      * @return {@link LiveData} of {@link List} containing {@link FoodEntry} objects
      */
-    // TODO Test. Parameters could be ints or strings.
-    @Query("SELECT * FROM food WHERE datetime(time, '%d') = :day " +
-            "AND datetime(time, '%m') = :month " +
-            "AND datetime(time, '%y') = :year")
-    LiveData<List<FoodEntry>> getByTime(int day, int month, int year);
-
-    /**
-     * Gets all food entries matching a given time.
-     * @param time {@link Calendar} time of relevant entries
-     * @return {@link LiveData} of {@link List} containing {@link FoodEntry} objects
-     */
-    @Query("SELECT * FROM food WHERE time = :time")
-    LiveData<List<FoodEntry>> getByTime(Calendar time);
+    @Query("SELECT * FROM food WHERE day = :day " +
+            "AND month = :month " +
+            "AND year = :year")
+    LiveData<List<FoodEntry>> getByDay(int day, int month, int year);
 
     /**
      * Gets the {@link FoodEntry} matching a given id
@@ -76,7 +64,7 @@ public interface FoodDao {
      *
      * @param entry {@link FoodEntry} to save
      */
-    @Insert
+    @Insert(onConflict = REPLACE)
     void insert(FoodEntry entry);
 
     /**
@@ -84,7 +72,7 @@ public interface FoodDao {
      *
      * @param food A list of food entries to save
      */
-    @Insert
+    @Insert(onConflict = REPLACE)
     void insertAll(FoodEntry... food);
 
     /**
@@ -93,7 +81,8 @@ public interface FoodDao {
      * @param entry {@link FoodEntry} to delete
      */
     @Delete
-    void delete(FoodEntry entry);
+    int delete(FoodEntry entry);
+
 //
 //    /**
 //     * Deletes a single entry from database
