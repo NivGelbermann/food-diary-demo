@@ -1,7 +1,6 @@
 package com.nivgelbermann.fooddiarydemo.ui;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
+import android.arch.lifecycle.LiveData;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,10 +15,11 @@ import android.widget.TextView;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.data.FoodRepository;
 import com.nivgelbermann.fooddiarydemo.data.SectionHeaderDate;
+import com.nivgelbermann.fooddiarydemo.data.database.AppDatabase;
+import com.nivgelbermann.fooddiarydemo.data.database.FoodEntry;
 import com.nivgelbermann.fooddiarydemo.ui.history.HistoryStatePagerAdapter;
-import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
-import com.nivgelbermann.fooddiarydemo.data.SectionChildFood;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,11 +45,13 @@ public class PageFragment extends Fragment
     public static final String PAGE_MONTH = "PageMonth";
     public static final String PAGE_YEAR = "PageYear";
 
-    private SectionedRvAdapter mAdapter;
+    private SectionedAdapter mAdapter;
     // Variables for querying the relevant mMonth from DB
     private int mMonth;
     private int mYear;
     private boolean mUpdated;
+
+    private FoodRepository mRepository;
 
     /**
      * @param month month represented by page
@@ -76,6 +78,9 @@ public class PageFragment extends Fragment
         mMonth = args.getInt(PAGE_MONTH);
         mYear = args.getInt(PAGE_YEAR);
         mUpdated = false;
+
+        // TODO Implement custom/opensource injection and replace following line throughout the application:
+        mRepository = FoodRepository.getInstance(AppDatabase.getInstance(getContext().getApplicationContext()).foodDao());
     }
 
     @Nullable
@@ -85,7 +90,7 @@ public class PageFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_page, container, false);
         ButterKnife.bind(this, view);
 //        if (!(getContext() instanceof InnerRecyclerViewAdapter.FoodItemViewHolder.FoodItemListener)) {
-        if (!(getContext() instanceof SectionedRvAdapter.ChildViewHolder.FoodItemListener)) {
+        if (!(getContext() instanceof SectionedAdapter.ChildViewHolder.FoodItemListener)) {
             throw new ClassCastException(getContext().getClass().getSimpleName()
                     + " must implement FoodItemListener interface");
         }
@@ -97,7 +102,7 @@ public class PageFragment extends Fragment
             return view;
         }
 
-        mAdapter = new SectionedRvAdapter(getContext(), dateList);
+        mAdapter = new SectionedAdapter(getContext(), dateList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true); // Helps performance optimization
         recyclerView.setAdapter(mAdapter);
@@ -118,11 +123,12 @@ public class PageFragment extends Fragment
      * @param sectionChildFoods ArrayList containing all food items for month
      * @return ArrayList containing all dates for month
      */
-    private ArrayList<SectionHeaderDate> getDateList(List<SectionChildFood> sectionChildFoods) {
+    private ArrayList<SectionHeaderDate> getDateList(List<FoodEntry> sectionChildFoods) {
         Log.d(TAG, mMonth + "/" + mYear + " getDatesList: called");
-        if (sectionChildFoods.isEmpty()) {
+        if (sectionChildFoods == null || sectionChildFoods.isEmpty()) {
             return new ArrayList<>();
         }
+        /*
         ContentResolver contentResolver = getContext().getContentResolver();
         if (contentResolver == null) {
             throw new IllegalStateException(TAG + " " + mMonth + "/" + mYear + " .onHandleWork: couldn't get ContentResolver.");
@@ -146,7 +152,7 @@ public class PageFragment extends Fragment
             throw new IllegalStateException(TAG + " " + mMonth + "/" + mYear + " getDatesList: couldn't move cursor to first");
         }
 
-        ArrayList<SectionHeaderDate> dates = new ArrayList<>();
+        ArrayList<SectionHeaderDate> headerDates = new ArrayList<>();
         while (cursor.moveToNext()) {
             // Get current day's food items
             final int day = cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.DAY));
@@ -159,19 +165,40 @@ public class PageFragment extends Fragment
                     });
             List<SectionChildFood> items = new ArrayList<>(filteredCollection);
 
-            // Add new SectionHeaderDate to dates list, containing said items
-            dates.add(new SectionHeaderDate(
+            // Add new SectionHeaderDate to headerDates list, containing said items
+            headerDates.add(new SectionHeaderDate(
                     items,
                     day,
                     cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.MONTH)),
                     cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.YEAR))));
         }
         cursor.close();
+        */
+
+        ArrayList<SectionHeaderDate> headerDates = new ArrayList<>();
+        ArrayList<Integer> dates = (ArrayList<Integer>) mRepository
+                .getDatesByMonth(mMonth, mYear).getValue();
+        for (final int day : dates) {
+            // Get current day's food items
+            Collection<FoodEntry> filteredCollection = Collections2.filter(sectionChildFoods,
+                    new Predicate<FoodEntry>() {
+                        @Override
+                        public boolean apply(FoodEntry input) {
+                            return input.getDay() == day;
+                        }
+                    });
+            List<FoodEntry> entriesForDay = new ArrayList<>(filteredCollection);
+
+            // Add new SectionHeaderDate to headerDates list, containing said items
+            headerDates.add(new SectionHeaderDate(entriesForDay, day, mMonth, mYear));
+        }
+
         mUpdated = true;
-        return dates;
+        return headerDates;
     }
 
-    private ArrayList<SectionChildFood> getFoodList() {
+    private ArrayList<FoodEntry> getFoodList() {
+        /*
         ContentResolver contentResolver = getContext().getContentResolver();
         if (contentResolver == null) {
             throw new IllegalStateException(TAG + " " + mMonth + "/" + mYear + " .onHandleWork: couldn't get ContentResolver.");
@@ -197,12 +224,12 @@ public class PageFragment extends Fragment
                 selectionArgs,
                 sortOrder);
         if (cursor == null || cursor.getCount() == 0) {
-            Log.d(TAG, mMonth + "/" + mYear + " getFoodList: cursor null or empty. Assuming no items exist for requested month.");
+            Log.d(TAG, mMonth + "/" + mYear + " getFoodList: cursor null or empty. Assuming no entries exist for requested month.");
             return new ArrayList<>();
         }
-        ArrayList<SectionChildFood> items = new ArrayList<>();
+        ArrayList<SectionChildFood> entries = new ArrayList<>();
         while (cursor.moveToNext()) {
-            items.add(new SectionChildFood(
+            entries.add(new SectionChildFood(
                     cursor.getString(cursor.getColumnIndex(FoodsContract.Columns._ID)),
                     cursor.getString(cursor.getColumnIndex(FoodsContract.Columns.FOOD_ITEM)),
                     cursor.getLong(cursor.getColumnIndex(FoodsContract.Columns.HOUR)),
@@ -212,7 +239,12 @@ public class PageFragment extends Fragment
                     cursor.getInt(cursor.getColumnIndex(FoodsContract.Columns.CATEGORY_ID))));
         }
         cursor.close();
-        return items;
+        */
+
+        LiveData<List<FoodEntry>> data = mRepository.getByMonth(mMonth, mYear);
+        ArrayList<FoodEntry> entries = (ArrayList<FoodEntry>) data.getValue();
+
+        return entries;
     }
 
     /**
@@ -232,7 +264,7 @@ public class PageFragment extends Fragment
         emptyDBMessage.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
         if (mAdapter == null) {
-            mAdapter = new SectionedRvAdapter(getContext(), dateList);
+            mAdapter = new SectionedAdapter(getContext(), dateList);
             recyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.notifyDataChanged(dateList);

@@ -2,7 +2,6 @@ package com.nivgelbermann.fooddiarydemo.ui.history;
 
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,13 +15,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nivgelbermann.fooddiarydemo.R;
+import com.nivgelbermann.fooddiarydemo.data.FoodRepository;
 import com.nivgelbermann.fooddiarydemo.data.SectionChildFood;
+import com.nivgelbermann.fooddiarydemo.data.database.AppDatabase;
 import com.nivgelbermann.fooddiarydemo.ui.add_edit.AddEditActivity;
 import com.nivgelbermann.fooddiarydemo.ui.SectionedRvAdapter;
-import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +39,7 @@ public class HistoryFragment
 
     private ArrayList<String> mTabTitles;
     private HistoryStatePagerAdapter mPagerAdapter;
+    private FoodRepository mRepository;
 
     public static HistoryFragment newInstance() {
         return new HistoryFragment();
@@ -55,35 +55,39 @@ public class HistoryFragment
         if (contentResolver == null) {
             throw new IllegalStateException(TAG + ".onCreate: couldn't get ContentResolver.");
         }
-        String[] projection = new String[]{"DISTINCT " + FoodsContract.Columns.MONTH,
-                FoodsContract.Columns.YEAR};
-        String sortOrder = FoodsContract.Columns.YEAR + ","
-                + FoodsContract.Columns.MONTH + " ASC";
-        Cursor cursor = contentResolver.query(
-                FoodsContract.CONTENT_URI,
-                projection,
-                null,
-                null,
-                sortOrder);
-        if (cursor == null || cursor.getCount() == 0) {
-            Log.d(TAG, "onCreate: cursor null or empty");
-        } else {
-            // TODO This method generates tabs only for months that exist in the DB. Make it generate a tab for every month since the FIRST IN THE DB to the CURRENT DATE
-            // Right now, if the DB contains items in June and August but no items in July, a tab for July would not be created
-            Calendar calendar = Calendar.getInstance();
-            int currentMonth = calendar.get(Calendar.MONTH);
-            int currentYear = calendar.get(Calendar.YEAR);
-            while (cursor.moveToNext()) {
-                String month = cursor.getString(
-                        cursor.getColumnIndex(FoodsContract.Columns.MONTH));
-                String year = cursor.getString(cursor.getColumnIndex(FoodsContract.Columns.YEAR));
-                if (Integer.valueOf(month) == currentMonth && Integer.valueOf(year) == currentYear) {
-                    break;
-                }
-                mTabTitles.add(month + "/" + year);
-            }
-            cursor.close();
-        }
+//        String[] projection = new String[]{"DISTINCT " + FoodsContract.Columns.MONTH,
+//                FoodsContract.Columns.YEAR};
+//        String sortOrder = FoodsContract.Columns.YEAR + ","
+//                + FoodsContract.Columns.MONTH + " ASC";
+//        Cursor cursor = contentResolver.query(
+//                FoodsContract.CONTENT_URI,
+//                projection,
+//                null,
+//                null,
+//                sortOrder);
+//        if (cursor == null || cursor.getCount() == 0) {
+//            Log.d(TAG, "onCreate: cursor null or empty");
+//        } else {
+//            // TODO This method generates tabs only for months that exist in the DB. Make it generate a tab for every month since the FIRST IN THE DB to the CURRENT DATE
+//            // Right now, if the DB contains items in June and August but no items in July, a tab for July would not be created
+//            Calendar calendar = Calendar.getInstance();
+//            int currentMonth = calendar.get(Calendar.MONTH);
+//            int currentYear = calendar.get(Calendar.YEAR);
+//            while (cursor.moveToNext()) {
+//                String month = cursor.getString(
+//                        cursor.getColumnIndex(FoodsContract.Columns.MONTH));
+//                String year = cursor.getString(cursor.getColumnIndex(FoodsContract.Columns.YEAR));
+//                if (Integer.valueOf(month) == currentMonth && Integer.valueOf(year) == currentYear) {
+//                    break;
+//                }
+//                mTabTitles.add(month + "/" + year);
+//            }
+//            cursor.close();
+//        }
+
+        mRepository = FoodRepository.getInstance(AppDatabase.getInstance(getContext().getApplicationContext()).foodDao());
+
+        mTabTitles = (ArrayList) mRepository.getAllDistinctMonths().getValue();
     }
 
     @Nullable

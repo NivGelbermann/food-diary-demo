@@ -21,7 +21,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.data.SectionChildFood;
+import com.nivgelbermann.fooddiarydemo.data.database.FoodEntry;
 import com.nivgelbermann.fooddiarydemo.data.sqlite_to_be_deprecated.FoodsContract;
 import com.nivgelbermann.fooddiarydemo.ui.add_edit.AddEditActivity;
 import com.nivgelbermann.fooddiarydemo.ui.history.HistoryFragment;
@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity
         extends AppCompatActivity
-        implements SectionedRvAdapter.ChildViewHolder.FoodItemListener {
+        implements SectionedAdapter.ChildViewHolder.FoodItemListener {
     private static final String TAG = "MainActivity";
 
     private static final String CURRENT_FRAGMENT_TAG = "CurrentFragment";
@@ -136,12 +136,12 @@ public class MainActivity
     }
 
     @Override
-    public void onFoodItemClicked(SectionChildFood item) {
-        startAddEditActivity(item);
+    public void onFoodItemClicked(FoodEntry entry) {
+        startAddEditActivity(entry);
     }
 
     @Override
-    public boolean onFoodItemLongClicked(SectionChildFood item) {
+    public boolean onFoodItemLongClicked(FoodEntry item) {
         // Ignore long clicks, consume event by returning true
         return true;
     }
@@ -222,14 +222,14 @@ public class MainActivity
     /**
      * Utility method to start an AddEdit activity.
      *
-     * @param item Pass item to edit it, otherwise pass null to create a new item
+     * @param entry Pass item to edit it, otherwise pass null to create a new item
      */
-    private void startAddEditActivity(SectionChildFood item) {
+    private void startAddEditActivity(FoodEntry entry) {
         Log.d(TAG, "startAddEditActivity: called");
 
         Intent addEditIntent = new Intent(this, AddEditActivity.class);
-        if (item != null) {
-            addEditIntent.putExtra(SectionChildFood.class.getSimpleName(), item);
+        if (entry != null) {
+            addEditIntent.putExtra(FoodEntry.class.getSimpleName(), entry);
         }
 //        startActivity(addEditIntent);
         startActivityForResult(addEditIntent, REQUEST_ADD_EDIT);
@@ -406,6 +406,7 @@ public class MainActivity
                 Log.d(TAG, "generateRandomItems: item saved: " + values.toString());
             }
         }
+
         ((PageFragment) mFragment).updateDisplay();
     }
 }

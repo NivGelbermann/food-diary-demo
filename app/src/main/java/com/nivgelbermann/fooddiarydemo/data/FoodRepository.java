@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.nivgelbermann.fooddiarydemo.data.database.FoodDao;
 import com.nivgelbermann.fooddiarydemo.data.database.FoodEntry;
+import com.nivgelbermann.fooddiarydemo.ui.history.HistoryFragment;
 
 import java.security.InvalidParameterException;
 import java.util.Calendar;
@@ -79,7 +80,7 @@ public class FoodRepository {
      *
      * @param month int for month
      * @param year  int for year
-     * @return
+     * @return {@link LiveData} containing {@link List} of {@link FoodEntry} objects for chosen month.
      */
     public LiveData<List<FoodEntry>> getByMonth(int month, int year) {
         if (!(month > 0 && year > 0)) {
@@ -96,6 +97,20 @@ public class FoodRepository {
      */
     public LiveData<FoodEntry> getById(int id) {
         return mFoodDao.getById(id);
+    }
+
+    /**
+     * Get all dates with entries available for selected month
+     * @param month
+     * @param year
+     * @return {@link LiveData} containing {@link List} of {@link Integer} days.
+     */
+    public LiveData<List<Integer>> getDatesByMonth(int month, int year) {
+        return mFoodDao.getValidDatesByMonth(month, year);
+    }
+
+    public LiveData<List<String>> getAllDistinctMonths() {
+        return mFoodDao.getAllMonths();
     }
 
     /**
@@ -134,8 +149,9 @@ public class FoodRepository {
         return entry.getName() != null
                 && !entry.getName().trim().isEmpty()
                 && entry.getTime() > 0
-                && entry.getYear() > 0
-                && entry.getMonth() >= Calendar.JANUARY && entry.getMonth() <= Calendar.DECEMBER
+//                && entry.getYear() > 0
+//                && entry.getMonth() >= Calendar.JANUARY && entry.getMonth() <= Calendar.DECEMBER
+                && entry.getMonth().isValid()
                 && entry.getDay() >= calendar.getActualMinimum(Calendar.DAY_OF_MONTH)
                 && entry.getDay() <= calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
                 && entry.getCategory() > 0;

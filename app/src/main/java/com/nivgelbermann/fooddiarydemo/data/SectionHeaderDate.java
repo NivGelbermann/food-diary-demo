@@ -1,20 +1,21 @@
 package com.nivgelbermann.fooddiarydemo.data;
 
 import com.intrusoft.sectionedrecyclerview.Section;
+import com.nivgelbermann.fooddiarydemo.data.database.FoodEntry;
 
 import java.util.Calendar;
 import java.util.List;
 
-public class SectionHeaderDate implements Section<SectionChildFood> {
+public class SectionHeaderDate implements Section<FoodEntry> {
     private static final String TAG = "SectionHeaderDate";
 
-    List<SectionChildFood> mChildItems;
+    List<FoodEntry> mChildItems;
     private int mDate;
     private String mDayOfWeek;
     private int mMonth;
     private int mYear;
 
-    public SectionHeaderDate(List<SectionChildFood> childItems, int date, int month, int year) {
+    public SectionHeaderDate(List<FoodEntry> childItems, int date, int month, int year) {
         mChildItems = childItems;
         mDate = date;
         mMonth = month;
@@ -25,7 +26,7 @@ public class SectionHeaderDate implements Section<SectionChildFood> {
     }
 
     @Override
-    public List<SectionChildFood> getChildItems() {
+    public List<FoodEntry> getChildItems() {
         return mChildItems;
     }
 

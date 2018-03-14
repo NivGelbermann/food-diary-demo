@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.intrusoft.sectionedrecyclerview.SectionRecyclerViewAdapter;
 import com.nivgelbermann.fooddiarydemo.R;
-import com.nivgelbermann.fooddiarydemo.data.SectionChildFood;
 import com.nivgelbermann.fooddiarydemo.data.SectionHeaderDate;
+import com.nivgelbermann.fooddiarydemo.data.database.FoodEntry;
 import com.nivgelbermann.fooddiarydemo.utilities.Util;
 
 import java.util.List;
@@ -21,13 +21,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SectionedRvAdapter
+public class SectionedAdapter
         extends SectionRecyclerViewAdapter<
         SectionHeaderDate,
-        SectionChildFood,
-        SectionedRvAdapter.SectionViewHolder,
-        SectionedRvAdapter.ChildViewHolder> {
-    private static final String TAG = "SectionedRvAdapter";
+        FoodEntry,
+        SectionedAdapter.SectionViewHolder,
+        SectionedAdapter.ChildViewHolder> {
+    private static final String TAG = "SectionedAdapter";
 
     private Context mContext; // TODO Replace with WeakReference??
 
@@ -44,16 +44,18 @@ public class SectionedRvAdapter
     }
 
     public static class ChildViewHolder extends RecyclerView.ViewHolder {
+        // TODO Fix documentation, and document FoodEntry as section child. Fix interface+method+variable names.
+
         @BindView(R.id.sec_child_food_icon) ImageView icon;
         @BindView(R.id.sec_child_food_text) TextView text;
         @BindView(R.id.sec_child_food_time) TextView time;
 
-        SectionedRvAdapter.ChildViewHolder.FoodItemListener mListener;
-        SectionChildFood mSectionChildFood;
+        SectionedAdapter.ChildViewHolder.FoodItemListener mListener;
+        FoodEntry mSectionChildFood;
 
         /**
          * Interface to be implemented by activities containing a RecyclerView
-         * with {@link SectionedRvAdapter}.
+         * with {@link SectionedAdapter}.
          */
         public interface FoodItemListener {
             /**
@@ -61,7 +63,7 @@ public class SectionedRvAdapter
              *
              * @param item The SectionChildFood object contained in the clicked FoodItemViewHolder
              */
-            void onFoodItemClicked(SectionChildFood item);
+            void onFoodItemClicked(FoodEntry item);
 
             /**
              * Called when FoodItemViewHolder is long-clicked.
@@ -69,10 +71,10 @@ public class SectionedRvAdapter
              * @param item The SectionChildFood object contained in the clicked FoodItemViewHolder
              * @return Returns true if callback consumed the event, false otherwise.
              */
-            boolean onFoodItemLongClicked(SectionChildFood item);
+            boolean onFoodItemLongClicked(FoodEntry item);
         }
 
-        ChildViewHolder(View view, final SectionedRvAdapter.ChildViewHolder.FoodItemListener listener) {
+        ChildViewHolder(View view, final SectionedAdapter.ChildViewHolder.FoodItemListener listener) {
             super(view);
             ButterKnife.bind(this, view);
             mListener = listener;
@@ -93,7 +95,7 @@ public class SectionedRvAdapter
             }); */
         }
 
-        void setFoodItem(SectionChildFood item, String color) {
+        void setFoodItem(FoodEntry item, String color) {
             try {
                 mSectionChildFood = item;
                 text.setText(mSectionChildFood.getName().trim());
@@ -129,7 +131,7 @@ public class SectionedRvAdapter
 */
     }
 
-    public SectionedRvAdapter(Context context, List<SectionHeaderDate> sectionItemList) {
+    public SectionedAdapter(Context context, List<SectionHeaderDate> sectionItemList) {
         super(context, sectionItemList);
         mContext = context;
     }
@@ -160,7 +162,7 @@ public class SectionedRvAdapter
     }
 
     @Override
-    public void onBindChildViewHolder(ChildViewHolder childViewHolder, int sectionPosition, int childPosition, SectionChildFood sectionChildFood) {
+    public void onBindChildViewHolder(ChildViewHolder childViewHolder, int sectionPosition, int childPosition, FoodEntry sectionChildFood) {
         // TODO Replace hard-coded string with getting color values either from DB or from a new Map<int id, Category c> in Util class. Later on repalce with switch for choosing category icon.
         childViewHolder.setFoodItem(sectionChildFood, "#9E9E9E");
     }

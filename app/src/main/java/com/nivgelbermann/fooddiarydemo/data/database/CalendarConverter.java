@@ -15,12 +15,12 @@ import java.util.Calendar;
 public class CalendarConverter {
     private static final String TAG = "CalendarConverter";
 
-    private static final String FORMAT = "dd/MM/yyyy/HH:mm";
+    private static final String TIME_STAMP_FORMAT = "YYYY-MM-DD HH:MM:SS.SSS";
 
     @TypeConverter
     public static Calendar toCalendar(@NonNull String time) {
         Calendar calendar = null;
-        SimpleDateFormat sdf = new SimpleDateFormat(FORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(TIME_STAMP_FORMAT);
         try {
             calendar = Calendar.getInstance();
             calendar.setTime(sdf.parse(time));
@@ -33,7 +33,7 @@ public class CalendarConverter {
 
     @TypeConverter
     public static String toString(@NonNull Calendar calendar) {
-        SimpleDateFormat sdf = new SimpleDateFormat(FORMAT);
+        SimpleDateFormat sdf = new SimpleDateFormat(TIME_STAMP_FORMAT);
         return sdf.format(calendar.getTime());
     }
 
@@ -54,7 +54,7 @@ public class CalendarConverter {
 
     /* =========== Calendar to String convertion TO SUPPORT TIMEZONES ===========
     private static final String TAG = "CalendarConverter";
-    private static final String FORMAT = "YYYY-MM-DDTHH:MM[+-]HH:MM";
+    private static final String TIME_STAMP_FORMAT = "YYYY-MM-DDTHH:MM[+-]HH:MM";
 
      The following code is relevant (though not tested!) for implementing timezones
     @TypeConverter
@@ -65,7 +65,7 @@ public class CalendarConverter {
             calendar.setTime(timestamp);
         } catch (Exception exception) {
             Log.d(TAG, "toCalendar: error occurred: " + exception.getMessage());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(FORMAT);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(TIME_STAMP_FORMAT);
             try {
                 calendar.setTime(simpleDateFormat.parse(time));
             } catch (ParseException parseException) {
@@ -80,7 +80,7 @@ public class CalendarConverter {
 
     @TypeConverter
     public static String toString(Calendar time) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(FORMAT);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(TIME_STAMP_FORMAT);
         return simpleDateFormat.format(time.getTime());
     }
     */
